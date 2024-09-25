@@ -3,14 +3,13 @@ project "MicroCore"
 	language "C++"
 	cppdialect "C++20"
     staticruntime "off"
-    location "../MicroCore/"
 
     defines { "_CRT_SECURE_NO_WARNINGS" }
 
 	files { "../MicroCore/**.h", "../MicroCore/**.cpp" }
 
-	pchheader "../MicroCore/__micro_core_pch.h"
-    pchsource "%{wks.location}/MicroCore/__micro_core_pch.cpp"
+	pchheader "__micro_core_pch.h"
+    pchsource "../MicroCore/__micro_core_pch.cpp"
 
 	targetdir "%{wks.location}/bin/"
 	objdir "%{wks.location}/bin-int/%{prj.name}"

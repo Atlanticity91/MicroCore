@@ -1,4 +1,4 @@
-workspace "TinySquad"
+workspace "MicroCore"
    architecture "x64"
    configurations { "Debug", "Release", "Dist" }
    startproject "MicroCore"
