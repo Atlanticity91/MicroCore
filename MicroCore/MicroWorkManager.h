@@ -113,7 +113,9 @@ public:
 	/**
 	 * PopWork function
 	 * @note : Pop first work task to available for execution.
+	 * @param work : Reference for the work.
+	 * @return : True if the function populate the work reference.
 	 **/
-	MicroWork PopWork( );
+	bool PopWork( MicroWork& work );
 
 };

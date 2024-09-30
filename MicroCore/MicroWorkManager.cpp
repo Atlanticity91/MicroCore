@@ -55,7 +55,8 @@ bool MicroWorkManager::Create( ) {
 }
 
 void MicroWorkManager::PushWork( MicroWorkPriorities priority, const MicroWork& work ) {
-	m_works[ (uint32_t)priority ].push( work );
+	if ( work.GetIsValid( ) )
+		m_works[ (uint32_t)priority ].push( work );
 }
 
 void MicroWorkManager::Destroy( ) {
@@ -68,10 +69,10 @@ void MicroWorkManager::Destroy( ) {
 }
 
 void MicroWorkManager::WorkExecution( MicroWorkManager* work_manager ) {
-	while ( work_manager->GetCanWork( ) ) {
-		auto work = work_manager->PopWork( );
+	auto work = MicroWork{ };
 
-		if ( work ) {
+	while ( work_manager->GetCanWork( ) ) {
+		if ( work_manager->PopWork( work ) ) {
 			if ( std::invoke( work.Execute, work_manager, work.Storage ) ) {
 				if ( work.OnSucced )
 					std::invoke( work.OnSucced, work_manager, work.Storage );
@@ -101,23 +102,23 @@ uint32_t MicroWorkManager::GetCount( ) const {
 	return (uint32_t)m_workers.size( );
 }
 
-MicroWork MicroWorkManager::PopWork( ) {
-	auto work_id = (uint32_t)MicroWorkPriorities::MW_PRIORITY_COUNT;
-	auto work    = MicroWork{ };
-
+bool MicroWorkManager::PopWork( MicroWork& work ) {
+	auto has_work = false;
+	auto work_id  = (uint32_t)MicroWorkPriorities::MW_PRIORITY_COUNT;
+	
 	m_mutex.lock( );
 
-	while ( work_id-- > 0 ) {
+	while ( !has_work && work_id-- > 0 ) {
 		if ( m_works[ work_id ].size( ) > 0 ) {
 			work = m_works[ work_id ].front( );
 
 			m_works[ work_id ].pop( );
 
-			break;
+			has_work = true;
 		}
 	}
 
 	m_mutex.unlock( );
 
-	return work;
+	return has_work;
 }
