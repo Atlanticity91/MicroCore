@@ -48,7 +48,7 @@ public:
 	/**
 	 * Destructor
 	 **/
-	~MicroYamlWriter( ) = default;
+	~MicroYamlWriter( );
 
 	/**
 	 * Open function
