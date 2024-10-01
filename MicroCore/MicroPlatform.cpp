@@ -37,6 +37,10 @@
 namespace micro {
 
 	bool copy( const uint32_t length, const void* src, void* dst ) {
+		micro_assert( length > 0, "You can't copy data form buffer to buffer with a 0 size buffer." );
+		micro_assert( src != nullptr, "You can't copy data from a null buffer." );
+		micro_assert( dst != nullptr, "You can't copy data to a null buffer." );
+
 	#	ifdef _WIN64
 		return memcpy_s( dst, length, src, length ) == 0;
 	#	else
@@ -46,6 +50,10 @@ namespace micro {
 
 
 	bool move( const uint32_t length, const void* src, void* dst ) {
+		micro_assert( length > 0, "You can't move data form buffer to buffer with a 0 size buffer." );
+		micro_assert( src != nullptr, "You can't move data from a null buffer." );
+		micro_assert( dst != nullptr, "You can't move data to a null buffer." );
+
 	#	ifdef _WIN64
 		return memmove_s( dst, length, src, length ) == 0;
 	#	else

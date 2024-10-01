@@ -138,14 +138,16 @@ namespace micro {
 		return crc32( length, pointer );
 	}
 
-	uint32_t crc32( const uint32_t length, const uint8_t* pointer ) {
+	uint32_t crc32( const uint32_t length, const uint8_t* data ) {
+		micro_assert( pointer != nullptr, "You can't calculate the Crc32 with no data pointer." );
+
 		// Implementation From :
 		// Table & implementation from https://web.mit.edu/freebsd/head/sys/libkern/crc32.c
 		auto crc_value = (uint32_t)~0U;
 		auto crc_count = length;
 
 		while ( crc_count-- > 0 )
-			crc_value = crc32_tab[ ( crc_value ^ ( *( pointer++ ) ) ) & 0xFF ] ^ ( crc_value >> 8 );
+			crc_value = crc32_tab[ ( crc_value ^ ( *( data++ ) ) ) & 0xFF ] ^ ( crc_value >> 8 );
 
 		return crc_value ^ ~0U;
 	}
@@ -164,6 +166,8 @@ namespace micro {
 	}
 
 	uint32_t hash32( const uint32_t length, micro_string string ) {
+		micro_assert( pointer != nullptr, "You can't calculate the 32-bits hash with an invalid string pointer." );
+
 		// From https://stackoverflow.com/questions/2351087/what-is-the-best-32bit-hash-function-for-short-strings-tag-names
 		// Use 1721 as Prime Number from https://en.wikipedia.org/wiki/List_of_prime_numbers
 		auto hash_id = (uint32_t)0;
