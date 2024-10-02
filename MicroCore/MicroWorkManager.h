@@ -39,10 +39,10 @@
  **/
 enum class MicroWorkPriorities : uint32_t { 
 
-	MW_PRIORITY_HIGH = 0,
-	MW_PRIORITY_LOW,
+	MWP_HIGH = 0,
+	MWP_LOW,
 
-	MW_PRIORITY_COUNT
+	MWP_COUNT
 
 };
 
