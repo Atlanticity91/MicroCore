@@ -269,6 +269,12 @@ public:
 	};
 
 private:
+	/**
+	 * GetFileMode const function
+	 * @note : Convert file accessor to native file open mode.
+	 * @param accessor : Query accessor to convert.
+	 * @return : Native file open string.
+	 **/
 	micro_string GetFileMode( const MicroFileAccessors accessor ) const;
 
 };
