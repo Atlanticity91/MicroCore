@@ -34,12 +34,31 @@
 #include "MicroAssert.h"
 
 /**
+ * MicroFileAccessors enum class
+ * @note : Defined all accessor for file access.
+ **/
+enum class MicroFileAccessors : uint32_t {
+
+	MFA_NONE  = 0,
+	MFA_BINARY = 1 << 0,
+	MFA_READ   = 1 << 1,
+	MFA_WRITE  = 1 << 2,
+	MFA_APPEND = 1 << 3,
+
+	MFA_BINARY_READ   = MFA_BINARY | MFA_READ,
+	MFA_BINARY_WRITE  = MFA_BINARY | MFA_WRITE,
+	MFA_BINARY_APPEND = MFA_BINARY | MFA_APPEND
+
+};
+
+/**
  * MicroFile final class
  * @note : Represent file, replace FILE*.
  **/
 class MicroFile final {
 
 private:
+	MicroFileAccessors m_accessor;
 	FILE* m_handle;
 
 public:
@@ -60,16 +79,16 @@ public:
 	 * @param mode : File opening mode, actualy same as native c fopen.
 	 * @return : True for succes.
 	 **/
-	bool Open( const std::string path, const std::string mode );
+	bool Open( const std::string path, const MicroFileAccessors accessor );
 
 	/**
 	 * Open function
 	 * @note : Open file specified by the path.
 	 * @param path : Path with extension to the query file.
-	 * @param mode : File opening mode, actualy same as native c fopen.
+	 * @param accessor : File opening mode, actualy same as native c fopen.
 	 * @return : True for succes.
 	 **/
-	bool Open( micro_string path, micro_string mode );
+	bool Open( micro_string path, const MicroFileAccessors accessor );
 
 	/**
 	 * Seek procedure
@@ -191,16 +210,34 @@ public:
 	bool GetIsValid( ) const;
 
 	/**
-	 * Get const function
+	 * GetNative const function
 	 * @note : Get the FILE* handle.
 	 **/
-	FILE* Get( ) const;
+	FILE* GetNative( ) const;
+
+	/**
+	 *  GetAccessor const function
+	 * @note : Get current file accessor.
+	 **/
+	MicroFileAccessors GetAccessor( ) const;
 
 	/**
 	 * GetSize const function
 	 * @note : Get current file size.
 	 **/
 	uint32_t GetSize( ) const;
+
+	/**
+	 * GetCanRead const function
+	 * @note : Get if the file as read access.
+	 **/
+	bool GetCanRead( ) const;
+
+	/**
+	 *  GetCanWrite const function
+	 * @note : Get if the file as write access.
+	 **/
+	bool GetCanWrite( ) const;
 
 public:
 	/**
@@ -230,5 +267,8 @@ public:
 
 		return *this;
 	};
+
+private:
+	micro_string GetFileMode( const MicroFileAccessors accessor ) const;
 
 };
