@@ -4,7 +4,7 @@ This repository contains the code for the Micro Core Library, this project defin
 
 > [!CAUTION]
 > This repository use submodules for Thirdparty. Make sure to setup submodules before any action.
-> git submodule update --init --recursive
+> `git submodule update --init --recursive`
 
 # Build System
 MicroCore as part of the Micro project use the Premake5 build system. Premake5 instance is present in this repository under Build/Premake5.
