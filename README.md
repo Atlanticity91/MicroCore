@@ -6,11 +6,11 @@ MicroCore as part of the Micro project use the Premake5 build system. Premake5 i
 
 Build files for Premake5 are inside Build folder under :
 
-| File  					  | Usage 							  |
-| --------------------------- | --------------------------------- |
-| Build/Build.lua  			  | Define global solution build. 	  |
-| Build/Build-MicroCore.lua   | Define MicroCore solution build.  |
-| Build/Build-Thirdparty.lua  | Define Thirdparty solution build. |
+| File  					    | Usage 							|
+| ----------------------------- | --------------------------------- |
+| `Build/Build.lua`  		 	| Define global solution build. 	|
+| `Build/Build-MicroCore.lua`   | Define MicroCore solution build.  |
+| `Build/Build-Thirdparty.lua`  | Define Thirdparty solution build. |
 
 ## Windows
 For Windows build you need at least visual studio 2022 community edition or visual studio C++.
