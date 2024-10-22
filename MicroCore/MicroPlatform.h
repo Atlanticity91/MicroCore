@@ -69,6 +69,13 @@ typedef const char* micro_string;
 namespace micro {
 
 	/**
+	 * is_little_endian function
+	 * @note : Get if plaform is little endian.
+	 * @return : True when plaform is little endian.
+	 **/
+	bool is_little_endian( );
+
+	/**
 	 * copy function
 	 * @note : Wrapper for platform memcpy.
 	 * @param length : Length of the source and destination buffer.
@@ -112,6 +119,42 @@ namespace micro {
 	template<typename Type>
 	bool move( const Type& src, Type& dst ) {
 		return move( (uint32_t)sizeof( Type ), &src, &dst );
+	};
+
+	/**
+	 * swap_endianness method
+	 * @note : Swap data endianness to current platform endianness.
+	 * @template Type : Query type of data to swap.
+	 * @param data : Reference to query data to swap.
+	 **/
+	template<typename Type>
+		requires ( !std::is_pointer<Type>::value )
+	inline void swap_endianness( Type& data ) {
+		auto data_size = sizeof( Type );
+		auto byte_max  = data_size / 2;
+		auto byte_id   = (size_t)0;
+
+		while ( byte_id < byte_max ) {
+			std::swap( data[ byte_id ], data[ data_size - byte_id - 1 ] );
+
+			byte_id += 1;
+		}
+	};
+
+	/**
+	 * swap_endianness method
+	 * @note : Swap data array endianness to current platform endianness.
+	 * @template Type : Query type of data to swap.
+	 * @param length : Query data array length.
+	 * @param data : Reference to query data array to swap.
+	 **/
+	template<typename Type>
+		requires ( std::is_pointer<Type>::value )
+	inline void swap_endianness( const uint32_t length, Type& data ) {
+		auto element_id = length;
+		
+		while ( element_id-- > 0 )
+			swap_endianness( data[ element_id ] );
 	};
 
 };

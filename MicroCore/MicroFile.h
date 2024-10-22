@@ -39,7 +39,7 @@
  **/
 enum class MicroFileAccessors : uint32_t {
 
-	MFA_NONE  = 0,
+	MFA_NONE   = 0,
 	MFA_BINARY = 1 << 0,
 	MFA_READ   = 1 << 1,
 	MFA_WRITE  = 1 << 2,

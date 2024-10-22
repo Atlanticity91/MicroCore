@@ -36,6 +36,12 @@
 ////////////////////////////////////////////////////////////////////////////////////////////
 namespace micro {
 
+	bool is_little_endian( ) {
+		static uint32_t test = 1;
+
+		return *( (int8_t*)( &test ) ) == 1;
+	}
+
 	bool copy( const uint32_t length, const void* src, void* dst ) {
 		micro_assert( length > 0, "You can't copy data form buffer to buffer with a 0 size buffer." );
 		micro_assert( src != nullptr, "You can't copy data from a null buffer." );
