@@ -60,11 +60,11 @@ void MicroYamlWriter::Close( ) {
 	if ( !m_path.empty( ) ) {
 		auto file = MicroFile{ };
 
-		if ( file.Open( m_path, MicroFileAccessors::MFA_WRITE ) ) {
+		if ( file.Open( m_path, MicroFileAccessors::Write, MicroFileTypes::Text ) ) {
 			m_emitter << YAML::EndMap;
 
 			auto* string = m_emitter.c_str( );
-			auto length = (uint32_t)strlen( string );
+			auto length  = (uint32_t)strlen( string );
 
 			file.Write( length, string );
 			file.Close( );

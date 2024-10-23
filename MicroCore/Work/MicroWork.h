@@ -31,7 +31,7 @@
 
 #pragma once
 
-#include "MicroYamlWriter.h"
+#include "../Yaml/MicroYamlWriter.h"
 
 /**
  * MicroWorkRequirements concept

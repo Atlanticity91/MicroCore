@@ -104,7 +104,7 @@ uint32_t MicroWorkManager::GetCount( ) const {
 
 bool MicroWorkManager::PopWork( MicroWork& work ) {
 	auto has_work = false;
-	auto work_id  = (uint32_t)MicroWorkPriorities::MWP_COUNT;
+	auto work_id  = (uint32_t)MicroWorkPriorities::COUNT;
 	
 	m_mutex.lock( );
 

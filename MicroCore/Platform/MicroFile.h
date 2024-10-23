@@ -39,15 +39,22 @@
  **/
 enum class MicroFileAccessors : uint32_t {
 
-	MFA_NONE   = 0,
-	MFA_BINARY = 1 << 0,
-	MFA_READ   = 1 << 1,
-	MFA_WRITE  = 1 << 2,
-	MFA_APPEND = 1 << 3,
+	None  = 0,
+	Read  = 1 << 0,
+	Write = 1 << 1,
+	Edit  = Read | Write
 
-	MFA_BINARY_READ   = MFA_BINARY | MFA_READ,
-	MFA_BINARY_WRITE  = MFA_BINARY | MFA_WRITE,
-	MFA_BINARY_APPEND = MFA_BINARY | MFA_APPEND
+};
+
+/**
+ * MicroFileTypes enum class
+ * @note : Defined all possible file types.
+ **/
+enum class MicroFileTypes : uint32_t { 
+
+	Undefined = 0,
+	Text,
+	Binary 
 
 };
 
@@ -58,6 +65,7 @@ enum class MicroFileAccessors : uint32_t {
 class MicroFile final {
 
 private:
+	MicroFileTypes m_type;
 	MicroFileAccessors m_accessor;
 	FILE* m_handle;
 
@@ -77,18 +85,28 @@ public:
 	 * @note : Open file specified by the path.
 	 * @param path : Path with extension to the query file.
 	 * @param mode : File opening mode, actualy same as native c fopen.
+	 * @param type : Query file type.
 	 * @return : True for succes.
 	 **/
-	bool Open( const std::string path, const MicroFileAccessors accessor );
+	bool Open( 
+		const std::string path,
+		const MicroFileAccessors accessor,
+		const MicroFileTypes type 
+	);
 
 	/**
 	 * Open function
 	 * @note : Open file specified by the path.
 	 * @param path : Path with extension to the query file.
 	 * @param accessor : File opening mode, actualy same as native c fopen.
+	 * @param type : Query file type.
 	 * @return : True for succes.
 	 **/
-	bool Open( micro_string path, const MicroFileAccessors accessor );
+	bool Open( 
+		micro_string path,
+		const MicroFileAccessors accessor,
+		const MicroFileTypes type
+	);
 
 	/**
 	 * Seek procedure
@@ -214,6 +232,12 @@ public:
 	 * @note : Get the FILE* handle.
 	 **/
 	FILE* GetNative( ) const;
+
+	/**
+	 * GetType const function
+	 * @note : Get currrent file type.
+	 **/
+	MicroFileTypes GetType( ) const;
 
 	/**
 	 *  GetAccessor const function

@@ -35,29 +35,43 @@
 //		===	PUBLIC ===
 ////////////////////////////////////////////////////////////////////////////////////////////
 MicroFile::MicroFile( )
-	: m_accessor{ MicroFileAccessors::MFA_NONE },
+	: m_type{ MicroFileTypes::Undefined },
+	m_accessor{ MicroFileAccessors::None },
 	m_handle{ nullptr } 
 { }
 
-bool MicroFile::Open( const std::string path, const MicroFileAccessors accessor ) {
+bool MicroFile::Open(
+	const std::string path,
+	const MicroFileAccessors accessor,
+	const MicroFileTypes type 
+) {
 	auto* path_ = path.c_str( );
 	
-	return Open( path_, accessor );
+	return Open( path_, accessor, type );
 }
 
-bool MicroFile::Open( micro_string path, const MicroFileAccessors accessor ) {
+bool MicroFile::Open( 
+	micro_string path,
+	const MicroFileAccessors accessor,
+	const MicroFileTypes type 
+) {
 	auto file_mode = GetFileMode( accessor );
+	auto result    = accessor > MicroFileAccessors::None && type > MicroFileTypes::Undefined;
 
-	m_accessor = accessor;
+	if ( result ) {
+		m_type	   = type;
+		m_accessor = accessor;
 
-#	ifdef _WIN64
-	return accessor > MicroFileAccessors::MFA_NONE && fopen_s( &m_handle, path, file_mode ) == 0;
-#	else
-	if ( accessor > MicroFileAccessors::MFA_NONE )
+#		ifdef _WIN64
+		result = ( fopen_s( &m_handle, path, file_mode ) == 0 );
+#		else
 		m_handle = fopen( path, file_mode );
 
-	return m_handle != nullptr;
-#	endif
+		result = ( m_handle != nullptr );
+#		endif
+	}
+
+	return result;
 }
 
 void MicroFile::Seek( const uint32_t offset ) {
@@ -110,18 +124,22 @@ void MicroFile::Close( ) {
 		m_handle = nullptr;
 	}
 
-	m_accessor = MicroFileAccessors::MFA_NONE;
+	m_accessor = MicroFileAccessors::None;
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 //		===	PUBLIC GET ===
 ////////////////////////////////////////////////////////////////////////////////////////////
 bool MicroFile::GetIsValid( ) const {
-	return m_accessor > MicroFileAccessors::MFA_NONE && m_handle != nullptr;
+	return m_accessor > MicroFileAccessors::None && m_handle != nullptr;
 }
 
 FILE* MicroFile::GetNative( ) const {
 	return m_handle;
+}
+
+MicroFileTypes MicroFile::GetType( ) const {
+	return m_type;
 }
 
 MicroFileAccessors MicroFile::GetAccessor( ) const {
@@ -145,11 +163,11 @@ uint32_t MicroFile::GetSize( ) const {
 }
 
 bool MicroFile::GetCanRead( ) const {
-	return GetIsValid( ) && ( (uint32_t)m_accessor & (uint32_t)MicroFileAccessors::MFA_READ );
+	return GetIsValid( ) && ( (uint32_t)m_accessor & (uint32_t)MicroFileAccessors::Read );
 }
 
 bool MicroFile::GetCanWrite( ) const {
-	return GetIsValid( ) && ( (uint32_t)m_accessor & (uint32_t)MicroFileAccessors::MFA_WRITE );
+	return GetIsValid( ) && ( (uint32_t)m_accessor & (uint32_t)MicroFileAccessors::Write );
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////
@@ -159,13 +177,9 @@ micro_string MicroFile::GetFileMode( const MicroFileAccessors accessor ) const {
 	auto file_mode = "";
 
 	switch ( accessor ) {
-		case MicroFileAccessors::MFA_READ   : file_mode = "r"; break;
-		case MicroFileAccessors::MFA_WRITE  : file_mode = "w"; break;
-		case MicroFileAccessors::MFA_APPEND : file_mode = "a"; break;
-
-		case MicroFileAccessors::MFA_BINARY_READ   : file_mode = "rb"; break;
-		case MicroFileAccessors::MFA_BINARY_WRITE  : file_mode = "wb"; break;
-		case MicroFileAccessors::MFA_BINARY_APPEND : file_mode = "ab"; break;
+		case MicroFileAccessors::Read  : file_mode = ( m_type == MicroFileTypes::Text ) ? "r"  : "rb";  break;
+		case MicroFileAccessors::Write : file_mode = ( m_type == MicroFileTypes::Text ) ? "w"  : "wb";  break;
+		case MicroFileAccessors::Edit  : file_mode = ( m_type == MicroFileTypes::Text ) ? "a+" : "ab+"; break;
 
 		default: break;
 	}
