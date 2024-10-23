@@ -1,36 +1,15 @@
-project "glm"
+project "Yaml"
 	kind "StaticLib"
 	language "C++"
 	cppdialect "C++20"
 	staticruntime "off"
-	location "../Thirdparty/"
+	location "../Solution/"
+
+	defines { "YAML_CPP_STATIC_DEFINE" }
 
 	files { 
-		"../Thirdparty/glm/glm/**.h", 
-		"../Thirdparty/glm/glm/**.hpp" 
-	}
-
-project "spdlog"
-	kind "StaticLib"
-	language "C++"
-	cppdialect "C++20"
-	staticruntime "off"
-	location "../Thirdparty/"
-
-	files { "../Thirdparty/spdlog/include/spdlog/**.h" }
-
-project "yaml-cpp"
-	kind "StaticLib"
-	language "C++"
-	cppdialect "C++20"
-    staticruntime "off"
-    location "../Thirdparty/"
-
-    defines { "YAML_CPP_STATIC_DEFINE" }
-
-    files { 
-    	"../Thirdparty/yaml-cpp/src/**.h",
-    	"../Thirdparty/yaml-cpp/src/**.cpp"
+		"../Thirdparty/yaml-cpp/src/**.h",
+		"../Thirdparty/yaml-cpp/src/**.cpp"
 	}
 
 	includedirs {
@@ -40,11 +19,18 @@ project "yaml-cpp"
 	targetdir "%{wks.location}/bin/"
 	objdir "%{wks.location}/bin-int/%{prj.name}"
 
+	--- WINDOWS
 	filter "system:windows"
 		systemversion "latest"
 		defines { "WINDOWS" }
 		flags { "MultiProcessorCompile" }
 
+	--- LINUX
+	filter "system:linux"
+		systemversion "latest"
+		defines { "LINUX" }
+
+	--- CONFIGURATION
 	filter "configurations:Debug"
 		defines { "DEBUG" }
 		runtime "Debug"

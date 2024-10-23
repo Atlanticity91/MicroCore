@@ -2,19 +2,16 @@ project "MicroCore"
 	kind "StaticLib"
 	language "C++"
 	cppdialect "C++20"
-    staticruntime "off"
+	staticruntime "off"
 
-    defines { "_CRT_SECURE_NO_WARNINGS" }
+	defines { "_CRT_SECURE_NO_WARNINGS" }
 
 	files { "../MicroCore/**.h", "../MicroCore/**.cpp" }
-
-	pchheader "__micro_core_pch.h"
-    pchsource "../MicroCore/__micro_core_pch.cpp"
 
 	targetdir "%{wks.location}/bin/"
 	objdir "%{wks.location}/bin-int/%{prj.name}"
 
-    links { "yaml-cpp" }
+	links { "Yaml" }
 
 	includedirs {
 		"%{wks.location}/MicroCore/",
@@ -29,11 +26,21 @@ project "MicroCore"
 		"%{wks.location}/Thirdparty/yaml-cpp/include/"
 	}
 
-    filter "system:windows"
+	--- WINDOWS
+	filter "system:windows"
 		systemversion "latest"
 		defines { "WINDOWS" }
 		flags { "MultiProcessorCompile" }
 
+		pchheader "__micro_core_pch.h"
+		pchsource "../MicroCore/__micro_core_pch.cpp"
+
+	--- LINUX
+	filter "system:linux"
+		systemversion "latest"
+		defines { "LINUX" }
+	
+	--- CONFIGURATION
 	filter "configurations:Debug"
 		defines { "DEBUG" }
 		runtime "Debug"
