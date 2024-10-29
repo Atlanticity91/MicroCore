@@ -32,6 +32,7 @@
 #pragma once
 
 extern "C" {
+	#include <stddef.h>
 	#include <stdlib.h>
 	#include <stdio.h>
 	#include <string.h>
@@ -46,6 +47,7 @@ extern "C" {
 #include <condition_variable>
 #include <filesystem>
 #include <functional>
+#include <iterator>
 #include <limits>
 #include <map>
 #include <memory>
@@ -63,6 +65,8 @@ extern "C" {
 #include <xhash>
 
 #define micro_unused( VAR ) ( (void)VAR )
+#define micro_stringifyx( TEXT ) #TEXT
+#define micro_stringify( TEXT ) micro_stringifyx( TEXT )
 
 typedef const char* micro_string;
 

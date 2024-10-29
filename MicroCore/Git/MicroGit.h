@@ -31,4 +31,26 @@
 
 #pragma once 
 
-#include "Git/MicroGit.h"
+#include "../Work/MicroWorkManager.h"
+
+class MicroGit final {
+
+public:
+	/**
+	 * Constructor
+	 **/
+	MicroGit( );
+
+	/**
+	 * Destructor 
+	 **/
+	~MicroGit( ) = default;
+	
+	/**
+	 * Initialize function
+	 * @note : Initialize git to a query folder.
+	 * @return : Return true when Initialization succeeded.
+	 **/
+	bool Initialize( const std::string& path );
+
+};

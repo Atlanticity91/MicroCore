@@ -31,7 +31,7 @@
 
 #pragma once
 
-#include "MicroMath.h"
+#include "../Maths/MicroMath.h"
 
 #pragma warning( push, 0 )
 #	include <spdlog/spdlog.h>

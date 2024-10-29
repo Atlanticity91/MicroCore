@@ -179,4 +179,30 @@ namespace micro {
 		return hash;
 	}
 
+	uint64_t hash64( const std::string& string ) {
+		auto* pointer = string.c_str( );
+		auto length   = (uint32_t)string.size( );
+
+		return hash64( length, pointer );
+	}
+
+	uint64_t hash64( micro_string string ) {
+		auto length = (uint32_t)strlen( string );
+
+		return hash64( length, string );
+	}
+
+	uint64_t hash64( const uint32_t length, micro_string string ) {
+		micro_assert( pointer != nullptr, "You can't calculate the 32-bits hash with an invalid string pointer." );
+
+		// Implementation based on FNV1a hashing function.
+		auto hash_id = (uint64_t)0;
+		auto hash	 = 0xcbf29ce484222325;
+
+		while ( hash_id < length )
+			hash = ( hash ^ (uint64_t)string[ 0 ] ) * 0x100000001b3;
+
+		return hash;
+	}
+
 };

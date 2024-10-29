@@ -31,7 +31,7 @@ project "MicroCore"
 		systemversion "latest"
 		defines { "WINDOWS" }
 		flags { "MultiProcessorCompile" }
-
+		
 		pchheader "__micro_core_pch.h"
 		pchsource "../MicroCore/__micro_core_pch.cpp"
 

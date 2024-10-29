@@ -7,3 +7,9 @@
 [submodule "Thirdparty/yaml-cpp"]
 	path = Thirdparty/yaml-cpp
 	url = https://github.com/jbeder/yaml-cpp.git
+[submodule "Thirdparty/libgit2"]
+	path = Thirdparty/libgit2
+	url = https://github.com/libgit2/libgit2
+[submodule "Thirdparty/libssh2"]
+	path = Thirdparty/libssh2
+	url = https://github.com/libssh2/libssh2

@@ -31,7 +31,7 @@
 
 #pragma once 
 
-#include "../Utils/MicroLog.h"
+#include "../Log/MicroLog.h"
 
 #define YAML_CPP_STATIC_DEFINE
 #include <yaml-cpp/yaml.h>
@@ -53,8 +53,8 @@ namespace YAML {
             if ( !node.IsSequence( ) || node.size( ) != 2 )
                 return false;
 
-            rhs.x = node[ 0 ].as<uint32_t>( );
-            rhs.y = node[ 1 ].as<uint32_t>( );
+            rhs.x = node[ 0 ].as<micro_upoint::value_type>( );
+            rhs.y = node[ 1 ].as<micro_upoint::value_type>( );
 
             return true;
         }
@@ -75,8 +75,8 @@ namespace YAML {
             if ( !node.IsSequence( ) || node.size( ) != 2 )
                 return false;
 
-            rhs.x = node[ 0 ].as<int32_t>( );
-            rhs.y = node[ 1 ].as<int32_t>( );
+            rhs.x = node[ 0 ].as<micro_point::value_type>( );
+            rhs.y = node[ 1 ].as<micro_point::value_type>( );
 
             return true;
         }
@@ -97,8 +97,8 @@ namespace YAML {
             if ( !node.IsSequence( ) || node.size( ) != 2 )
                 return false;
 
-            rhs.x = node[ 0 ].as<float>( );
-            rhs.y = node[ 1 ].as<float>( );
+            rhs.x = node[ 0 ].as<micro_vec2::value_type>( );
+            rhs.y = node[ 1 ].as<micro_vec2::value_type>( );
 
             return true;
         }
@@ -120,9 +120,9 @@ namespace YAML {
             if ( !node.IsSequence( ) || node.size( ) != 3 )
                 return false;
 
-            rhs.x = node[ 0 ].as<float>( );
-            rhs.y = node[ 1 ].as<float>( );
-            rhs.z = node[ 2 ].as<float>( );
+            rhs.x = node[ 0 ].as<micro_vec3::value_type>( );
+            rhs.y = node[ 1 ].as<micro_vec3::value_type>( );
+            rhs.z = node[ 2 ].as<micro_vec3::value_type>( );
 
             return true;
         }
@@ -141,14 +141,14 @@ namespace YAML {
             return node;
         }
 
-        static bool decode( const Node& node, micro_vec3& rhs ) {
+        static bool decode( const Node& node, micro_vec4& rhs ) {
             if ( !node.IsSequence( ) || node.size( ) != 4 )
                 return false;
 
-            rhs.x = node[ 0 ].as<float>( );
-            rhs.y = node[ 1 ].as<float>( );
-            rhs.z = node[ 2 ].as<float>( );
-            rhs.z = node[ 3 ].as<float>( );
+            rhs.x = node[ 0 ].as<micro_vec4::value_type>( );
+            rhs.y = node[ 1 ].as<micro_vec4::value_type>( );
+            rhs.z = node[ 2 ].as<micro_vec4::value_type>( );
+            rhs.z = node[ 3 ].as<micro_vec4::value_type>( );
 
             return true;
         }
