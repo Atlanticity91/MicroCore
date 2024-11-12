@@ -31,7 +31,7 @@
 
 #pragma once
 
-#include "MicroMat4.h"
+#include "MicroInterpolation.h"
 
 namespace micro {
 
@@ -95,33 +95,5 @@ namespace micro {
 	 * @param string : String to hash.
 	 **/
 	micro_nodiscard uint64_t hash64( const uint32_t length, micro_string string );
-
-	/**
-	 * Lerp template function
-	 * @note : Perform linear interpolation between source and destination.
-	 * @template Type : Type of the element to lerp.
-	 * @param source : Query source value.
-	 * @param destination : Query destination value.
-	 * @param alpha : Scalar controlling interpolation in range [ 0.f : 1.f ]
-	 * @return : Return interpolation between source and destination by alpha.
-	 **/
-	template<typename Type>
-	micro_nodiscard Type Lerp( const Type& source, const Type& destination, const float alpha ) {
-		return source + alpha * ( destination - source );
-	};
-
-	/**
-	 * LerpStable function
-	 * @note : Perform linear interpolation between source and destination.
-	 * @template Type : Type of the element to lerp.
-	 * @param source : Query source value.
-	 * @param destination : Query destination value.
-	 * @param alpha : Scalar controlling interpolation in range [ 0.f : 1.f ]
-	 * @return : Return interpolation between source and destination by alpha.
-	 **/
-	template<typename Type>
-	micro_nodiscard Type LerpStable( const Type& source, const Type& destination, const float alpha ) {
-		return source * ( 1.f - alpha ) + destination * alpha;
-	};
 
 };
