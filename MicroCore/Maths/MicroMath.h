@@ -40,6 +40,7 @@ namespace micro {
 	 * @note : Calculate CRC 32 bits for checksum validation.
 	 * @param data : Data used to calculate the checksum value.
 	 **/
+	micro_nodiscard_cause( "Cyclic Redundancy Checksum calculation is expensive" ) 
 	uint32_t crc32( const std::vector<uint8_t>& data );
 
 	/**
@@ -48,6 +49,7 @@ namespace micro {
 	 * @param length : Length of data buffer.
 	 * @param pointer : Pointer to data buffer.
 	 **/
+	micro_nodiscard_cause( "Cyclic Redundancy Checksum calculation is expensive" )
 	uint32_t crc32( const uint32_t length, const uint8_t* pointer );
 	
 	/**
@@ -55,14 +57,14 @@ namespace micro {
 	 * @note : Calculate 32 bits based hash for string.
 	 * @param string : String to hash.
 	 **/
-	uint32_t hash32( const std::string& string );
+	micro_nodiscard uint32_t hash32( const std::string& string );
 
 	/**
 	 * hash32 function
 	 * @note : Calculate 32 bits based hash for string.
 	 * @param string : String to hash.
 	 **/
-	uint32_t hash32( micro_string string );
+	micro_nodiscard uint32_t hash32( micro_string string );
 
 	/**
 	 * hash32 function
@@ -70,21 +72,21 @@ namespace micro {
 	 * @param length : Length of string to hash.
 	 * @param string : String to hash.
 	 **/
-	uint32_t hash32( const uint32_t length, micro_string string );
+	micro_nodiscard uint32_t hash32( const uint32_t length, micro_string string );
 
 	/**
 	 * hash64 function
 	 * @note : Calculate 64 bits based hash for string.
 	 * @param string : String to hash.
 	 **/
-	uint64_t hash64( const std::string& string );
+	micro_nodiscard uint64_t hash64( const std::string& string );
 
 	/**
 	 * hash32 function
 	 * @note : Calculate 64 bits based hash for string.
 	 * @param string : String to hash.
 	 **/
-	uint64_t hash64( micro_string string );
+	micro_nodiscard uint64_t hash64( micro_string string );
 
 	/**
 	 * hash64 function
@@ -92,6 +94,34 @@ namespace micro {
 	 * @param length : Length of string to hash.
 	 * @param string : String to hash.
 	 **/
-	uint64_t hash64( const uint32_t length, micro_string string );
+	micro_nodiscard uint64_t hash64( const uint32_t length, micro_string string );
+
+	/**
+	 * Lerp template function
+	 * @note : Perform linear interpolation between source and destination.
+	 * @template Type : Type of the element to lerp.
+	 * @param source : Query source value.
+	 * @param destination : Query destination value.
+	 * @param alpha : Scalar controlling interpolation in range [ 0.f : 1.f ]
+	 * @return : Return interpolation between source and destination by alpha.
+	 **/
+	template<typename Type>
+	micro_nodiscard Type Lerp( const Type& source, const Type& destination, const float alpha ) {
+		return source + alpha * ( destination - source );
+	};
+
+	/**
+	 * LerpStable function
+	 * @note : Perform linear interpolation between source and destination.
+	 * @template Type : Type of the element to lerp.
+	 * @param source : Query source value.
+	 * @param destination : Query destination value.
+	 * @param alpha : Scalar controlling interpolation in range [ 0.f : 1.f ]
+	 * @return : Return interpolation between source and destination by alpha.
+	 **/
+	template<typename Type>
+	micro_nodiscard Type LerpStable( const Type& source, const Type& destination, const float alpha ) {
+		return source * ( 1.f - alpha ) + destination * alpha;
+	};
 
 };

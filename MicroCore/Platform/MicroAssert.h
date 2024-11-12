@@ -38,8 +38,8 @@
 #   define micro_assert( CHECK, FORMAT, ... )\
 	    do {\
             if (\
-                !( CHECK ) &&\
-                ( 1 == _CrtDbgReport( _CRT_ASSERT, __FILE__, __LINE__, #CHECK, FORMAT, __VA_ARGS__ ) )\
+                !( ( CHECK ) ) &&\
+                ( 1 == _CrtDbgReport( _CRT_ASSERT, __FILE__, __LINE__, #CHECK, ( FORMAT ), ( __VA_ARGS__ ) ) )\
             )\
                 __debugbreak( );\
         } while( 0 )

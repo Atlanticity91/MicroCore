@@ -65,8 +65,13 @@ extern "C" {
 #include <xhash>
 
 #define micro_unused( VAR ) ( (void)VAR )
-#define micro_stringifyx( TEXT ) #TEXT
+#define micro_stringifyx( TEXT ) ( #TEXT )
 #define micro_stringify( TEXT ) micro_stringifyx( TEXT )
+#define micro_nodiscard_cause( MESSAGE ) [[nodiscard( MESSAGE )]]
+#define micro_nodiscard micro_nodiscard_cause( "" )
+#define micro_depreated( SINCE ) [[deprecated( "Since : " micro_stringify( SINCE ) )]]
+#define micro_depreated_for( SINCE, REPLACEMENT )\
+	[[deprecated( "Since : " micro_stringify( SINCE ) ", instead use : " micro_stringify( REPLACEMENT ) )]]
 
 typedef const char* micro_string;
 
