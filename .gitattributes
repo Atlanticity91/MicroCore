@@ -1,0 +1,2 @@
+Thirdparty/libclang/windows/libclang.dll filter=lfs diff=lfs merge=lfs -text
+Thirdparty/libclang/windows/libclang.lib filter=lfs diff=lfs merge=lfs -text
