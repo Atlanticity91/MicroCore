@@ -31,20 +31,31 @@
 
 #pragma once 
 
-#include "MicroReflectNative.h"
+#include "Tool/MicroReflectParser.h"
 
-#define MICRO_FIELD( ... )
-#define MICRO_FUNCTION( ... )
-#define MICRO_ENUM( ... ) enum
-#define MICRO_UNION( ... ) union 
-#define MICRO_STRUCT( ... ) struct
-#define MICRO_CLASS( ... ) class
-#define MICRO_REFLECT_STRUCT( )\
-	template<class T> \
-	friend const micro::ReflectStruct* micro::GetStructImpl( micro::ReflectStructTag<T> ) noexcept;
-#define MICRO_REFLECT_CLASS( )\
-	template<class T> \
-	friend const micro::ReflectClass* micro::GetClassImpl( micro::ReflectClassTag<T> ) noexcept;
+#ifndef __MICRO_REFLECT__
+#	define MICRO_FIELD( ... )
+#	define MICRO_FUNCTION( ... )
+#	define MICRO_ENUM( ... ) enum
+#	define MICRO_UNION( ... ) union 
+#	define MICRO_STRUCT( ... ) struct
+#	define MICRO_CLASS( ... ) class
+#	define MICRO_REFLECT_STRUCT( )\
+		template<class T> \
+		friend const micro::ReflectStruct* micro::GetStructImpl( micro::ReflectStructTag<T> ) noexcept;
+#	define MICRO_REFLECT_CLASS( )\
+		template<class T> \
+		friend const micro::ReflectClass* micro::GetClassImpl( micro::ReflectClassTag<T> ) noexcept;
+#else
+#	define MICRO_FIELD( ... ) __attribute__(( annotate( "reflect-field;" #__VA_ARGS__ )))
+#	define MICRO_FUNCTION( ... ) __attribute__(( annotate( "reflect-function;" #__VA_ARGS__ )))
+#	define MICRO_ENUM( ... ) enum __attribute__(( annotate( "reflect-enum;" #__VA_ARGS__ )))
+#	define MICRO_UNION( ... ) union __attribute__(( annotate( "reflect-union;" #__VA_ARGS__ )))
+#	define MICRO_STRUCT( ... ) struct __attribute__(( annotate( "reflect-struct;" #__VA_ARGS__ )))
+#	define MICRO_CLASS( ... ) class __attribute__(( annotate( "reflect-class;" #__VA_ARGS__ )))
+#	define MICRO_REFLECT_STRUCT( )
+#	define MICRO_REFLECT_CLASS( )
+#endif
 
 namespace micro {
 
