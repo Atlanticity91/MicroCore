@@ -45,8 +45,8 @@ namespace micro {
 	{ }
 
 	ReflectType::ReflectType( micro_string name, const size_t size )
-		: name{ name },
-		size{ size } 
+		: Name{ name },
+		Size{ size } 
 	{ };
 
 };

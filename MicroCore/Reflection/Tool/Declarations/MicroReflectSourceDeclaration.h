@@ -47,7 +47,7 @@ struct MicroReflectSourceDeclaration : public MicroReflectNamespaceDeclaration {
 	 * Constructor
 	 * @param source : Query source file path.
 	 **/
-	MicroReflectSourceDeclaration( const std::filesystem::path& source );
+	MicroReflectSourceDeclaration( const std::filesystem::path&& source );
 
 	/**
 	 * GetIsValid const function

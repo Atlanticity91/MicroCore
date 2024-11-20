@@ -29,31 +29,14 @@
  *
  **/
 
-#include "__micro_core_pch.h"
+#pragma once 
 
-////////////////////////////////////////////////////////////////////////////////////////////
-//		===	PUBLIC ===
-////////////////////////////////////////////////////////////////////////////////////////////
-namespace micro {
+#include "../../Platform/MicroFile.h"
 
-	ReflectStruct::ReflectStruct( )
-		: ReflectStruct{ "", 0, { } } 
-	{ };
+enum class MicroReflectAccessor : uint32_t {
 
-	ReflectStruct::ReflectStruct(
-		micro_string name,
-		const size_t size
-	)
-		: ReflectStruct{ name, size, { } } 
-	{ };
-
-	ReflectStruct::ReflectStruct(
-		micro_string name,
-		const size_t size,
-		const Fields_t fields
-	)
-		: ReflectType{ name, size },
-		Fields{ fields } 
-	{ };
+	Public = 0,
+	Protected,
+	Private
 
 };

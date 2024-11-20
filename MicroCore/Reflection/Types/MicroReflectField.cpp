@@ -44,7 +44,7 @@ namespace micro {
 		micro_string name,
 		const ReflectType* type
 	)
-		: ReflectField{ name, 0, type }
+		: ReflectField{ name, 0, type, MicroReflectAccessor::Public }
 	{ }
 
 	ReflectField::ReflectField(
@@ -52,8 +52,18 @@ namespace micro {
 		const size_t offset,
 		const ReflectType* type
 	)
+		: ReflectField{ name, offset, type, MicroReflectAccessor::Public }
+	{ }
+
+	ReflectField::ReflectField(
+		micro_string name,
+		const size_t offset,
+		const ReflectType* type,
+		const MicroReflectAccessor accessor
+	)
 		: ReflectType{ name, offset },
-		type{ (ReflectType*)type }
+		Type{ (ReflectType*)type },
+		Accessor{ accessor }
 	{ }
 
 };

@@ -38,7 +38,7 @@ MicroReflectSourceDeclaration::MicroReflectSourceDeclaration( )
 { }
 
 MicroReflectSourceDeclaration::MicroReflectSourceDeclaration( 
-	const std::filesystem::path& source 
+	const std::filesystem::path&& source 
 )
 	: MicroReflectNamespaceDeclaration{ },
 	Source{ std::move( source ) },
@@ -48,6 +48,5 @@ MicroReflectSourceDeclaration::MicroReflectSourceDeclaration(
 bool MicroReflectSourceDeclaration::GetIsValid( ) const {
 	return  Enumerations.size( ) > 0 ||
 			Functions.size( )    > 0 ||
-			Structures.size( )   > 0 ||
 			Classes.size( )		 > 0;
 }

@@ -37,19 +37,82 @@
 namespace micro { 
 
 	ReflectFunction::ReflectFunction( )
-		: ReflectFunction{ "", nullptr, { } } 
-	{ };
+		: ReflectFunction{ "", MicroReflectAccessor::Public, GetType<void>( ) }
+	{ }
+
+	ReflectFunction::ReflectFunction( micro_string name )
+		: ReflectFunction{ name, MicroReflectAccessor::Public, GetType<void>( ), Parameters_t{ } }
+	{ }
+
+	ReflectFunction::ReflectFunction(
+		micro_string name,
+		const MicroReflectAccessor accessor
+	)
+		: ReflectFunction{ name, accessor, GetType<void>( ), Parameters_t{ } }
+	{ }
+
+	ReflectFunction::ReflectFunction(
+		micro_string name,
+		const ReflectType* return_type
+	)
+		: ReflectFunction{ name, MicroReflectAccessor::Public, return_type, Parameters_t{ } }
+	{ }
+
+	ReflectFunction::ReflectFunction(
+		micro_string name,
+		const Parameters_t parameters
+	) 
+		: ReflectFunction{ name, MicroReflectAccessor::Public, GetType<void>( ), parameters }
+	{ }
+
+	ReflectFunction::ReflectFunction(
+		micro_string name,
+		const MicroReflectAccessor accessor,
+		const ReflectType* return_type
+	)
+		: ReflectFunction{ name, accessor, return_type, Parameters_t{ } }
+	{ }
+
+	ReflectFunction::ReflectFunction(
+		micro_string name,
+		const MicroReflectAccessor accessor,
+		const Parameters_t parameters
+	)
+		: ReflectFunction{ name, accessor, GetType<void>( ), parameters }
+	{ }
 
 	ReflectFunction::ReflectFunction(
 		micro_string name,
 		const ReflectType* return_type,
 		const Parameters_t parameters
 	)
+		: ReflectFunction{ name, MicroReflectAccessor::Public, return_type, parameters }
+	{ }
+
+	ReflectFunction::ReflectFunction(
+		micro_string name,
+		const MicroReflectAccessor accessor,
+		const ReflectType* return_type,
+		const Parameters_t parameters
+	)
 		: ReflectType{ name },
-		return_type{ (ReflectType*)return_type },
-		parameters{ parameters } 
+		Accessor{ accessor },
+		ReturnType{ return_type },
+		Parameters{ parameters }
 	{
-		size = parameters.GetCount( );
-	};
+		Size = parameters.GetCount( );
+	}
+
+	ReflectFunction::ReflectFunction(
+		micro_string name,
+		const MicroReflectAccessor accessor,
+		const ReflectType* return_type,
+		std::function<Parameters_t( )> lambda
+	)
+		: ReflectFunction{ name, accessor, return_type, Parameters_t{ } }
+	{
+		Parameters = std::invoke( lambda );
+		Size	   = Parameters.GetCount( );
+	}
 
 };

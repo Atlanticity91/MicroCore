@@ -47,16 +47,13 @@ struct MicroReflectEnumDeclaration : public MicroReflectDeclaration {
 	 * Constructor
 	 * @paran name : Query enum name.
 	 **/
-	MicroReflectEnumDeclaration( const std::string& name );
+	MicroReflectEnumDeclaration( std::string&& name );
 
 	/**
 	 * Constructor
 	 * @paran name : Query enum name.
 	 * @param cast_type : Query enum cast type.
 	 **/
-	MicroReflectEnumDeclaration( 
-		const std::string& name,
-		const std::string& cast_type
-	);
+	MicroReflectEnumDeclaration( std::string&& name, std::string&& cast_type );
 
 };

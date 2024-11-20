@@ -44,8 +44,8 @@ namespace micro {
 		micro_string name, 
 		const ReflectType* type 
 	)
-		: name{ name },
-		type{ (ReflectType*)type } 
+		: Name{ name },
+		Type{ type } 
 	{ };
 
 };

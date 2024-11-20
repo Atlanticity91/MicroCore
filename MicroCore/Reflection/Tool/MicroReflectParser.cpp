@@ -40,14 +40,7 @@ MicroReflectParser::MicroReflectParser( )
 	m_directories{ },
 	m_emitters{ },
 	m_options{ }
-{
-	AddExtensions( { ".h", ".hpp" } );
-	AddArguments( { "-x", "c++", "-std=c++20", "-D__MICRO_REFLECT__" } );
-	AddOptions( { 
-		CXTranslationUnit_IncludeAttributedTypes,
-		CXTranslationUnit_VisitImplicitAttributes 
-	} );
-}
+{ }
 
 void MicroReflectParser::AddExtension( const std::string& extension ) {
 	if ( !extension.empty( ) )
@@ -88,6 +81,15 @@ void MicroReflectParser::AddDirectories( std::initializer_list<std::string> dire
 		AddDirectory( directory );
 }
 
+void MicroReflectParser::InitializeGeneric( ) {
+	AddExtensions( { ".h", ".hpp" } );
+	AddArguments( { "-x", "c++", "-std=c++20", "-D__MICRO_REFLECT__" } );
+	AddOptions( {
+		CXTranslationUnit_IncludeAttributedTypes,
+		CXTranslationUnit_VisitImplicitAttributes
+	} );
+}
+
 void MicroReflectParser::ParseArguments( 
 	const int32_t argument_count, 
 	const char** argument_values
@@ -98,7 +100,7 @@ void MicroReflectParser::ParseArguments(
 		const auto* argument = argument_values[ arg_count ];
 		const auto value	 = std::string{ argument + 2 };
 
-		if ( argument[ 0 ] != '-' || strlen( argument ) < 3 )
+		if ( argument[ 0 ] != '-' || value.size( ) == 0 )
 			continue;
 
 		switch ( argument[ 1 ] ) {
@@ -112,61 +114,84 @@ void MicroReflectParser::ParseArguments(
 }
 
 void MicroReflectParser::Run( const std::filesystem::path& source_path ) {
-	if ( !std::filesystem::is_directory( source_path ) ) {
-		auto declaration = MicroReflectSourceDeclaration{ source_path };
-		auto entry_ext   = source_path.extension( );
-		auto extension   = entry_ext.string( );
+	const auto arguments = GetArguments( );
 
-		if ( CanParse( extension ) && ProcessClang( source_path, declaration ) ) {
-			for ( const auto& emitter : m_emitters )
-				emitter->Run( declaration );
-		}
-	} else {
-		for ( const auto& entry : std::filesystem::directory_iterator{ source_path } ) {
-			auto entry_path = entry.path( );
-			
-			Run( entry_path );
-		}
-	}
+	RunParser( arguments, source_path );
 }
 
 void MicroReflectParser::Run(
 	const int32_t argument_count,
-	const char** argument_values
+	micro_string* argument_values
 ) {
 	ParseArguments( argument_count, argument_values );
 
+	const auto arguments = GetArguments( );
+
 	for ( const auto& directory : m_directories )
-		Run( { directory } );
+		RunParser( arguments, { directory } );
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 //		===	PRIVATE ===
 ////////////////////////////////////////////////////////////////////////////////////////////
-bool MicroReflectParser::ProcessClang(
-	const std::filesystem::path& source_path,
-	MicroReflectSourceDeclaration& declaration
+void MicroReflectParser::RunParser(
+	const std::vector<micro_string>& arguments,
+	const std::filesystem::path& source_path
 ) {
-	auto clang_index = clang_createIndex( 0, 0 );
-	auto path_string = source_path.string( );
-	auto arguments   = GetArguments( );
-	auto* arg_values = arguments.data( );
-	auto arg_count   = (uint32_t)arguments.size( );
-	auto result		 = false;
-	auto* path		 = path_string.c_str( );
-	
-	if ( auto clang_unit = clang_parseTranslationUnit( clang_index, path, arg_values, arg_count, NULL, 0, m_options ) ) {
-		auto root = clang_getTranslationUnitCursor( clang_unit );
+	micro_assert( m_extensions.size( ) > 0, "You can't run reflection parser without supported extensions filled." );
+	micro_assert( m_arguments.size( ) > 0, "You can't run reflection parser without at least one argument for language specification." );
 
-		clang_visitChildren( root, ClangVisitor, (CXClientData)&declaration );
+	if ( !std::filesystem::is_directory( source_path ) ) {
+		auto entry_ext = source_path.extension( );
+		auto extension = entry_ext.string( );
+		auto context   = MicroReflectParsingContext{ std::move( source_path ) };
+
+		if ( CanParse( extension ) && ProcessClang( arguments, context ) )
+			RunEmitters( context );
+	} else {
+		for ( const auto& entry : std::filesystem::directory_iterator{ source_path } ) {
+			const auto entry_path = entry.path( );
+
+			Run( entry_path );
+		}
+	}
+}
+
+bool MicroReflectParser::ProcessClang( 
+	const std::vector<micro_string>& arguments, 
+	MicroReflectParsingContext& context 
+) {
+	const auto* path = context.GetPath( );
+	const auto* argv = arguments.data( );
+	const auto argc  = (uint32_t)arguments.size( );
+	auto clang_index = clang_createIndex( 0, 0 );
+	auto result		 = false;
+	
+	if ( auto clang_unit = clang_parseTranslationUnit( clang_index, path, argv, argc, NULL, 0, m_options ) ) {
+		auto* user_data  = micro_ptr_as( context, CXClientData );
+		auto root		 = clang_getTranslationUnitCursor( clang_unit );
+
+		clang_visitChildren( root, ClangVisitor, user_data );
 		clang_disposeTranslationUnit( clang_unit );
 
-		result = declaration.GetIsValid( );
+		result = context.GetIsValid( );
 	}
 
 	clang_disposeIndex( clang_index );
 
 	return result;
+}
+
+void MicroReflectParser::RunEmitters( MicroReflectParsingContext& context ) {
+	for ( auto& emitter : m_emitters )
+		emitter->PreRun( context );
+
+	for ( const auto& emitter : m_emitters ) {
+		if ( !context.GetCanEmit( ) )
+			break;
+		
+		emitter->Run( context );
+	}
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////
@@ -177,33 +202,36 @@ CXChildVisitResult MicroReflectParser::ClangVisitor(
 	CXCursor parent,
 	CXClientData user_data
 ) {
-	auto* declaration = reinterpret_cast<MicroReflectSourceDeclaration*>( user_data );
+	micro_assert( user_data != nullptr, "You can't visit libclang Ast without user_data for storing parsed information." );
 
-	const CXCursorKind parent_kind = clang_getCursorKind( parent );
-	const CXCursorKind cursor_kind = clang_getCursorKind( cursor );
-	const CXType cursor_type = clang_getCursorType( cursor );
-	const bool is_attr = clang_isAttribute( cursor_kind ) != 0;
-	const bool has_attr = clang_Cursor_hasAttrs( cursor );
+	auto parent_kind = clang_getCursorKind( parent );
+	auto cursor_kind = clang_getCursorKind( cursor );
+	auto* context	 = micro_cast( user_data, MicroReflectParsingContext* );
+	auto name		 = ClangGetString( clang_getCursorSpelling, cursor );
 
-	auto display_name = ClangGetString( clang_getCursorDisplayName, cursor );
-	auto spelling = ClangGetString( clang_getCursorSpelling, cursor );
-	auto parent_spelling = ClangGetString( clang_getCursorKindSpelling, parent_kind );
-	auto kind_spelling = ClangGetString( clang_getCursorKindSpelling, cursor_kind );
-	auto type_spelling = ClangGetString( clang_getTypeSpelling, cursor_type );
+	if ( parent_kind == CXCursor_TranslationUnit )
+		context->CreateDeclaration( cursor_kind, std::move( name ) );
+	else if ( cursor_kind == CXCursor_AnnotateAttr ) 
+		context->ParseAnnotation( std::move( name ) );
+	else if ( cursor_kind == CXCursor_CXXAccessSpecifier ) {
+		auto accessor = clang_getCXXAccessSpecifier( cursor );
 
-	auto format_message = std::format(
-		"[{}] {} <{}> '{}' [{}]", 
-		parent_spelling, 
-		kind_spelling, 
-		type_spelling, 
-		spelling, 
-		is_attr ? "ATTRIB" : ( has_attr ? "HAS_ATTR" : "" )
-	);
-	printf( "%s\n", format_message.c_str( ) );
+		context->ParseAccessor( accessor );
+	} else {
+		auto cursor_type = clang_getCursorType( cursor );
+		auto type		 = ClangGetString( clang_getTypeSpelling, cursor_type );
 
-	clang_visitChildren( cursor, ClangVisitor, user_data );
+		if ( cursor_kind == CXCursor_EnumConstantDecl )
+			context->CreateEnumConstant( std::move( name ) );
+		else if ( cursor_kind == CXCursor_FieldDecl ) 
+			context->CreateField( std::move( type ), std::move( name ) );
+		else if ( GetIsFunction( cursor_kind ) ) 
+			context->CreateFunction( std::move( type ), std::move( name ) );
+		else if ( cursor_kind == CXCursor_ParmDecl )
+			context->CreateParameter( std::move( type ), std::move( name ) );
+	}
 
-	return CXChildVisit_Continue;
+	return CXChildVisit_Recurse;
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////
@@ -223,12 +251,22 @@ bool MicroReflectParser::CanParse( const std::filesystem::path& extension ) cons
 	return result != last_element;
 }
 
-std::vector<const char*> MicroReflectParser::GetArguments( ) const {
+std::vector<micro_string> MicroReflectParser::GetArguments( ) const {
 	auto argument_id = m_arguments.size( );
-	auto arguments   = std::vector<const char*>{ argument_id };
+	auto arguments   = std::vector<micro_string>{ argument_id };
 
 	while ( argument_id-- > 0 )
 		arguments[ argument_id ] = m_arguments[ argument_id ].c_str( );
 
-	return arguments;
-};
+	return std::move( arguments );
+}
+
+////////////////////////////////////////////////////////////////////////////////////////////
+//		===	PRIVATE STATIC GET ===
+////////////////////////////////////////////////////////////////////////////////////////////
+bool MicroReflectParser::GetIsFunction( const CXCursorKind cursor_kind ) {
+	return  cursor_kind == CXCursor_FunctionDecl ||
+			cursor_kind == CXCursor_CXXMethod	 ||
+			cursor_kind == CXCursor_Constructor  ||
+			cursor_kind == CXCursor_Destructor;
+}

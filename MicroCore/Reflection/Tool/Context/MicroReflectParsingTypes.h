@@ -31,22 +31,15 @@
 
 #pragma once 
 
-#include "MicroReflectFieldDeclaration.h"
+#include "../Emitters/MicroReflectGenerator.h"
 
-struct MicroReflectStructDeclaration : public MicroReflectDeclaration { 
+enum MicroReflectParsingTypes : uint32_t {
 
-	std::vector<std::string> Parents;
-	std::vector<MicroReflectFieldDeclaration> Fields;
-
-	/**
-	 * Constructor
-	 **/
-	MicroReflectStructDeclaration( );
-
-	/**
-	 * Constructor
-	 * @param name : Query struct name.
-	 **/
-	MicroReflectStructDeclaration( const std::string& name );
+	MRP_TYPE_ROOT	   = 0,
+	MRP_TYPE_NAMESPACE = MRP_TYPE_ROOT,
+	MRP_TYPE_ENUM,
+	MRP_TYPE_FUNCTION,
+	MRP_TYPE_STRUCT,
+	MRP_TYPE_CLASS
 
 };

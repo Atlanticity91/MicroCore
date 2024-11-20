@@ -37,8 +37,8 @@
 namespace micro {
 
 	template<>
-	const ReflectStruct* GetStructImpl( ReflectStructTag<micro_upoint> ) noexcept {
-		static auto storage_upoint = ReflectStorageStruct<micro_upoint, 2>{ 
+	const ReflectClass* GetClassImpl( ReflectClassTag<micro_upoint> ) noexcept {
+		static auto storage_upoint = ReflectStorageClass<micro_upoint, 0, 2, 0>{ 
 			"micro_upoint",
 			[]( auto* self ){
 				self->Fields[ 0 ] = { "x", GetType<micro_upoint::value_type>( ) };

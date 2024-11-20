@@ -35,12 +35,31 @@
 //		===	PUBLIC ===
 ////////////////////////////////////////////////////////////////////////////////////////////
 MicroReflectFunctionDeclaration::MicroReflectFunctionDeclaration( )
-	: MicroReflectFunctionDeclaration{ "" }
+	: MicroReflectFunctionDeclaration{ "", "", MicroReflectAccessor::Private }
 { }
 
-MicroReflectFunctionDeclaration::MicroReflectFunctionDeclaration( const std::string& name )
-	: MicroReflectDeclaration{ name },
-	Visibility{ },
-	ReturnType{ },
+MicroReflectFunctionDeclaration::MicroReflectFunctionDeclaration( std::string&& name )
+	: MicroReflectFunctionDeclaration{ std::move( name ), "", MicroReflectAccessor::Public }
+{ }
+
+MicroReflectFunctionDeclaration::MicroReflectFunctionDeclaration(
+	std::string&& name,
+	std::string&& return_type
+)
+	: MicroReflectFunctionDeclaration{
+		std::move( name ), 
+		std::move( return_type ), 
+		MicroReflectAccessor::Public 
+	}
+{ }
+
+MicroReflectFunctionDeclaration::MicroReflectFunctionDeclaration(
+	std::string&& name,
+	std::string&& return_type,
+	const MicroReflectAccessor accessor
+)
+	: MicroReflectDeclaration{ std::move( name ) },
+	Accessor{ accessor },
+	ReturnType{ std::move( return_type ) },
 	Parameters{ }
 { }

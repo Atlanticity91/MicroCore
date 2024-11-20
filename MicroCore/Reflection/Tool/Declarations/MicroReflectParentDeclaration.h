@@ -31,25 +31,32 @@
 
 #pragma once 
 
-#include "Declarations/MicroReflectSourceDeclaration.h"
+#include "MicroReflectFunctionDeclaration.h"
 
-struct MicroReflectEmitter {
+struct MicroReflectParentDeclaration {
+
+	MicroReflectAccessor Accessor;
+	std::string Name;
 
 	/**
 	 * Constructor
 	 **/
-	MicroReflectEmitter( ) = default;
+	MicroReflectParentDeclaration( );
 
 	/**
-	 * Destructor
+	 * Constructor
+	 * @param name : Query parent name.
 	 **/
-	virtual ~MicroReflectEmitter( ) = default;
+	MicroReflectParentDeclaration( std::string&& name );
 
 	/**
-	 * Run method
-	 * @note : Generator run execution.
-	 * @param declaration : Reference to query declaration.
+	 * Constructor
+	 * @param name : Query parent name.
+	 * @param accessor : Query parent accessor.
 	 **/
-	virtual void Run( const MicroReflectSourceDeclaration& declaration ) = 0;
+	MicroReflectParentDeclaration(
+		std::string&& name,
+		const MicroReflectAccessor accessor
+	);
 
 };

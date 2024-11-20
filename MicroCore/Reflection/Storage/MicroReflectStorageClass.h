@@ -31,13 +31,14 @@
 
 #pragma once 
 
-#include "MicroReflectStorageStruct.h"
+#include "../Types/MicroReflectClass.h"
 
 namespace micro { 
 
-	template<class T, size_t FieldCount, size_t FunctionCount>
+	template<class T, size_t ParentCount, size_t FieldCount, size_t FunctionCount>
 	struct ReflectStorageClass {
 
+		ReflectStorage<ReflectParent, ParentCount> Parents;
 		ReflectStorage<ReflectField, FieldCount> Fields;
 		ReflectStorage<ReflectFunction, FunctionCount> Functions;
 		ReflectClass Detail;
@@ -52,8 +53,9 @@ namespace micro {
 		ReflectStorageClass( micro_string name, Lambda&& lambda ) 
 			: Detail{ name, sizeof( T ) } 
 		{
-			lambda( this );
-
+			std::invoke( lambda, this );
+			
+			Detail.Parents   = Parents;
 			Detail.Fields	 = Fields;
 			Detail.Functions = Functions;
 		};

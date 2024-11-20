@@ -29,42 +29,23 @@
  *
  **/
 
-#pragma once
+#include "__micro_core_pch.h"
 
-#include "../Storage/MicroReflectStorage.h"
+////////////////////////////////////////////////////////////////////////////////////////////
+//		===	PUBLIC ===
+////////////////////////////////////////////////////////////////////////////////////////////
+MicroReflectParentDeclaration::MicroReflectParentDeclaration( )
+	: MicroReflectParentDeclaration{ "", MicroReflectAccessor::Public }
+{ }
 
-namespace micro {
+MicroReflectParentDeclaration::MicroReflectParentDeclaration( std::string&& name )
+	: MicroReflectParentDeclaration{ std::move( name ), MicroReflectAccessor::Public }
+{ }
 
-	struct ReflectStruct : public ReflectType {
-
-		using Fields_t = MicroReflectIteratorStorage<ReflectField>;
-
-		Fields_t Fields;
-
-		/**
-		 * Constructor
-		 **/
-		ReflectStruct( );
-
-		/**
-		 * Constructor
-		 * @param name : Name of the struct.
-		 * @param size : Size of the struct.
-		 **/
-		ReflectStruct( micro_string name, const size_t size );
-
-		/**
-		 * Constructor
-		 * @param name : Name of the struct.
-		 * @param size : Size of the struct.
-		 * @param fields : Query struct field iterator storage.
-		 **/
-		ReflectStruct( 
-			micro_string name, 
-			const size_t size, 
-			const Fields_t fields
-		);
-
-	};
-
-};
+MicroReflectParentDeclaration::MicroReflectParentDeclaration(
+	std::string&& name,
+	const MicroReflectAccessor accessor
+)
+	: Name{ std::move( name ) },
+	Accessor{ accessor }
+{ }

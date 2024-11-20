@@ -31,7 +31,7 @@
 
 #pragma once
 
-#include "MicroMat4.h"
+#include "MicroMathConstant.h"
 
 namespace micro {
 
@@ -113,10 +113,9 @@ namespace micro {
 	micro_nodiscard Type InterpSinIn(
 		const Type& source,
 		const Type& destination,
-		const float alpha,
-		const float exponent
+		const float alpha
 	) {
-		const auto scalar = -1.f * std::cos( alpha * UE_HALF_PI ) + 1.f;
+		const auto scalar = -1.f * std::cos( alpha * MICRO_HALF_PI_F ) + 1.f;
 
 		return Lerp( source, destination, scalar );
 	};
@@ -125,10 +124,9 @@ namespace micro {
 	micro_nodiscard Type InterpSinOut(
 		const Type& source,
 		const Type& destination,
-		const float alpha,
-		const float exponent
+		const float alpha
 	) {
-		const auto scalar = std::sin( alpha * UE_HALF_PI );
+		const auto scalar = std::sin( alpha * MICRO_HALF_PI_F );
 		
 		return Lerp( source, destination, scalar );
 	};
@@ -137,8 +135,7 @@ namespace micro {
 	micro_nodiscard Type InterpSinInOut(
 		const Type& source,
 		const Type& destination,
-		const float alpha,
-		const float exponent
+		const float alpha
 	) {
 		const auto scalar = ( alpha < 0.5f ) ?
 							InterpSinIn(  0.f, 1.f, alpha * 2.f		  ) * 0.5f :
@@ -151,8 +148,7 @@ namespace micro {
 	micro_nodiscard Type InterpExpoIn(
 		const Type& source,
 		const Type& destination,
-		const float alpha,
-		const float exponent
+		const float alpha
 	) {
 		const auto scalar = ( alpha == 0.f ) ? 0.f : std::pow( 2.f, 10.f * ( alpha - 1.f ) );
 
@@ -163,8 +159,7 @@ namespace micro {
 	micro_nodiscard Type InterpExpoOut(
 		const Type& source,
 		const Type& destination,
-		const float alpha,
-		const float exponent
+		const float alpha
 	) {
 		const auto scalar = ( alpha == 1.f ) ? 1.f : -std::pow( 2.f, -10.f * alpha ) + 1.f;
 		
@@ -175,8 +170,7 @@ namespace micro {
 	micro_nodiscard Type InterpExpoInOut(
 		const Type& source,
 		const Type& destination,
-		const float alpha,
-		const float exponent
+		const float alpha
 	) {
 		const auto scalar = ( alpha < 0.5f ) ?
 							InterpExpoIn(  0.f, 1.f, alpha * 2.f	   ) * 0.5f :

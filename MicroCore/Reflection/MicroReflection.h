@@ -40,21 +40,17 @@
 #	define MICRO_UNION( ... ) union 
 #	define MICRO_STRUCT( ... ) struct
 #	define MICRO_CLASS( ... ) class
-#	define MICRO_REFLECT_STRUCT( )\
-		template<class T> \
-		friend const micro::ReflectStruct* micro::GetStructImpl( micro::ReflectStructTag<T> ) noexcept;
-#	define MICRO_REFLECT_CLASS( )\
+#	define MICRO_REFLECT_BODY( )\
 		template<class T> \
 		friend const micro::ReflectClass* micro::GetClassImpl( micro::ReflectClassTag<T> ) noexcept;
 #else
-#	define MICRO_FIELD( ... ) __attribute__(( annotate( "reflect-field;" #__VA_ARGS__ )))
-#	define MICRO_FUNCTION( ... ) __attribute__(( annotate( "reflect-function;" #__VA_ARGS__ )))
-#	define MICRO_ENUM( ... ) enum __attribute__(( annotate( "reflect-enum;" #__VA_ARGS__ )))
-#	define MICRO_UNION( ... ) union __attribute__(( annotate( "reflect-union;" #__VA_ARGS__ )))
-#	define MICRO_STRUCT( ... ) struct __attribute__(( annotate( "reflect-struct;" #__VA_ARGS__ )))
-#	define MICRO_CLASS( ... ) class __attribute__(( annotate( "reflect-class;" #__VA_ARGS__ )))
-#	define MICRO_REFLECT_STRUCT( )
-#	define MICRO_REFLECT_CLASS( )
+#	define MICRO_FIELD( ... ) __attribute__(( annotate( "micro_reflect," #__VA_ARGS__ )))
+#	define MICRO_FUNCTION( ... ) __attribute__(( annotate( "micro_reflect," #__VA_ARGS__ )))
+#	define MICRO_ENUM( ... ) enum __attribute__(( annotate( "micro_reflect," #__VA_ARGS__ )))
+#	define MICRO_UNION( ... ) union __attribute__(( annotate( "micro_reflect," #__VA_ARGS__ )))
+#	define MICRO_STRUCT( ... ) struct __attribute__(( annotate( "micro_reflect," #__VA_ARGS__ )))
+#	define MICRO_CLASS( ... ) class __attribute__(( annotate( "micro_reflect," #__VA_ARGS__ )))
+#	define MICRO_REFLECT_BODY( )
 #endif
 
 namespace micro {
@@ -68,17 +64,6 @@ namespace micro {
 	template<class T>
 	const ReflectType* GetType( ) noexcept {
 		return GetTypeImpl( ReflectTypeTag<T>{ } );
-	};
-
-	/**
-	 * GetStruct function
-	 * @note : Get struct implementation detail.
-	 * @template T : Type of struct to process.
-	 * @return : Return pointer to the type structure detail.
-	 **/
-	template<class T>
-	const ReflectStruct* GetStruct( ) noexcept {
-		return GetStructImpl( ReflectStructTag<T>{ } );
 	};
 
 	/**

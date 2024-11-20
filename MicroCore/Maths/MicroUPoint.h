@@ -51,12 +51,12 @@ typedef glm::uvec2 micro_upoint;
 namespace micro {
 	
 	/**
-	 * GetStructImpl template function
+	 * GetClassImpl template function
 	 * @note : Implementation detail for unsigned integer point type.
 	 * @return : Return pointer to reflection type information structure.
 	 **/
 	template<>
-	extern const ReflectStruct* GetStructImpl( ReflectStructTag<micro_upoint> ) noexcept;
+	extern const ReflectClass* GetClassImpl( ReflectClassTag<micro_upoint> ) noexcept;
 
 };
 

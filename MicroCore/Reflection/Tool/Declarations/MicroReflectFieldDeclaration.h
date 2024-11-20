@@ -35,7 +35,7 @@
 
 struct MicroReflectFieldDeclaration : public MicroReflectDeclaration {
 
-	std::string Visibility;
+	MicroReflectAccessor Accessor;
 	std::string Type;
 
 	/**
@@ -48,21 +48,18 @@ struct MicroReflectFieldDeclaration : public MicroReflectDeclaration {
 	 * @param name : Query field name.
 	 * @param type : Query field type.
 	 **/
-	MicroReflectFieldDeclaration( 
-		const std::string& name,
-		const std::string& type 
-	);
+	MicroReflectFieldDeclaration( std::string&& name, std::string&& type );
 
 	/**
 	 * Constructor
 	 * @param name : Query field name.
 	 * @param type : Query field type.
-	 * @param visibility : Query field visibility.
+	 * @param accessor : Query field accessor.
 	 **/
 	MicroReflectFieldDeclaration( 
-		const std::string& name,
-		const std::string& type,
-		const std::string& visibility
+		std::string&& name,
+		std::string&& type,
+		const MicroReflectAccessor accessor
 	);
 
 };

@@ -38,15 +38,15 @@ MicroReflectEnumDeclaration::MicroReflectEnumDeclaration( )
 	: MicroReflectEnumDeclaration{ "", "" }
 { }
 
-MicroReflectEnumDeclaration::MicroReflectEnumDeclaration( const std::string& name )
-	: MicroReflectEnumDeclaration{ name, "" }
+MicroReflectEnumDeclaration::MicroReflectEnumDeclaration( std::string&& name )
+	: MicroReflectEnumDeclaration{ std::move( name ), "" }
 { }
 
 MicroReflectEnumDeclaration::MicroReflectEnumDeclaration( 
-	const std::string& name,
-	const std::string& cast_type
+	std::string&& name,
+	std::string&& cast_type
 )
-	: MicroReflectDeclaration{ name },
-	CastType{ cast_type },
+	: MicroReflectDeclaration{ std::move( name ) },
+	CastType{ std::move( cast_type ) },
 	Values{ }
 { }

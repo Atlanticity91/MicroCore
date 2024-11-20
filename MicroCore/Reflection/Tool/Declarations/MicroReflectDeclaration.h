@@ -47,6 +47,6 @@ struct MicroReflectDeclaration {
 	 * Constructor
 	 * @param name : Query declaration name.
 	 **/
-	MicroReflectDeclaration( const std::string& name );
+	MicroReflectDeclaration( std::string&& name );
 
 };

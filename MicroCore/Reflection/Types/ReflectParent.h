@@ -29,20 +29,40 @@
  *
  **/
 
-#pragma once
+#pragma once 
 
-#include "MicroUPoint.h"
-
-typedef glm::ivec2 micro_point;
+#include "MicroReflectFunction.h"
 
 namespace micro {
 
-	/**
-	 * GetClassImpl template function
-	 * @note : Implementation detail for integer point type.
-	 * @return : Return pointer to reflection type information structure.
-	 **/
-	template<>
-	extern const ReflectClass* GetClassImpl( ReflectClassTag<micro_point> ) noexcept;
+	struct ReflectClass;
+
+	struct ReflectParent {
+
+		MicroReflectAccessor Accessor;
+		const ReflectClass* Parent;
+
+		/**
+		 * Constructor
+		 **/
+		ReflectParent( );
+
+		/**
+		 * Constructor
+		 * @param parent : Query parent class.
+		 **/
+		ReflectParent( const ReflectClass* parent );
+
+		/**
+		 * Constructor
+		 * @param accessor : Query parent accessor.
+		 * @param parent : Query parent class.
+		 **/
+		ReflectParent( 
+			const MicroReflectAccessor accessor,
+			const ReflectClass* parent
+		);
+
+	};
 
 };

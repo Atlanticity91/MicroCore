@@ -35,21 +35,26 @@
 //		===	PUBLIC ===
 ////////////////////////////////////////////////////////////////////////////////////////////
 MicroReflectFieldDeclaration::MicroReflectFieldDeclaration( )
+	: MicroReflectFieldDeclaration{ "", "", MicroReflectAccessor::Private }
 { }
 
 MicroReflectFieldDeclaration::MicroReflectFieldDeclaration( 
-	const std::string& name,
-	const std::string& type
+	std::string&& name,
+	std::string&& type
 )
-	: MicroReflectFieldDeclaration{ name, type, "public" }
+	: MicroReflectFieldDeclaration{ 
+		std::move( name ), 
+		std::move( type ), 
+		MicroReflectAccessor::Public 
+	}
 { }
 
 MicroReflectFieldDeclaration::MicroReflectFieldDeclaration(
-	const std::string& name,
-	const std::string& type,
-	const std::string& visibility
+	std::string&& name,
+	std::string&& type,
+	const MicroReflectAccessor accessor
 )
-	: MicroReflectDeclaration{ name },
-	Visibility{ visibility },
-	Type{ type } 
+	: MicroReflectDeclaration{ std::move( name ) },
+	Accessor{ accessor },
+	Type{ std::move( type ) } 
 { }

@@ -47,6 +47,14 @@ public:
 	virtual ~MicroReflectGenerator( ) = default;
 
 	/**
+	 * PreRun method
+	 * @note : Executed after declaration generation, used to manually add
+	 *		   declaration to the source.
+	 * @param declaration : Current source declaration.
+	 **/
+	virtual void PreRun( MicroReflectSourceDeclaration& declaration ) override;
+
+	/**
 	 * Run method
 	 * @note : Generator run execution.
 	 * @param declaration : Reference to query declaration.
@@ -54,6 +62,47 @@ public:
 	virtual void Run( const MicroReflectSourceDeclaration& declaration ) override;
 
 private:
+	/**
+	 * GenerateEnum method
+	 * @note : Generate enum output for the declaration.
+	 * @param file : current output file.
+	 * @param declaration : enum to output.
+	 **/
+	void GenerateEnum(
+		std::ofstream& file,
+		const MicroReflectEnumDeclaration& declaration
+	);
+
+	/**
+	 * GenerateFunctions method
+	 * @note : Generate functions output for the declaration.
+	 * @param file : current output file.
+	 * @param declaration : List of all functions to output.
+	 **/
+	void GenerateFunctions(
+		std::ofstream& file,
+		const std::vector<MicroReflectFunctionDeclaration>& declaration
+	);
+
+	/**
+	 * GenerateAccessor function
+	 * @note : Cast clang accessor to MicroReflectAccessor.
+	 * @param accessor : Query clang accessor.
+	 * @return : Return accessor as MicroReflectAccessor.
+	 **/
+	std::string GenerateAccessor( const MicroReflectAccessor accessor ) const;
+
+	/**
+	 * GenerateParents method
+	 * @note : Generate functions output for the declaration.
+	 * @param file : current output file.
+	 * @param parents : List of all parents to output
+	 **/
+	void GenerateParents(
+		std::ofstream& file,
+		const std::vector<MicroReflectParentDeclaration>& parents
+	);
+
 	/**
 	 * GenerateFields method
 	 * @note : Generate fields output for the declaration.
@@ -68,28 +117,6 @@ private:
 	);
 
 	/**
-	 * GenerateFunctions method
-	 * @note : Generate functions output for the declaration.
-	 * @param file : current output file.
-	 * @param declaration : List of all functions to output.
-	 **/
-	void GenerateFunctions( 
-		std::ofstream& file,
-		const std::vector<MicroReflectFunctionDeclaration>& declaration
-	);
-
-	/**
-	 * GenerateStruct method
-	 * @note : Generate struct output for the declaration.
-	 * @param file : current output file.
-	 * @param declaration : struct to output.
-	 **/
-	void GenerateStruct( 
-		std::ofstream& file,
-		const MicroReflectStructDeclaration& declaration 
-	);
-
-	/**
 	 * GenerateClass method
 	 * @note : Generate class output for the declaration.
 	 * @param file : current output file.
@@ -98,6 +125,17 @@ private:
 	void GenerateClass( 
 		std::ofstream& file,
 		const MicroReflectClassDeclaration& declaration
+	);
+
+	/**
+	 * GenerateNamespace method
+	 * @note : Generate namespace output for the declaration.
+	 * @param file : current output file.
+	 * @param declaration : namespace to output.
+	 **/
+	void GenerateNamespace(
+		std::ofstream& file,
+		const MicroReflectNamespaceDeclaration& declaration
 	);
 
 };

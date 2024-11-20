@@ -38,7 +38,7 @@ MicroReflectDeclaration::MicroReflectDeclaration( )
 	: MicroReflectDeclaration{ "" }
 { }
 
-MicroReflectDeclaration::MicroReflectDeclaration( const std::string& name )
-	: Name{ name },
+MicroReflectDeclaration::MicroReflectDeclaration( std::string&& name )
+	: Name{ std::move( name ) },
 	Annotations{ }
 { }

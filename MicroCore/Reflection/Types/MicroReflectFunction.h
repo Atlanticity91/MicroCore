@@ -39,13 +39,74 @@ namespace micro {
 
 		using Parameters_t = MicroReflectIteratorStorage<ReflectFunctionParameter>;
 
-		ReflectType* return_type;
-		Parameters_t parameters;
+		MicroReflectAccessor Accessor;
+		const ReflectType* ReturnType;
+		Parameters_t Parameters;
 
 		/**
 		 * Constructor
 		 **/
 		ReflectFunction( );
+
+		/**
+		 * Constructor
+		 * @param name : Name of the function.
+		 **/
+		ReflectFunction( micro_string name );
+
+		/**
+		 * Constructor
+		 * @param name : Name of the function.
+		 * @param accessor : Query field accessor.
+		 **/
+		ReflectFunction( 
+			micro_string name,
+			const MicroReflectAccessor accessor
+		);
+
+		/**
+		 * Constructor
+		 * @param name : Name of the function.
+		 * @param return_type : Type of the function return value.
+		 **/
+		ReflectFunction(
+			micro_string name,
+			const ReflectType* return_type
+		);
+
+		/**
+		 * Constructor
+		 * @param name : Name of the function.
+		 * @param parameters : Iterator storage for the parameters.
+		 **/
+		ReflectFunction(
+			micro_string name,
+			const Parameters_t parameters
+		);
+
+		/**
+		 * Constructor
+		 * @param name : Name of the function.
+		 * @param accessor : Query field accessor.
+		 * @param return_type : Type of the function return value.
+		 **/
+		ReflectFunction(
+			micro_string name,
+			const MicroReflectAccessor accessor,
+			const ReflectType* return_type
+		);
+
+		/**
+		 * Constructor
+		 * @param name : Name of the function.
+		 * @param accessor : Query field accessor.
+		 * @param parameters : Iterator storage for the parameters.
+		 **/
+		ReflectFunction(
+			micro_string name,
+			const MicroReflectAccessor accessor,
+			const Parameters_t parameters
+		);
 
 		/**
 		 * Constructor
@@ -57,6 +118,34 @@ namespace micro {
 			micro_string name,
 			const ReflectType* return_type,
 			const Parameters_t parameters
+		);
+
+		/**
+		 * Constructor
+		 * @param name : Name of the function.
+		 * @param accessor : Query field accessor.
+		 * @param return_type : Type of the function return value.
+		 * @param parameters : Iterator storage for the parameters.
+		 **/
+		ReflectFunction(
+			micro_string name,
+			const MicroReflectAccessor accessor,
+			const ReflectType* return_type,
+			const Parameters_t parameters
+		);
+
+		/**
+		 * Constructor
+		 * @param name : Name of the function.
+		 * @param accessor : Query field accessor.
+		 * @param return_type : Type of the function return value.
+		 * @param lambda : Function lambda to generate function parameters storage.
+		 **/
+		ReflectFunction(
+			micro_string name,
+			const MicroReflectAccessor accessor,
+			const ReflectType* return_type,
+			std::function<Parameters_t()> lambda
 		);
 
 	};

@@ -31,19 +31,17 @@
 
 #pragma once 
 
-#include "MicroReflectGenerator.h"
-
-extern "C" {
-	#include <clang-c/Index.h>
-};
+#include "Context/MicroReflectParsingContext.h"
 
 class MicroReflectParser {
+
+	using Emitter_t = std::unique_ptr<MicroReflectEmitter>;
 
 private:
 	std::vector<std::string> m_extensions;
 	std::vector<std::string> m_arguments;
 	std::vector<std::string> m_directories;
-	std::vector<std::unique_ptr<MicroReflectEmitter>> m_emitters;
+	std::vector<Emitter_t> m_emitters;
 	uint32_t m_options;
 
 public:
@@ -114,6 +112,13 @@ public:
 	void AddDirectories( std::initializer_list<std::string> directories );
 
 	/**
+	 * InitializeGeneric method
+	 * @note : Initialize parser with default extensions, arguments and options,
+	 *		   ready for Micro reflection production.
+	 **/
+	void InitializeGeneric( );
+
+	/**
 	 * AddArguments method
 	 * @note : Parse command lines arguments.
 	 * @param argument_count : Command lines arguments count.
@@ -121,7 +126,7 @@ public:
 	 **/
 	void ParseArguments( 
 		const int32_t argument_count,
-		const char** argument_values 
+		micro_string* argument_values
 	);
 
 	/**
@@ -137,7 +142,7 @@ public:
 	 * @param argument_count : Command lines arguments count.
 	 * @param argument_values : Command lines argument values.
 	 **/
-	void Run( const int32_t argument_count, const char** argument_values );
+	void Run( const int32_t argument_count, micro_string* argument_values );
 
 public:
 	/**
@@ -154,15 +159,33 @@ public:
 
 private:
 	/**
+	 * RunParser method
+	 * @note : Run parser on specific file or directory.
+	 * @param arguments : Reference to argument list converted as native string list.
+	 * @param source_path : Query source path.
+	 **/
+	void RunParser(
+		const std::vector<micro_string>& arguments, 
+		const std::filesystem::path& source_path 
+	);
+
+	/**
 	 * ProcessClang function
 	 * @note : Parse source file with libclang.
-	 * @param source_path : Query source file.
-	 * @param declaration : Reference to the declaration storage.
+	 * @param arguments : Reference to argument list converted as native string list.
+	 * @param context : Reference to the parsing context instance.
 	 **/
 	bool ProcessClang( 
-		const std::filesystem::path& source_path,
-		MicroReflectSourceDeclaration& declaration 
+		const std::vector<micro_string>& arguments,
+		MicroReflectParsingContext& declaration 
 	);
+
+	/**
+	 * RunEmitters method
+	 * @note : Run parser emitters for context.
+	 * @param context : Query reflection parsing context to execute.
+	 **/
+	void RunEmitters( MicroReflectParsingContext& context );
 
 private:
 	/**
@@ -179,22 +202,6 @@ private:
 		CXClientData user_data 
 	);
 
-private:
-	/**
-	 * CanParse function
-	 * @note : Get if an extension match supported extension.
-	 * @param extension : Query extension.
-	 * @return : Return true when extension is found.
-	 **/
-	bool CanParse( const std::filesystem::path& extension ) const;
-
-	/**
-	 * GetArguments const function
-	 * @note : Convert argument list to c-style string for libclang.
-	 * @return : Return argument list as const char* list.
-	 **/
-	std::vector<const char*> GetArguments( ) const;
-
 public:
 	/**
 	 * ClangGetString template function
@@ -210,9 +217,9 @@ public:
 	>
 	static std::string ClangGetString(
 		ClangSignature clang_function,
-		const Args... args
+		Args&&... args
 	) {
-		auto element_value  = std::invoke( clang_function, std::forward<Args>( args ) );
+		auto element_value  = std::invoke( clang_function, std::forward<Args>( args )... );
 		auto element_string = clang_getCString( element_value );
 		auto result			= std::string{ element_string };
 
@@ -220,5 +227,30 @@ public:
 
 		return std::move( result );
 	};
+
+private:
+	/**
+	 * CanParse function
+	 * @note : Get if an extension match supported extension.
+	 * @param extension : Query extension.
+	 * @return : Return true when extension is found.
+	 **/
+	bool CanParse( const std::filesystem::path& extension ) const;
+
+	/**
+	 * GetArguments const function
+	 * @note : Convert argument list to c-style string for libclang.
+	 * @return : Return argument list as native string list.
+	 **/
+	std::vector<micro_string> GetArguments( ) const;
+
+private:
+	/**
+	 * GetIsFunction static function
+	 * @note : Get if a clang cursor kind represent a function.
+	 * @param cursor_kind : Query clang cursor kind.
+	 * @return : Return true when cursor kind represent a function.
+	 **/
+	static bool GetIsFunction( const CXCursorKind cursor_kind );
 
 };

@@ -54,24 +54,6 @@ namespace micro {
 	};
 
 	/**
-	 * ReflectStructTag template struct
-	 * @note : Define struct tag for template dispatch.
-	 **/
-	template<class T>
-	struct ReflectStructTag { };
-
-	/**
-	 * GetStructImpl function
-	 * @note : Get struct implementation detail.
-	 * @template T : Type of struct to process.
-	 * @return : Return pointer to the type structure detail.
-	 **/
-	template<class T>
-	const ReflectStruct* GetStructImpl( ReflectStructTag<T> ) {
-		return nullptr;
-	};
-
-	/**
 	 * ReflectClassTag template struct
 	 * @note : Define class tag for template dispatch.
 	 **/

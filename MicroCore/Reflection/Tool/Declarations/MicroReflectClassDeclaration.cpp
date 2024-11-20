@@ -35,10 +35,12 @@
 //		===	PUBLIC ===
 ////////////////////////////////////////////////////////////////////////////////////////////
 MicroReflectClassDeclaration::MicroReflectClassDeclaration( )
-	: MicroReflectClassDeclaration{ "" }
+	: MicroReflectDeclaration{ "" }
 { }
 
-MicroReflectClassDeclaration::MicroReflectClassDeclaration( const std::string& name )
-	: MicroReflectStructDeclaration{ name },
+MicroReflectClassDeclaration::MicroReflectClassDeclaration( std::string&& name )
+	: MicroReflectDeclaration{ std::move( name ) },
+	Parents{ },
+	Fields{ },
 	Functions{ }
 { }

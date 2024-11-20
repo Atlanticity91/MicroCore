@@ -31,14 +31,14 @@
 
 #pragma once 
 
-#include "../../Platform/MicroFile.h"
+#include "MicroReflectAccessor.h"
 
 namespace micro {
 
 	struct ReflectType {
 
-		micro_string name;
-		size_t size;
+		micro_string Name;
+		size_t Size;
 
 		/**
 		 * Constructor

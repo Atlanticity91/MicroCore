@@ -38,11 +38,11 @@ typedef glm::vec4 micro_vec4;
 namespace micro {
 
 	/**
-	 * GetStructImpl template function
+	 * GetClassImpl template function
 	 * @note : Implementation detail for 4D vector type.
 	 * @return : Return pointer to reflection type information structure.
 	 **/
 	template<>
-	extern const ReflectStruct* GetStructImpl( ReflectStructTag<micro_vec4> ) noexcept;
+	extern const ReflectClass* GetClassImpl( ReflectClassTag<micro_vec4> ) noexcept;
 
 };

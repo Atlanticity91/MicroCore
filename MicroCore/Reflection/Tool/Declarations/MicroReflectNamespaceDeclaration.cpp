@@ -38,10 +38,9 @@ MicroReflectNamespaceDeclaration::MicroReflectNamespaceDeclaration( )
 	: MicroReflectNamespaceDeclaration{ "" }
 { }
 
-MicroReflectNamespaceDeclaration::MicroReflectNamespaceDeclaration( const std::string& name )
-	: MicroReflectDeclaration{ name },
+MicroReflectNamespaceDeclaration::MicroReflectNamespaceDeclaration( std::string&& name )
+	: MicroReflectDeclaration{ std::move( name ) },
 	Enumerations{ },
-	Structures{ },
 	Classes{ }, 
 	Functions{ }
 { }

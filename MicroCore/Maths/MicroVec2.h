@@ -38,11 +38,11 @@ typedef glm::vec2 micro_vec2;
 namespace micro {
 
 	/**
-	 * GetStructImpl template function
+	 * GetClassImpl template function
 	 * @note : Implementation detail for 2D vector type.
 	 * @return : Return pointer to reflection type information structure.
 	 **/
 	template<>
-	extern const ReflectStruct* GetStructImpl( ReflectStructTag<micro_vec2> ) noexcept;
+	extern const ReflectClass* GetClassImpl( ReflectClassTag<micro_vec2> ) noexcept;
 
 };

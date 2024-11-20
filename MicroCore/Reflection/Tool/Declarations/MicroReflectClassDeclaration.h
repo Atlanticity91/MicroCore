@@ -31,10 +31,12 @@
 
 #pragma once 
 
-#include "MicroReflectFunctionDeclaration.h"
+#include "MicroReflectParentDeclaration.h"
 
-struct MicroReflectClassDeclaration : public MicroReflectStructDeclaration {
+struct MicroReflectClassDeclaration : public MicroReflectDeclaration {
 
+	std::vector<MicroReflectParentDeclaration> Parents;
+	std::vector<MicroReflectFieldDeclaration> Fields;
 	std::vector<MicroReflectFunctionDeclaration> Functions;
 
 	/**
@@ -46,6 +48,6 @@ struct MicroReflectClassDeclaration : public MicroReflectStructDeclaration {
 	 * Constructor
 	 * @param name : Query class name.
 	 **/
-	MicroReflectClassDeclaration( const std::string& name );
+	MicroReflectClassDeclaration( std::string&& name );
 
 };

@@ -53,8 +53,20 @@ namespace micro {
 		const Fields_t fields,
 		const Functions_t functions
 	)
-		: ReflectStruct{ name, size, fields },
-		Functions{ functions }
+		: ReflectClass{ name, size, { }, fields, functions }
+	{ }
+
+	ReflectClass::ReflectClass(
+		micro_string name,
+		const size_t size,
+		const Parent_t parents,
+		const Fields_t fields,
+		const Functions_t functions
+	)
+		: ReflectType{ name, size },
+		Parents{ parents },
+		Fields{ fields },
+		Functions{ functions } 
 	{ }
 
 };

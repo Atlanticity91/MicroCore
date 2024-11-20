@@ -38,11 +38,11 @@ typedef glm::vec3 micro_vec3;
 namespace micro {
 
 	/**
-	 * GetStructImpl template function
+	 * GetClassImpl template function
 	 * @note : Implementation detail for 3D vector type.
 	 * @return : Return pointer to reflection type information structure.
 	 **/
 	template<>
-	extern const ReflectStruct* GetStructImpl( ReflectStructTag<micro_vec3> ) noexcept;
+	extern const ReflectClass* GetClassImpl( ReflectClassTag<micro_vec3> ) noexcept;
 
 };

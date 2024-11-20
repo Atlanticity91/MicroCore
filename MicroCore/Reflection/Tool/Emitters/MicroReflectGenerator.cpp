@@ -37,6 +37,8 @@
 MicroReflectGenerator::MicroReflectGenerator( ) 
 { }
 
+void MicroReflectGenerator::PreRun( MicroReflectSourceDeclaration& declaration ) { }
+
 void MicroReflectGenerator::Run( const MicroReflectSourceDeclaration& declaration ) {
 	auto dst_path = declaration.Source;
 
@@ -57,13 +59,13 @@ void MicroReflectGenerator::Run( const MicroReflectSourceDeclaration& declaratio
 	file << " * source file : " << declaration.Source << "\n";
 	file << " *\n";
 	file << " **/\n\n";
+	file << "#pragma once\n\n";
 	file << "namespace micro {\n\n";
 
-	for ( auto& struct_declaration : declaration.Structures )
-		GenerateStruct( file, struct_declaration );
+	GenerateNamespace( file, declaration );
 
-	for ( auto& class_declaration : declaration.Classes )
-		GenerateClass( file, class_declaration );
+	for ( const auto& namespace_declaration : declaration.Namespaces )
+		GenerateNamespace( file, namespace_declaration );
 
 	file << "\n};\n";
 
@@ -73,17 +75,12 @@ void MicroReflectGenerator::Run( const MicroReflectSourceDeclaration& declaratio
 ////////////////////////////////////////////////////////////////////////////////////////////
 //		===	PRIVATE ===
 ////////////////////////////////////////////////////////////////////////////////////////////
-void MicroReflectGenerator::GenerateFields(
+void MicroReflectGenerator::GenerateEnum(
 	std::ofstream& file,
-	const std::string& owner,
-	const std::vector<MicroReflectFieldDeclaration>& declaration
+	const MicroReflectEnumDeclaration& declaration
 ) {
-	auto field_id = 0;
 
-	for ( auto& field : declaration ) {
-		file << "\t\t\t\tself->Fields[ " << std::to_string( field_id++ ) << " ] = { \"" 
-			 << field.Name << "\", offsetof( " << owner << ", " << field.Name << " ), GetType<" << field.Type << ">( ) };\n";
-	}
+	file << "\n";
 }
 
 void MicroReflectGenerator::GenerateFunctions(
@@ -97,46 +94,96 @@ void MicroReflectGenerator::GenerateFunctions(
 			 << function.Name << "\",\n"
 			 << "GetType<" << function.ReturnType << ">( ),\n"
 			 << "{}\n"
-			 << "};\n";
+			 << GenerateAccessor( function.Accessor )
+			 << " };\n";
 	}
+
+	file << "\n";
 }
 
-void MicroReflectGenerator::GenerateStruct(
+std::string MicroReflectGenerator::GenerateAccessor(
+	const MicroReflectAccessor accessor
+) const {
+	auto result = std::string{ "MicroReflectVisibility::Public" };
+
+	if ( accessor == MicroReflectAccessor::Protected )
+		result = "MicroReflectVisibility::Protected";
+	else if ( accessor == MicroReflectAccessor::Private )
+		result = "MicroReflectVisibility::Private";
+
+	return result;
+}
+
+void MicroReflectGenerator::GenerateParents(
 	std::ofstream& file,
-	const MicroReflectStructDeclaration& declaration
+	const std::vector<MicroReflectParentDeclaration>& parents
 ) {
-	file << "\ttemplate<>\n"
-		 << "\tfriend const ReflectStruct* GetStructImpl( ReflecStructTag<" << declaration.Name << "> ) noexcept {\n"
-		 << "\t\tstatic auto storage_" << declaration.Name << " = ReflectStorageStruct<"
-		 << declaration.Name << ", "
-		 << declaration.Fields.size( ) << "\>{\n"
-		 << "\t\t\t\"" << declaration.Name << "\"\n"
-		 << "\t\t\t[]( auto* self ) {\n";
+	auto parent_id = parents.size( );
 
-	GenerateFields( file, declaration.Name, declaration.Fields );
+	while ( parent_id-- > 0 ) {
+		file << "\t\t\t\tself->Parents[ " << std::to_string( parent_id++ ) << " ] = { \""
+			 << parents[ parent_id ].Name
+			 << ", "
+			 << GenerateAccessor( parents[ parent_id ].Accessor )
+			 << "\" };\n";
+	}
 
-	file << "\t\t\t}\n\t\t};\n"
-		 << "\t\treturn storage_" << declaration.Name << ";\n"
-		 << "\t};\n\n";
+	file << "\n";
+}
+
+void MicroReflectGenerator::GenerateFields(
+	std::ofstream& file,
+	const std::string& owner,
+	const std::vector<MicroReflectFieldDeclaration>& declaration
+) {
+	auto field_id = 0;
+
+	for ( auto& field : declaration ) {
+		file << "\t\t\t\tself->Parents[ " << std::to_string( field_id++ ) << " ] = { \"" 
+			 << field.Name << "\", offsetof( " << owner << ", " << field.Name << " ), GetType<" 
+			 << field.Type << ">( ), "
+			 << GenerateAccessor( field.Accessor ) << " };\n";
+	}
+
+	file << "\n";
 }
 
 void MicroReflectGenerator::GenerateClass(
 	std::ofstream& file,
 	const MicroReflectClassDeclaration& declaration
 ) {
-	file << "\ttemplate<>\n"
-		 << "\tfriend const ReflectClass* GetClassImpl( ReflectClassTag<" << declaration.Name << "> ) noexcept {\n"
-		 << "\t\tstatic auto storage_" << declaration.Name << " = ReflectStorageClass<"
-		 << declaration.Name << ", "
-		 << declaration.Fields.size( ) << ", "
-		 << declaration.Functions.size( ) << ">{\n"
-		 << "\t\t\t\"" << declaration.Name << "\"\n"
-		 << "\t\t\t[]( auto* self ) {\n";
+	auto& name = declaration.Name;
 
-	GenerateFields( file, declaration.Name, declaration.Fields );
+	file << "// === " << name << " ===\n";
+	file << "\ttemplate<>\n\tfriend const ReflectClass* GetClassImpl( ReflectClassTag<" << name << "> ) noexcept {\n"
+			<< "\t\tstatic auto storage_" << name << " = ReflectStorageClass<" 
+				<< name << ", "
+				<< declaration.Parents.size( ) << ", "
+				<< declaration.Fields.size( ) << ", "
+				<< declaration.Functions.size( ) 
+				<< ">{\n"
+			<< "\t\t\t\"" << name << "\"\n"
+			<< "\t\t\t[]( auto* self ) {\n";
+
+	GenerateParents( file, declaration.Parents );
+	GenerateFields( file, name, declaration.Fields );
 	GenerateFunctions( file, declaration.Functions );
 
 	file << "\t\t\t}\n\t\t};\n"
-		 << "\t\treturn storage_" << declaration.Name << ";\n"
+		 << "\t\treturn storage_" << name << ";\n"
 		 << "\t};\n\n";
+}
+
+void MicroReflectGenerator::GenerateNamespace(
+	std::ofstream& file,
+	const MicroReflectNamespaceDeclaration& declaration
+) {
+	for ( const auto& enum_declaration : declaration.Enumerations )
+		GenerateEnum( file, enum_declaration );
+
+	for ( const auto& function_declaration : declaration.Functions )
+		GenerateFunctions( file, { function_declaration } );
+	
+	for ( const auto& class_declaration : declaration.Classes )
+		GenerateClass( file, class_declaration );
 }

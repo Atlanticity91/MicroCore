@@ -29,17 +29,35 @@
  *
  **/
 
-#include "__micro_core_pch.h"
+#pragma once 
 
-////////////////////////////////////////////////////////////////////////////////////////////
-//		===	PUBLIC ===
-////////////////////////////////////////////////////////////////////////////////////////////
-MicroReflectStructDeclaration::MicroReflectStructDeclaration( )
-	: MicroReflectStructDeclaration{ "" }
-{ }
+#include "../Declarations/MicroReflectSourceDeclaration.h"
 
-MicroReflectStructDeclaration::MicroReflectStructDeclaration( const std::string& name )
-	: MicroReflectDeclaration{ name },
-	Parents{ },
-	Fields{ }
-{ }
+struct MicroReflectEmitter {
+
+	/**
+	 * Constructor
+	 **/
+	MicroReflectEmitter( ) = default;
+
+	/**
+	 * Destructor
+	 **/
+	virtual ~MicroReflectEmitter( ) = default;
+
+	/**
+	 * PreRun method
+	 * @note : Executed after declaration generation, used to manually add 
+	 *		   declaration to the source.
+	 * @param declaration : Current source declaration.
+	 **/
+	virtual void PreRun( MicroReflectSourceDeclaration& declaration ) = 0;
+
+	/**
+	 * Run method
+	 * @note : Generator run execution.
+	 * @param declaration : Reference to query declaration.
+	 **/
+	virtual void Run( const MicroReflectSourceDeclaration& declaration ) = 0;
+
+};

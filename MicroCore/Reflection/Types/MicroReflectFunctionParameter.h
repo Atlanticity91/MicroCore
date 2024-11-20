@@ -31,14 +31,14 @@
 
 #pragma once
 
-#include "MicroReflectStruct.h"
+#include "../Storage/MicroReflectStorage.h"
 
 namespace micro {
 
 	struct ReflectFunctionParameter {
 
-		micro_string name;
-		ReflectType* type;
+		micro_string Name;
+		const ReflectType* Type;
 
 		/**
 		 * Constructor

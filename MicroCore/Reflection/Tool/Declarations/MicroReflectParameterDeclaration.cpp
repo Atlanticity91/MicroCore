@@ -39,9 +39,9 @@ MicroReflectParameterDeclaration::MicroReflectParameterDeclaration( )
 { }
 
 MicroReflectParameterDeclaration::MicroReflectParameterDeclaration( 
-	const std::string& name,
-	const std::string& type
+	std::string&& name,
+	std::string&& type
 )
-	: Name{ name },
-	Type{ type }
+	: Name{ std::move( name ) },
+	Type{ std::move( type ) }
 { }

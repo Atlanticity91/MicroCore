@@ -35,13 +35,14 @@
 
 #ifdef MICRO_DEBUG
 #   ifdef _WIN64
+#   define micro_make_breakpoint __debugbreak( )
 #   define micro_assert( CHECK, FORMAT, ... )\
 	    do {\
             if (\
                 !( ( CHECK ) ) &&\
                 ( 1 == _CrtDbgReport( _CRT_ASSERT, __FILE__, __LINE__, #CHECK, ( FORMAT ), ( __VA_ARGS__ ) ) )\
             )\
-                __debugbreak( );\
+                micro_make_breakpoint;\
         } while( 0 )
 #   elif defined( __linux__ )
 #   elif defined( __APPLE__ )

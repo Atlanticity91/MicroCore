@@ -29,42 +29,27 @@
  *
  **/
 
-#pragma once 
+#include "__micro_core_pch.h"
 
-#include "../Types/MicroReflectClass.h"
-
+////////////////////////////////////////////////////////////////////////////////////////////
+//		===	PUBLIC ===
+////////////////////////////////////////////////////////////////////////////////////////////
 namespace micro {
 
-	template<class T, size_t FieldCount>
-	struct ReflectStorageStruct{
+	ReflectParent::ReflectParent( )
+		: ReflectParent{ MicroReflectAccessor::Private, nullptr } 
+	{ }
 
-		ReflectStorage<ReflectField, FieldCount> Fields;
-		ReflectStruct Detail;
+	ReflectParent::ReflectParent( const ReflectClass* parent )
+		: ReflectParent{ MicroReflectAccessor::Public, parent } 
+	{ }
 
-		/**
-		 * Constructor
-		 * @template Lambda : Lambda signature taking pointer to self.
-		 * @param name : Name of the struct.
-		 * @param lambda : Query construction lambda.
-		 **/
-		template<typename Lambda>
-		ReflectStorageStruct( micro_string name, Lambda&& lambda ) 
-			: Detail{ name, sizeof( T ) }
-		{
-			lambda( this );
-
-			Detail.Fields = Fields;
-		};
-
-		/**
-		 * Cast operator
-		 * @note : Get pointer to struct detail information.
-		 * @return : Return pointer to struct detail.
-		 **/
-		operator const ReflectStruct* ( ) const {
-			return &Detail;
-		};
-
-	};
+	ReflectParent::ReflectParent(
+		const MicroReflectAccessor accessor,
+		const ReflectClass* parent
+	)
+		: Accessor{ accessor },
+		Parent{ parent }
+	{ }
 
 };

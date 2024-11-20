@@ -31,14 +31,18 @@
 
 #pragma once 
 
-#include "MicroReflectFunction.h"
+#include "ReflectParent.h"
 
 namespace micro { 
 
-	struct ReflectClass : public ReflectStruct {
+	struct ReflectClass : public ReflectType {
 
+		using Parent_t	  = MicroReflectIteratorStorage<ReflectParent>;
+		using Fields_t	  = MicroReflectIteratorStorage<ReflectField>;
 		using Functions_t = MicroReflectIteratorStorage<ReflectFunction>;
 
+		Parent_t Parents;
+		Fields_t Fields;
 		Functions_t Functions;
 
 		/**
@@ -65,9 +69,25 @@ namespace micro {
 		 * @param fields : Query class field iterator storage.
 		 * @param functions : Query class function iterator storage.
 		 **/
+		ReflectClass(
+			micro_string name,
+			const size_t size,
+			const Fields_t fields,
+			const Functions_t functions
+		);
+
+		/**
+		 * Constructor
+		 * @param name : Name of the class.
+		 * @param size : Size of the class.
+		 * @param parents : Query class parents.
+		 * @param fields : Query class field iterator storage.
+		 * @param functions : Query class function iterator storage.
+		 **/
 		ReflectClass( 
 			micro_string name,
 			const size_t size,
+			const Parent_t parents,
 			const Fields_t fields,
 			const Functions_t functions
 		);

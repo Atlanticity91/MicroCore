@@ -31,47 +31,21 @@
 
 #pragma once
 
-extern "C" {
-	#include <stddef.h>
-	#include <stdlib.h>
-	#include <stdio.h>
-	#include <string.h>
-};
+#include "../Traits/MicroTraits.h"
 
-#include <algorithm>
-#include <array>
-#include <bitset>
-#include <cassert>
-#include <chrono>
-#include <concepts>
-#include <condition_variable>
-#include <filesystem>
-#include <functional>
-#include <iterator>
-#include <limits>
-#include <map>
-#include <memory>
-#include <mutex>
-#include <new>
-#include <queue>
-#include <random>
-#include <regex>
-#include <set>
-#include <string>
-#include <thread>
-#include <type_traits>
-#include <unordered_map>
-#include <vector>
-#include <xhash>
-
-#define micro_unused( VAR ) ( (void)VAR )
+/**
+ * micro_stringifyx macro
+ * @note : Stringify text.
+ * @param TEXT : Query text to stringify.
+ **/
 #define micro_stringifyx( TEXT ) ( #TEXT )
+
+/**
+ * micro_stringify macro
+ * @note : Wrapper for stringify to prevent macro substitution error.
+ * @param TEXT : Query text to stringify.
+ **/
 #define micro_stringify( TEXT ) micro_stringifyx( TEXT )
-#define micro_nodiscard_cause( MESSAGE ) [[nodiscard( MESSAGE )]]
-#define micro_nodiscard micro_nodiscard_cause( "" )
-#define micro_depreated( SINCE ) [[deprecated( "Since : " micro_stringify( SINCE ) )]]
-#define micro_depreated_for( SINCE, REPLACEMENT )\
-	[[deprecated( "Since : " micro_stringify( SINCE ) ", instead use : " micro_stringify( REPLACEMENT ) )]]
 
 typedef const char* micro_string;
 

@@ -41,7 +41,7 @@ namespace micro {
 		using IteratorStorage_t = MicroReflectIteratorStorage<T>;
 		using IteratorPointer_t = typename IteratorStorage_t::IteratorPointer_t;
 
-		T Elements[ Count + 1 ];
+		T Elements[ ( Count > 0 ) ? Count : 1 ];
 
 		/**
 		 * constructor
@@ -69,9 +69,9 @@ namespace micro {
 		 * @note : Get iterator storage for current storage.
 		 * @return : Return iterator storage representation.
 		 **/
-		IteratorStorage_t GetIteratorStorage( ) const {
+		const IteratorStorage_t GetIteratorStorage( ) const {
 			return IteratorStorage_t{ (IteratorPointer_t)Elements, Count };
-		}
+		};
 
 		/**
 		 * Access operator
@@ -89,7 +89,7 @@ namespace micro {
 		 * @note : Cast current storage to it's iterator storage representation.
 		 * @return : Return GetIteratorStorage( ) call value.
 		 **/
-		operator IteratorStorage_t( ) const {
+		operator const IteratorStorage_t( ) const {
 			return GetIteratorStorage( );
 		};
 

@@ -37,7 +37,8 @@ namespace micro {
 
 	struct ReflectField : public ReflectType {
 
-		ReflectType* type;
+		MicroReflectAccessor Accessor;
+		ReflectType* Type;
 
 		/**
 		 * Constructor
@@ -60,10 +61,24 @@ namespace micro {
 		 * @param offset : Offset in bytes from structure start.
 		 * @param type : Pointer to query field reflect type description.
 		 **/
-		ReflectField( 
-			micro_string name, 
-			const size_t offset, 
+		ReflectField(
+			micro_string name,
+			const size_t offset,
 			const ReflectType* type
+		);
+
+		/**
+		 * Constructor
+		 * @param name : Name of the field.
+		 * @param offset : Offset in bytes from structure start.
+		 * @param type : Pointer to query field reflect type description.
+		 * @param Accessor : Query field accessor.
+		 **/
+		ReflectField( 
+			micro_string name,
+			const size_t offset,
+			const ReflectType* type,
+			const MicroReflectAccessor accessor
 		);
 
 	};

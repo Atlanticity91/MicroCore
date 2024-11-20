@@ -35,7 +35,7 @@
 
 struct MicroReflectFunctionDeclaration : public MicroReflectDeclaration {
 
-	std::string Visibility;
+	MicroReflectAccessor Accessor;
 	std::string ReturnType;
 	std::vector<MicroReflectParameterDeclaration> Parameters;
 
@@ -48,6 +48,28 @@ struct MicroReflectFunctionDeclaration : public MicroReflectDeclaration {
 	 * Constructor
 	 * @param name : Query function name.
 	 **/
-	MicroReflectFunctionDeclaration( const std::string& name );
+	MicroReflectFunctionDeclaration( std::string&& name );
+
+	/**
+	 * Constructor
+	 * @param name : Query function name.
+	 * @param return_type : Query function return type.
+	 **/
+	MicroReflectFunctionDeclaration( 
+		std::string&& name, 
+		std::string&& return_type 
+	);
+	
+	/**
+	 * Constructor
+	 * @param name : Query function name.
+	 * @param return_type : Query function return type.
+	 * @param accessor : Query function accessor.
+	 **/
+	MicroReflectFunctionDeclaration( 
+		std::string&& name, 
+		std::string&& return_type, 
+		const MicroReflectAccessor accessor 
+	);
 
 };

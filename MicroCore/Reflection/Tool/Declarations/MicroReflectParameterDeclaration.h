@@ -31,7 +31,7 @@
 
 #pragma once 
 
-#include "MicroReflectStructDeclaration.h"
+#include "MicroReflectFieldDeclaration.h"
 
 struct MicroReflectParameterDeclaration {
 
@@ -48,9 +48,6 @@ struct MicroReflectParameterDeclaration {
 	 * @param name : Query parameter name.
 	 * @param type : Query parameter type.
 	 **/
-	MicroReflectParameterDeclaration( 
-		const std::string& name, 
-		const std::string& type 
-	);
+	MicroReflectParameterDeclaration( std::string&& name, std::string&& type );
 
 };

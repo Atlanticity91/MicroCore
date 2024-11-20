@@ -37,7 +37,6 @@ struct MicroReflectNamespaceDeclaration : public MicroReflectDeclaration {
 
 	std::vector<MicroReflectEnumDeclaration> Enumerations;
 	std::vector<MicroReflectFunctionDeclaration> Functions;
-	std::vector<MicroReflectStructDeclaration> Structures;
 	std::vector<MicroReflectClassDeclaration> Classes;
 
 	/**
@@ -49,6 +48,6 @@ struct MicroReflectNamespaceDeclaration : public MicroReflectDeclaration {
 	 * Constructor
 	 * @param name : Query namespace name.
 	 **/
-	MicroReflectNamespaceDeclaration( const std::string& name );
+	MicroReflectNamespaceDeclaration( std::string&& name );
 
 };
