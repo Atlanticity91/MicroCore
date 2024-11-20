@@ -17,13 +17,15 @@ project "MicroCore"
 		"%{wks.location}/MicroCore/",
 		"%{wks.location}/Thirdparty/glm/",
 		"%{wks.location}/Thirdparty/spdlog/include/",
-		"%{wks.location}/Thirdparty/yaml-cpp/include/"
+		"%{wks.location}/Thirdparty/yaml-cpp/include/",
+		"%{wks.location}/Thirdparty/libclang/"
 	}
 	externalincludedirs { 
 		"%{wks.location}/MicroCore/",
 		"%{wks.location}/Thirdparty/glm/",
 		"%{wks.location}/Thirdparty/spdlog/include/",
-		"%{wks.location}/Thirdparty/yaml-cpp/include/"
+		"%{wks.location}/Thirdparty/yaml-cpp/include/",
+		"%{wks.location}/Thirdparty/libclang/"
 	}
 
 	--- WINDOWS
