@@ -33,7 +33,11 @@
 
 #include "MicroReflectParentDeclaration.h"
 
-struct MicroReflectClassDeclaration : public MicroReflectDeclaration {
+/**
+ * MicroReflectClassDeclaration struct
+ * @note : Defined class declaration for reflection system parser.
+ **/
+micro_struct MicroReflectClassDeclaration : public MicroReflectDeclaration {
 
 	std::vector<MicroReflectParentDeclaration> Parents;
 	std::vector<MicroReflectFieldDeclaration> Fields;

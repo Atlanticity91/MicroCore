@@ -33,7 +33,11 @@
 
 #include "../../MicroReflectNative.h"
 
-struct MicroReflectDeclaration { 
+/**
+ * MicroReflectDeclaration struct
+ * @note : Defined base declaration for reflection system parser.
+ **/
+micro_struct MicroReflectDeclaration { 
 
 	std::string Name;
 	std::vector<std::string> Annotations;

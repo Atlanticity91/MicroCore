@@ -39,7 +39,7 @@ namespace micro {
 	bool is_little_endian( ) {
 		static uint32_t test = 1;
 
-		return *( (int8_t*)( &test ) ) == 1;
+		return micro_ref( micro_ptr_as( test, int8_t* ) ) == 1;
 	}
 
 	bool copy( const uint32_t length, const void* src, void* dst ) {

@@ -31,49 +31,38 @@
 
 #pragma once 
 
-#include "MicroReflectParameterDeclaration.h"
+#include "MicroReflectGenerator.h"
 
 /**
- * MicroReflectFunctionDeclaration struct
- * @note : Defined function declaration for reflection system parser.
+ * MicroYamlGenerator class final
+ * @note : Defined reflection system default Yaml emitter.
  **/
-micro_struct MicroReflectFunctionDeclaration : public MicroReflectDeclaration {
+micro_class MicroYamlGenerator final : public MicroReflectEmitter {
 
-	MicroReflectAccessor Accessor;
-	std::string ReturnType;
-	std::vector<MicroReflectParameterDeclaration> Parameters;
-
+public:
 	/**
 	 * Constructor
 	 **/
-	MicroReflectFunctionDeclaration( );
+	MicroYamlGenerator( );
 
 	/**
-	 * Constructor
-	 * @param name : Query function name.
+	 * Destructor
 	 **/
-	MicroReflectFunctionDeclaration( std::string&& name );
+	virtual ~MicroYamlGenerator( ) = default;
 
 	/**
-	 * Constructor
-	 * @param name : Query function name.
-	 * @param return_type : Query function return type.
+	 * PreRun method
+	 * @note : Executed after declaration generation, used to manually add
+	 *		   declaration to the source.
+	 * @param declaration : Current source declaration.
 	 **/
-	MicroReflectFunctionDeclaration( 
-		std::string&& name, 
-		std::string&& return_type 
-	);
-	
+	virtual void PreRun( MicroReflectSourceDeclaration& declaration ) override;
+
 	/**
-	 * Constructor
-	 * @param name : Query function name.
-	 * @param return_type : Query function return type.
-	 * @param accessor : Query function accessor.
+	 * Run method
+	 * @note : Generator run execution.
+	 * @param declaration : Reference to query declaration.
 	 **/
-	MicroReflectFunctionDeclaration( 
-		std::string&& name, 
-		std::string&& return_type, 
-		const MicroReflectAccessor accessor 
-	);
+	virtual void Run( const MicroReflectSourceDeclaration& declaration ) override;
 
 };

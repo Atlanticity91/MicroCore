@@ -35,7 +35,11 @@
 
 namespace micro {
 
-	struct ReflectField : public ReflectType {
+	/** 
+	 * ReflectField struct
+	 * @note : Defined field representation for reflection system.
+	 **/
+	micro_struct ReflectField : public ReflectType {
 
 		MicroReflectAccessor Accessor;
 		ReflectType* Type;

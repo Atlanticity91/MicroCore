@@ -35,7 +35,11 @@
 
 namespace micro {
 
-	struct ReflectType {
+	/**
+	 * ReflectType struct
+	 * @note : Defined basic type representation for reflection system.
+	 **/
+	micro_struct ReflectType {
 
 		micro_string Name;
 		size_t Size;

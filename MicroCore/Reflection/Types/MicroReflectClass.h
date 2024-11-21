@@ -35,7 +35,11 @@
 
 namespace micro { 
 
-	struct ReflectClass : public ReflectType {
+	/**
+	 * ReflectClass struct
+	 * @note : Defined class representation for reflection system.
+	 **/
+	micro_struct ReflectClass : public ReflectType {
 
 		using Parent_t	  = MicroReflectIteratorStorage<ReflectParent>;
 		using Fields_t	  = MicroReflectIteratorStorage<ReflectField>;

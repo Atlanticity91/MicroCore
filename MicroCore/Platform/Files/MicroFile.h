@@ -31,38 +31,13 @@
 
 #pragma once
 
-#include "MicroAssert.h"
-
-/**
- * MicroFileAccessors enum class
- * @note : Defined all accessor for file access.
- **/
-enum class MicroFileAccessors : uint32_t {
-
-	None  = 0,
-	Read  = 1 << 0,
-	Write = 1 << 1,
-	Edit  = Read | Write
-
-};
-
-/**
- * MicroFileTypes enum class
- * @note : Defined all possible file types.
- **/
-enum class MicroFileTypes : uint32_t { 
-
-	Undefined = 0,
-	Text,
-	Binary 
-
-};
+#include "MicroFileTypes.h"
 
 /**
  * MicroFile final class
  * @note : Represent file, replace FILE*.
  **/
-class MicroFile final {
+micro_class MicroFile final {
 
 private:
 	MicroFileTypes m_type;
@@ -161,7 +136,7 @@ public:
 	 **/
 	template<typename Type>
 	uint32_t Read( Type& data ) {
-		auto* buffer = (const void*)&data;
+		auto* buffer = micro_ptr_as( data, const void* );
 		auto length  = (uint32_t)sizeof( Type );
 
 		return Read( length, buffer );
@@ -275,7 +250,7 @@ public:
 	MicroFile& operator>>( Type& data ) {
 		Read<Type>( data );
 
-		return *this;
+		return micro_self;
 	};
 
 	/**
@@ -289,7 +264,7 @@ public:
 	MicroFile& operator<<( const Type& data ) {
 		Write<Type>( data );
 
-		return *this;
+		return micro_self;
 	};
 
 private:

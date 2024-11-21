@@ -31,8 +31,12 @@
 
 #pragma once 
 
-#include "../Emitters/MicroReflectGenerator.h"
+#include "../Emitters/MicroYamlGenerator.h"
 
+/**
+ * MicroReflectParsingTypes enum
+ * @note : Defined all possible reflection parsing node type.
+ **/
 enum MicroReflectParsingTypes : uint32_t {
 
 	MRP_TYPE_ROOT	   = 0,

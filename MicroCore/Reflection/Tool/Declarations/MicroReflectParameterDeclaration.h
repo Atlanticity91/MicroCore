@@ -33,7 +33,11 @@
 
 #include "MicroReflectFieldDeclaration.h"
 
-struct MicroReflectParameterDeclaration {
+/**
+ * MicroReflectParameterDeclaration struct
+ * @note : Defined parameter declaration for reflection system parser.
+ **/
+micro_struct MicroReflectParameterDeclaration {
 
 	std::string Name;
 	std::string Type;

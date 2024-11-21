@@ -33,7 +33,11 @@
 
 #include "MicroReflectFunctionDeclaration.h"
 
-struct MicroReflectParentDeclaration {
+/**
+ * MicroReflectParentDeclaration struct
+ * @note : Defined parent declaration for reflection system parser.
+ **/
+micro_struct MicroReflectParentDeclaration {
 
 	MicroReflectAccessor Accessor;
 	std::string Name;

@@ -132,6 +132,16 @@ extern "C" {
 	[[deprecated( "Since : " micro_stringify( SINCE ) ", instead use : " micro_stringify( REPLACEMENT ) )]]
 
 /**
+ * micro_inline macro
+ * @note : Wrapper for inline keyword.
+ **/
+#ifdef _WIN64
+#	define micro_inline inline
+#else
+#	define micro_inline __inline__
+#endif
+
+/**
  * micro_nodiscard_cause macro
  * @note : Mark that function return value can't be discarded with cause message.
  * @param MESSAGE : Cause of non discard.
@@ -149,3 +159,54 @@ extern "C" {
  * @note : Wrapper for class member function *this.
  **/
 #define micro_self micro_ref( this )
+
+/**
+ * MICRO_API macro
+ * @note : Defined API for library expose elements.
+ **/
+#ifndef MICRO_API
+#	ifdef MICRO_EXPORT
+#		ifdef _WIN64
+#			define MICRO_API __declspec( dllexport )
+#		endif
+#	elif MICRO_IMPORT
+#		ifdef _WIN64
+#			define MICRO_API __declspec( dllimport )
+#		endif
+#	endif
+#	define MICRO_API
+#endif
+ 
+/**
+ * micro_enum_class macro
+ * @note : Wrapper for exposing enum.
+ **/
+#define micro_enum_class enum class MICRO_API 
+
+/**
+ * micro_struct macro
+ * @note : Wrapper for exposing struct.
+ **/
+#define micro_struct struct MICRO_API
+
+/**
+ * micro_class macro
+ * @note : Wrapper for exposing class.
+ **/
+#define micro_class class MICRO_API
+
+/**
+ * micro_stringifyx macro
+ * @note : Stringify text.
+ * @param TEXT : Query text to stringify.
+ **/
+#define micro_stringifyx( TEXT ) ( #TEXT )
+
+/**
+ * micro_stringify macro
+ * @note : Wrapper for stringify to prevent macro substitution error.
+ * @param TEXT : Query text to stringify.
+ **/
+#define micro_stringify( TEXT ) micro_stringifyx( TEXT )
+
+typedef const char* micro_string;

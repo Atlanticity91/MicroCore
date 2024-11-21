@@ -33,7 +33,11 @@
 
 #include "MicroReflectClassDeclaration.h"
 
-struct MicroReflectEnumDeclaration : public MicroReflectDeclaration {
+/**
+ * MicroReflectEnumDeclaration struct
+ * @note : Defined enum declaration for reflection system parser.
+ **/
+micro_struct MicroReflectEnumDeclaration : public MicroReflectDeclaration {
 
 	std::string CastType;
 	std::vector<MicroReflectDeclaration> Values;

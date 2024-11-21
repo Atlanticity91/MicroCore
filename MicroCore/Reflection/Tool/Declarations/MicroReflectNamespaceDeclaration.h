@@ -33,7 +33,11 @@
 
 #include "MicroReflectEnumDeclaration.h"
 
-struct MicroReflectNamespaceDeclaration : public MicroReflectDeclaration {
+/**
+ * MicroReflectNamespaceDeclaration struct
+ * @note : Defined namespace declaration for reflection system parser.
+ **/
+micro_struct MicroReflectNamespaceDeclaration : public MicroReflectDeclaration {
 
 	std::vector<MicroReflectEnumDeclaration> Enumerations;
 	std::vector<MicroReflectFunctionDeclaration> Functions;

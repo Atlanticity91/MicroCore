@@ -31,4 +31,22 @@
 
 #pragma once
 
-#include "MicroTraits.h"
+#include "BenchReport.h"
+
+namespace micro {
+
+	/**
+	 * Bench function
+	 * @note : Run elementary benchmark.
+	 * @param name : Query bench function name.
+	 * @param step_counts : Number of steps foreach lambda execution.
+	 * @param lambda : Query lambda to bench.
+	 * @return : Return benchmark result.
+	 **/
+	MICRO_API BenchReport Bench(
+		micro_string name,
+		std::initializer_list<uint32_t> step_counts,
+		std::function<double( BenchTimer& timer, uint32_t )> lambda
+	);
+
+};

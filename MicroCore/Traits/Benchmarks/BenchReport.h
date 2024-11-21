@@ -29,51 +29,34 @@
  *
  **/
 
-#pragma once 
+#pragma once
 
-#include "MicroReflectParameterDeclaration.h"
+#include "BenchResult.h"
 
-/**
- * MicroReflectFunctionDeclaration struct
- * @note : Defined function declaration for reflection system parser.
- **/
-micro_struct MicroReflectFunctionDeclaration : public MicroReflectDeclaration {
+namespace micro {
 
-	MicroReflectAccessor Accessor;
-	std::string ReturnType;
-	std::vector<MicroReflectParameterDeclaration> Parameters;
+	micro_struct BenchReport {
 
-	/**
-	 * Constructor
-	 **/
-	MicroReflectFunctionDeclaration( );
+		micro_string Name;
+		std::vector<BenchResult> Results;
 
-	/**
-	 * Constructor
-	 * @param name : Query function name.
-	 **/
-	MicroReflectFunctionDeclaration( std::string&& name );
+		/**
+		 * Constructor
+		 **/
+		BenchReport( );
 
-	/**
-	 * Constructor
-	 * @param name : Query function name.
-	 * @param return_type : Query function return type.
-	 **/
-	MicroReflectFunctionDeclaration( 
-		std::string&& name, 
-		std::string&& return_type 
-	);
-	
-	/**
-	 * Constructor
-	 * @param name : Query function name.
-	 * @param return_type : Query function return type.
-	 * @param accessor : Query function accessor.
-	 **/
-	MicroReflectFunctionDeclaration( 
-		std::string&& name, 
-		std::string&& return_type, 
-		const MicroReflectAccessor accessor 
-	);
+		/**
+		 * Constructor
+		 * @param name : Query function name.
+		 * @param step_count : Number of execution.
+		 **/
+		BenchReport( micro_string name, const uint32_t step_count );
+
+		/**
+		 * Move-Constructor
+		 **/
+		BenchReport( BenchReport&& other );
+
+	};
 
 };

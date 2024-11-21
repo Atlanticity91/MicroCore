@@ -29,51 +29,27 @@
  *
  **/
 
-#pragma once 
+#include "__micro_core_pch.h"
 
-#include "MicroReflectParameterDeclaration.h"
+////////////////////////////////////////////////////////////////////////////////////////////
+//		===	PUBLIC ===
+////////////////////////////////////////////////////////////////////////////////////////////
+namespace micro {
 
-/**
- * MicroReflectFunctionDeclaration struct
- * @note : Defined function declaration for reflection system parser.
- **/
-micro_struct MicroReflectFunctionDeclaration : public MicroReflectDeclaration {
+	BenchTimer::BenchTimer( )
+		: m_start_point{ } 
+	{ }
 
-	MicroReflectAccessor Accessor;
-	std::string ReturnType;
-	std::vector<MicroReflectParameterDeclaration> Parameters;
+	void BenchTimer::Start( ) {
+		m_start_point = std::chrono::high_resolution_clock::now( );
+	}
 
-	/**
-	 * Constructor
-	 **/
-	MicroReflectFunctionDeclaration( );
+	double BenchTimer::Resolve( ) {
+		auto stop_point = std::chrono::high_resolution_clock::now( );
+		auto start		= std::chrono::time_point_cast<std::chrono::microseconds>( m_start_point ).time_since_epoch( );
+		auto stop		= std::chrono::time_point_cast<std::chrono::microseconds>( stop_point ).time_since_epoch( );
 
-	/**
-	 * Constructor
-	 * @param name : Query function name.
-	 **/
-	MicroReflectFunctionDeclaration( std::string&& name );
-
-	/**
-	 * Constructor
-	 * @param name : Query function name.
-	 * @param return_type : Query function return type.
-	 **/
-	MicroReflectFunctionDeclaration( 
-		std::string&& name, 
-		std::string&& return_type 
-	);
-	
-	/**
-	 * Constructor
-	 * @param name : Query function name.
-	 * @param return_type : Query function return type.
-	 * @param accessor : Query function accessor.
-	 **/
-	MicroReflectFunctionDeclaration( 
-		std::string&& name, 
-		std::string&& return_type, 
-		const MicroReflectAccessor accessor 
-	);
+		return std::chrono::duration<double>( stop - start ).count( );
+	}
 
 };

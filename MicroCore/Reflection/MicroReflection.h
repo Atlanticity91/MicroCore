@@ -37,9 +37,8 @@
 #	define MICRO_FIELD( ... )
 #	define MICRO_FUNCTION( ... )
 #	define MICRO_ENUM( ... ) enum
-#	define MICRO_UNION( ... ) union 
-#	define MICRO_STRUCT( ... ) struct
-#	define MICRO_CLASS( ... ) class
+#	define MICRO_STRUCT( ... ) struct API
+#	define MICRO_CLASS( ... ) class API
 #	define MICRO_REFLECT_BODY( )\
 		template<class T> \
 		friend const micro::ReflectClass* micro::GetClassImpl( micro::ReflectClassTag<T> ) noexcept;
@@ -47,7 +46,6 @@
 #	define MICRO_FIELD( ... ) __attribute__(( annotate( "micro_reflect," #__VA_ARGS__ )))
 #	define MICRO_FUNCTION( ... ) __attribute__(( annotate( "micro_reflect," #__VA_ARGS__ )))
 #	define MICRO_ENUM( ... ) enum __attribute__(( annotate( "micro_reflect," #__VA_ARGS__ )))
-#	define MICRO_UNION( ... ) union __attribute__(( annotate( "micro_reflect," #__VA_ARGS__ )))
 #	define MICRO_STRUCT( ... ) struct __attribute__(( annotate( "micro_reflect," #__VA_ARGS__ )))
 #	define MICRO_CLASS( ... ) class __attribute__(( annotate( "micro_reflect," #__VA_ARGS__ )))
 #	define MICRO_REFLECT_BODY( )
@@ -56,13 +54,13 @@
 namespace micro {
 
 	/**
-	 * GetType function
+	 * GetReflectType function
 	 * @note : Get type implementation detail.
 	 * @template T : Type to process.
 	 * @return : Return pointer to the type structure detail.
 	 **/
 	template<class T>
-	const ReflectType* GetType( ) noexcept {
+	const ReflectType* GetReflectType( ) noexcept {
 		return GetTypeImpl( ReflectTypeTag<T>{ } );
 	};
 
@@ -73,7 +71,7 @@ namespace micro {
 	 * @return : Return pointer to the type structure detail.
 	 **/
 	template<class T>
-	const ReflectClass* GetClass( ) noexcept {
+	const ReflectClass* GetReflectClass( ) noexcept {
 		return GetClassImpl( ReflectClassTag<T>{ } );
 	};
 

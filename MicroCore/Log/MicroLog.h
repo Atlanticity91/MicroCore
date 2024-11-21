@@ -50,7 +50,7 @@ namespace micro {
 	 * @param name : Name of the logger.
 	 * @param path : Path to the log file.
 	 **/
-	bool create_log( const std::string& name, const std::string& path );
+	MICRO_API bool create_log( const std::string& name, const std::string& path );
 
 	/**
 	 * create_log function
@@ -58,13 +58,13 @@ namespace micro {
 	 * @param name : Name of the logger.
 	 * @param path : Path to the log file.
 	 **/
-	bool create_log( micro_string name, micro_string path );
+	MICRO_API bool create_log( micro_string name, micro_string path );
 
 	/**
 	 * get_logger function
 	 * @note : Get the internal logger value.
 	 **/
-	std::shared_ptr<spdlog::logger> get_logger( );
+	MICRO_API std::shared_ptr<spdlog::logger> get_logger( );
 
 	/**
 	 * log_trace templace procedure

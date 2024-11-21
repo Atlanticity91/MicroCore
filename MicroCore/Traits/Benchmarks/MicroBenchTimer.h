@@ -29,51 +29,41 @@
  *
  **/
 
-#pragma once 
+#pragma once
 
-#include "MicroReflectParameterDeclaration.h"
+#include "../MicroTraits.h"
 
-/**
- * MicroReflectFunctionDeclaration struct
- * @note : Defined function declaration for reflection system parser.
- **/
-micro_struct MicroReflectFunctionDeclaration : public MicroReflectDeclaration {
+namespace micro {
 
-	MicroReflectAccessor Accessor;
-	std::string ReturnType;
-	std::vector<MicroReflectParameterDeclaration> Parameters;
+	micro_class BenchTimer final {
 
-	/**
-	 * Constructor
-	 **/
-	MicroReflectFunctionDeclaration( );
+	private:
+		std::chrono::time_point<std::chrono::high_resolution_clock> m_start_point;
 
-	/**
-	 * Constructor
-	 * @param name : Query function name.
-	 **/
-	MicroReflectFunctionDeclaration( std::string&& name );
+	public:
+		/**
+		 * Constructor
+		 **/
+		BenchTimer( );
 
-	/**
-	 * Constructor
-	 * @param name : Query function name.
-	 * @param return_type : Query function return type.
-	 **/
-	MicroReflectFunctionDeclaration( 
-		std::string&& name, 
-		std::string&& return_type 
-	);
-	
-	/**
-	 * Constructor
-	 * @param name : Query function name.
-	 * @param return_type : Query function return type.
-	 * @param accessor : Query function accessor.
-	 **/
-	MicroReflectFunctionDeclaration( 
-		std::string&& name, 
-		std::string&& return_type, 
-		const MicroReflectAccessor accessor 
-	);
+		/**
+		 * Destructor
+		 **/
+		~BenchTimer( ) = default;
+
+		/**
+		 * Start method
+		 * @note : Start timer.
+		 **/
+		void Start( );
+
+		/**
+		 * Resolve function
+		 * @note : Stop timer and resolve elapsed time in micro seconds.
+		 * @return : Return elapsed time in micro seconds as double.
+		 **/
+		double Resolve( );
+
+	};
 
 };

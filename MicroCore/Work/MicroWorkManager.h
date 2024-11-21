@@ -37,7 +37,7 @@
  * MicroWorkPriorities enum class
  * @note : Defined work priorities.
  **/
-enum class MicroWorkPriorities : uint32_t { 
+micro_enum_class MicroWorkPriorities : uint32_t { 
 
 	High = 0,
 	LOW,
@@ -50,7 +50,7 @@ enum class MicroWorkPriorities : uint32_t {
  * MicroWorkManager class
  * @note : Represent work manager for multithreading.
  **/
-class MicroWorkManager {
+micro_class MicroWorkManager {
 
 private:
 	std::mutex m_mutex;

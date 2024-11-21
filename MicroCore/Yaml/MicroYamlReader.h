@@ -33,7 +33,7 @@
 
 #include "MicroYaml.h"
 
-class MicroYamlReader final {
+micro_class MicroYamlReader final {
 
 private:
 	YAML::Node m_document;

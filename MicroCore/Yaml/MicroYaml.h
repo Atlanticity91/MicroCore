@@ -38,120 +38,286 @@
 
 namespace YAML {
 
+    ////////////////////////////////////////////////////////////////////////////////////////////
+    //	micro_upoint
+    ////////////////////////////////////////////////////////////////////////////////////////////
     template<>
     struct convert<micro_upoint> {
+
+        /**
+         * encode static function
+         * @note : Encode data for yaml writing operation.
+         * @param rhs : Reference to value to encode.
+         * @return : Return Yaml node.
+         **/
         static Node encode( const micro_upoint& rhs ) {
-            Node node;
+            auto node = Node{ };
 
             node.push_back( rhs.x );
             node.push_back( rhs.y );
+            node.SetStyle( EmitterStyle::Flow );
 
             return node;
-        }
+        };
 
+        /**
+         * decode static function
+         * @note : Decode data from yaml reading operation.
+         * @param node : Query node to decoce.
+         * @param rhs : Reference to value used to store decoded data.
+         * @return : Return true when operation succeeded.
+         **/
         static bool decode( const Node& node, micro_upoint& rhs ) {
-            if ( !node.IsSequence( ) || node.size( ) != 2 )
-                return false;
+            auto result = node.IsSequence( ) && node.size( ) == 2;
 
-            rhs.x = node[ 0 ].as<micro_upoint::value_type>( );
-            rhs.y = node[ 1 ].as<micro_upoint::value_type>( );
+            if ( result ) {
+                rhs.x = node[ 0 ].as<micro_upoint::value_type>( );
+                rhs.y = node[ 1 ].as<micro_upoint::value_type>( );
+            }
 
-            return true;
-        }
+            return result;
+        };
+
     };
 
+    /**
+     * Left hand operator
+     * @note : Stream style write operator overload.
+     * @param out : Current Yaml emitter intance.
+     * @param value : Query value to write.
+     * @return : Return current Yaml emitter instance.
+     **/
+    Emitter& operator<<( Emitter& out, const micro_upoint& value ) {
+        out << YAML::Flow << YAML::BeginSeq << value.x << value.y << YAML::EndSeq;
+
+        return out;
+    };
+
+    ////////////////////////////////////////////////////////////////////////////////////////////
+    //	micro_point
+    ////////////////////////////////////////////////////////////////////////////////////////////
     template<>
     struct convert<micro_point> {
+
+        /**
+         * encode static function
+         * @note : Encode data for yaml writing operation.
+         * @param rhs : Reference to value to encode.
+         * @return : Return Yaml node.
+         **/
         static Node encode( const micro_point& rhs ) {
-            Node node;
+            auto node = Node{ };
 
             node.push_back( rhs.x );
             node.push_back( rhs.y );
+            node.SetStyle( EmitterStyle::Flow );
 
             return node;
-        }
+        };
 
+        /**
+         * decode static function
+         * @note : Decode data from yaml reading operation.
+         * @param node : Query node to decoce.
+         * @param rhs : Reference to value used to store decoded data.
+         * @return : Return true when operation succeeded.
+         **/
         static bool decode( const Node& node, micro_point& rhs ) {
-            if ( !node.IsSequence( ) || node.size( ) != 2 )
-                return false;
+            auto result = node.IsSequence( ) && node.size( ) == 2;
+            
+            if ( result ) {
+                rhs.x = node[ 0 ].as<micro_point::value_type>( );
+                rhs.y = node[ 1 ].as<micro_point::value_type>( );
+            }
 
-            rhs.x = node[ 0 ].as<micro_point::value_type>( );
-            rhs.y = node[ 1 ].as<micro_point::value_type>( );
+            return result;
+        };
 
-            return true;
-        }
     };
 
+    /**
+     * Left hand operator
+     * @note : Stream style write operator overload.
+     * @param out : Current Yaml emitter intance.
+     * @param value : Query value to write.
+     * @return : Return current Yaml emitter instance.
+     **/
+    Emitter& operator<<( Emitter& out, const micro_point& value ) {
+        out << YAML::Flow << YAML::BeginSeq << value.x << value.y << YAML::EndSeq;
+
+        return out;
+    };
+
+    ////////////////////////////////////////////////////////////////////////////////////////////
+    //	micro_vec2
+    ////////////////////////////////////////////////////////////////////////////////////////////
     template<>
     struct convert<micro_vec2> {
+
+        /**
+         * encode static function
+         * @note : Encode data for yaml writing operation.
+         * @param rhs : Reference to value to encode.
+         * @return : Return Yaml node.
+         **/
         static Node encode( const micro_vec2& rhs ) {
-            Node node;
+            auto node = Node{ };
 
             node.push_back( rhs.x );
             node.push_back( rhs.y );
+            node.SetStyle( EmitterStyle::Flow );
 
             return node;
-        }
+        };
 
+        /**
+         * decode static function
+         * @note : Decode data from yaml reading operation.
+         * @param node : Query node to decoce.
+         * @param rhs : Reference to value used to store decoded data.
+         * @return : Return true when operation succeeded.
+         **/
         static bool decode( const Node& node, micro_vec2& rhs ) {
-            if ( !node.IsSequence( ) || node.size( ) != 2 )
-                return false;
+            auto result = node.IsSequence( ) && node.size( ) == 2;
 
-            rhs.x = node[ 0 ].as<micro_vec2::value_type>( );
-            rhs.y = node[ 1 ].as<micro_vec2::value_type>( );
+            if ( result ) {
+                rhs.x = node[ 0 ].as<micro_vec2::value_type>( );
+                rhs.y = node[ 1 ].as<micro_vec2::value_type>( );
+            }
 
-            return true;
-        }
+            return result;
+        };
+
     };
 
+    /**
+     * Left hand operator
+     * @note : Stream style write operator overload.
+     * @param out : Current Yaml emitter intance.
+     * @param value : Query value to write.
+     * @return : Return current Yaml emitter instance.
+     **/
+    Emitter& operator<<( Emitter& out, const micro_vec2& value ) {
+        out << YAML::Flow << YAML::BeginSeq << value.x << value.y << YAML::EndSeq;
+
+        return out;
+    };
+
+    ////////////////////////////////////////////////////////////////////////////////////////////
+    //	micro_vec3
+    ////////////////////////////////////////////////////////////////////////////////////////////
     template<>
     struct convert<micro_vec3> {
+
+        /**
+         * encode static function
+         * @note : Encode data for yaml writing operation.
+         * @param rhs : Reference to value to encode.
+         * @return : Return Yaml node.
+         **/
         static Node encode( const micro_vec3& rhs ) {
-            Node node;
+            auto node = Node{ };
 
             node.push_back( rhs.x );
             node.push_back( rhs.y );
             node.push_back( rhs.z );
+            node.SetStyle( EmitterStyle::Flow );
 
             return node;
-        }
+        };
 
+        /**
+         * decode static function
+         * @note : Decode data from yaml reading operation.
+         * @param node : Query node to decoce.
+         * @param rhs : Reference to value used to store decoded data.
+         * @return : Return true when operation succeeded.
+         **/
         static bool decode( const Node& node, micro_vec3& rhs ) {
-            if ( !node.IsSequence( ) || node.size( ) != 3 )
-                return false;
+            auto result = node.IsSequence( ) && node.size( ) == 3;
 
-            rhs.x = node[ 0 ].as<micro_vec3::value_type>( );
-            rhs.y = node[ 1 ].as<micro_vec3::value_type>( );
-            rhs.z = node[ 2 ].as<micro_vec3::value_type>( );
+            if ( result ) {
+                rhs.x = node[ 0 ].as<micro_vec3::value_type>( );
+                rhs.y = node[ 1 ].as<micro_vec3::value_type>( );
+                rhs.z = node[ 2 ].as<micro_vec3::value_type>( );
+            }
 
-            return true;
-        }
+            return result;
+        };
+
     };
 
+    /**
+     * Left hand operator
+     * @note : Stream style write operator overload.
+     * @param out : Current Yaml emitter intance.
+     * @param value : Query value to write.
+     * @return : Return current Yaml emitter instance.
+     **/
+    Emitter& operator<<( Emitter& out, const micro_vec3& value ) {
+        out << YAML::Flow << YAML::BeginSeq << value.x << value.y << value.z << YAML::EndSeq;
+
+        return out;
+    };
+
+    ////////////////////////////////////////////////////////////////////////////////////////////
+    //	micro_vec4
+    ////////////////////////////////////////////////////////////////////////////////////////////
     template<>
     struct convert<micro_vec4> {
+
+        /**
+         * encode static function
+         * @note : Encode data for yaml writing operation.
+         * @param rhs : Reference to value to encode.
+         * @return : Return Yaml node.
+         **/
         static Node encode( const micro_vec4& rhs ) {
-            Node node;
+            auto node = Node{ };
 
             node.push_back( rhs.x );
             node.push_back( rhs.y );
             node.push_back( rhs.z );
             node.push_back( rhs.w );
+            node.SetStyle( EmitterStyle::Flow );
 
             return node;
-        }
+        };
 
+        /**
+         * decode static function
+         * @note : Decode data from yaml reading operation.
+         * @param node : Query node to decoce.
+         * @param rhs : Reference to value used to store decoded data.
+         * @return : Return true when operation succeeded.
+         **/
         static bool decode( const Node& node, micro_vec4& rhs ) {
-            if ( !node.IsSequence( ) || node.size( ) != 4 )
-                return false;
+            auto result = node.IsSequence( ) && node.size( ) == 4;
 
-            rhs.x = node[ 0 ].as<micro_vec4::value_type>( );
-            rhs.y = node[ 1 ].as<micro_vec4::value_type>( );
-            rhs.z = node[ 2 ].as<micro_vec4::value_type>( );
-            rhs.z = node[ 3 ].as<micro_vec4::value_type>( );
+            if ( result ) {
+                rhs.x = node[ 0 ].as<micro_vec4::value_type>( );
+                rhs.y = node[ 1 ].as<micro_vec4::value_type>( );
+                rhs.z = node[ 2 ].as<micro_vec4::value_type>( );
+                rhs.z = node[ 3 ].as<micro_vec4::value_type>( );
+            }
 
-            return true;
-        }
+            return result;
+        };
+
+    };
+
+    /**
+     * Left hand operator
+     * @note : Stream style write operator overload.
+     * @param out : Current Yaml emitter intance.
+     * @param value : Query value to write.
+     * @return : Return current Yaml emitter instance.
+     **/
+    Emitter& operator<<( Emitter& out, const micro_vec4& value ) {
+        out << YAML::Flow;
+        out << YAML::BeginSeq << value.x << value.y << value.z << value.w << YAML::EndSeq;
+
+        return out;
     };
 
 };

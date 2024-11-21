@@ -29,51 +29,18 @@
  *
  **/
 
-#pragma once 
+#pragma once
 
-#include "MicroReflectParameterDeclaration.h"
+#include "MicroFileAccessors.h"
 
 /**
- * MicroReflectFunctionDeclaration struct
- * @note : Defined function declaration for reflection system parser.
+ * MicroFileTypes enum class
+ * @note : Defined all possible file types.
  **/
-micro_struct MicroReflectFunctionDeclaration : public MicroReflectDeclaration {
+micro_enum_class MicroFileTypes : uint32_t{
 
-	MicroReflectAccessor Accessor;
-	std::string ReturnType;
-	std::vector<MicroReflectParameterDeclaration> Parameters;
-
-	/**
-	 * Constructor
-	 **/
-	MicroReflectFunctionDeclaration( );
-
-	/**
-	 * Constructor
-	 * @param name : Query function name.
-	 **/
-	MicroReflectFunctionDeclaration( std::string&& name );
-
-	/**
-	 * Constructor
-	 * @param name : Query function name.
-	 * @param return_type : Query function return type.
-	 **/
-	MicroReflectFunctionDeclaration( 
-		std::string&& name, 
-		std::string&& return_type 
-	);
-	
-	/**
-	 * Constructor
-	 * @param name : Query function name.
-	 * @param return_type : Query function return type.
-	 * @param accessor : Query function accessor.
-	 **/
-	MicroReflectFunctionDeclaration( 
-		std::string&& name, 
-		std::string&& return_type, 
-		const MicroReflectAccessor accessor 
-	);
+	Undefined = 0,
+	Text,
+	Binary
 
 };

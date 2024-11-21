@@ -37,7 +37,11 @@ namespace micro {
 
 	struct ReflectClass;
 
-	struct ReflectParent {
+	/**
+	 * ReflectParent struct
+	 * @note : Defined class parent for reflection system.
+	 **/
+	micro_struct ReflectParent {
 
 		MicroReflectAccessor Accessor;
 		const ReflectClass* Parent;

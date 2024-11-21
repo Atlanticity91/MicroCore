@@ -31,9 +31,13 @@
 
 #pragma once 
 
-#include "../../Platform/MicroFile.h"
+#include "../../Platform/Files/MicroFile.h"
 
-enum class MicroReflectAccessor : uint32_t {
+/**
+ * MicroReflectAccessor enum class
+ * @note : Defined all possible element accessor.
+ **/
+micro_enum_class MicroReflectAccessor : uint32_t {
 
 	Public = 0,
 	Protected,

@@ -34,3 +34,25 @@
 ////////////////////////////////////////////////////////////////////////////////////////////
 //		===	PUBLIC ===
 ////////////////////////////////////////////////////////////////////////////////////////////
+namespace micro {
+
+	BenchReport Bench(
+		micro_string name,
+		std::initializer_list<uint32_t> step_counts,
+		std::function<double( BenchTimer& timer, uint32_t )> lambda
+	) {
+		auto step_id = step_counts.size( );
+		auto report = BenchReport{ name, (uint32_t)step_id };
+		auto timer = BenchTimer{ };
+
+		while ( step_id-- > 0 ) {
+			auto& result = report.Results[ step_id ];
+
+			result.Steps	= micro_ref( step_counts.begin( ) + step_id );
+			result.Duration = std::invoke( lambda, timer, result.Steps );
+		}
+
+		return std::move( report );
+	}
+
+};

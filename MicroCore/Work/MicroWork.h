@@ -44,7 +44,7 @@ concept MicroWorkRequirements = ( sizeof( Type ) <= sizeof( float ) * 16 );
  * MicroWork struct
  * @note : Defined thread work handle.
  **/
-struct MicroWork {
+micro_struct MicroWork {
 	
 	using Execute_t  = std::function<bool( class MicroWorkManager*, float* )>;
 	using Callback_t = std::function<void( class MicroWorkManager*, float* )>;

@@ -90,6 +90,11 @@ void MicroReflectParser::InitializeGeneric( ) {
 	} );
 }
 
+void MicroReflectParser::RegisterGeneric( ) {
+	Register<MicroReflectGenerator>( );
+	Register<MicroYamlGenerator>( );
+}
+
 void MicroReflectParser::ParseArguments( 
 	const int32_t argument_count, 
 	const char** argument_values
@@ -113,6 +118,19 @@ void MicroReflectParser::ParseArguments(
 	}
 }
 
+void MicroReflectParser::Run( const std::string& name, const std::string& source ) {
+	const auto arguments = GetArguments( );
+	auto unsaved_file	 = CXUnsavedFile{ };
+	auto context		 = MicroReflectParsingContext{ "unsaved.txt" };
+	
+	unsaved_file.Filename = "unsaved.txt";
+	unsaved_file.Contents = source.c_str( );
+	unsaved_file.Length   = source.size( );
+
+	if ( ProcessClangSource( arguments, unsaved_file, context ) )
+		RunEmitters( context );
+}
+
 void MicroReflectParser::Run( const std::filesystem::path& source_path ) {
 	const auto arguments = GetArguments( );
 
@@ -132,7 +150,7 @@ void MicroReflectParser::Run(
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////
-//		===	PRIVATE ===
+//		===	PROTECTED ===
 ////////////////////////////////////////////////////////////////////////////////////////////
 void MicroReflectParser::RunParser(
 	const std::vector<micro_string>& arguments,
@@ -182,6 +200,31 @@ bool MicroReflectParser::ProcessClang(
 	return result;
 }
 
+bool MicroReflectParser::ProcessClangSource(
+	const std::vector<micro_string>& arguments,
+	CXUnsavedFile& save,
+	MicroReflectParsingContext& context
+) {
+	const auto* argv = arguments.data( );
+	const auto argc  = (uint32_t)arguments.size( );
+	auto clang_index = clang_createIndex( 0, 0 );
+	auto result		 = false;
+
+	if ( auto clang_unit = clang_parseTranslationUnit( clang_index, save.Filename, argv, argc, micro_ptr( save ), 1, m_options ) ) {
+		auto* user_data = micro_ptr_as( context, CXClientData );
+		auto root		= clang_getTranslationUnitCursor( clang_unit );
+
+		clang_visitChildren( root, ClangVisitor, user_data );
+		clang_disposeTranslationUnit( clang_unit );
+
+		result = context.GetIsValid( );
+	}
+
+	clang_disposeIndex( clang_index );
+
+	return result;
+}
+
 void MicroReflectParser::RunEmitters( MicroReflectParsingContext& context ) {
 	for ( auto& emitter : m_emitters )
 		emitter->PreRun( context );
@@ -195,7 +238,7 @@ void MicroReflectParser::RunEmitters( MicroReflectParsingContext& context ) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////
-//		===	PRIVATE STATIC ===
+//		===	PROTECTED STATIC ===
 ////////////////////////////////////////////////////////////////////////////////////////////
 CXChildVisitResult MicroReflectParser::ClangVisitor(
 	CXCursor cursor,
@@ -235,7 +278,7 @@ CXChildVisitResult MicroReflectParser::ClangVisitor(
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////
-//		===	PRIVATE GET ===
+//		===	PROTECTED GET ===
 ////////////////////////////////////////////////////////////////////////////////////////////
 bool MicroReflectParser::CanParse( const std::filesystem::path& extension ) const {
 	auto first_element = m_extensions.begin( );
@@ -262,7 +305,7 @@ std::vector<micro_string> MicroReflectParser::GetArguments( ) const {
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////
-//		===	PRIVATE STATIC GET ===
+//		===	PROTECTED STATIC GET ===
 ////////////////////////////////////////////////////////////////////////////////////////////
 bool MicroReflectParser::GetIsFunction( const CXCursorKind cursor_kind ) {
 	return  cursor_kind == CXCursor_FunctionDecl ||

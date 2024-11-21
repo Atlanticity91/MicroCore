@@ -29,51 +29,24 @@
  *
  **/
 
-#pragma once 
+#include "__micro_core_pch.h"
 
-#include "MicroReflectParameterDeclaration.h"
-
-/**
- * MicroReflectFunctionDeclaration struct
- * @note : Defined function declaration for reflection system parser.
- **/
-micro_struct MicroReflectFunctionDeclaration : public MicroReflectDeclaration {
-
-	MicroReflectAccessor Accessor;
-	std::string ReturnType;
-	std::vector<MicroReflectParameterDeclaration> Parameters;
-
-	/**
-	 * Constructor
-	 **/
-	MicroReflectFunctionDeclaration( );
-
-	/**
-	 * Constructor
-	 * @param name : Query function name.
-	 **/
-	MicroReflectFunctionDeclaration( std::string&& name );
-
-	/**
-	 * Constructor
-	 * @param name : Query function name.
-	 * @param return_type : Query function return type.
-	 **/
-	MicroReflectFunctionDeclaration( 
-		std::string&& name, 
-		std::string&& return_type 
-	);
-	
-	/**
-	 * Constructor
-	 * @param name : Query function name.
-	 * @param return_type : Query function return type.
-	 * @param accessor : Query function accessor.
-	 **/
-	MicroReflectFunctionDeclaration( 
-		std::string&& name, 
-		std::string&& return_type, 
-		const MicroReflectAccessor accessor 
+////////////////////////////////////////////////////////////////////////////////////////////
+//		===	PROTECTED GET ===
+////////////////////////////////////////////////////////////////////////////////////////////
+bool MicroReflectEmitter::FindAnnotation(
+	const std::vector<std::string>& annotation_list,
+	const std::string& annotation
+) const {
+	auto first  = annotation_list.begin( );
+	auto last   = annotation_list.end( );
+	auto result = std::find_if(
+		first,
+		last,
+		[ annotation ]( const std::string& element ) {
+			return element == annotation;
+		}
 	);
 
-};
+	return result != last;
+}

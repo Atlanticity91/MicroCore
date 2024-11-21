@@ -33,9 +33,24 @@
 
 #include "MicroPlatform.h"
 
+/**
+ * micro_make_breakpoint macro
+ * @note : Defined breakpoint by calling.
+ **/
+#ifdef _WIN64
+#   define micro_make_breakpoint __debugbreak( )
+#elif defined( __linux__ )
+#   define micro_make_breakpoint 
+#elif defined( __APPLE__ )
+#   define micro_make_breakpoint 
+#endif
+
+/**
+ * micro_assert macro
+ * @note : Defined assertion macro.
+ **/
 #ifdef MICRO_DEBUG
 #   ifdef _WIN64
-#   define micro_make_breakpoint __debugbreak( )
 #   define micro_assert( CHECK, FORMAT, ... )\
 	    do {\
             if (\

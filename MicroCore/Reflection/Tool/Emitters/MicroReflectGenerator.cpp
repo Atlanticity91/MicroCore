@@ -35,6 +35,7 @@
 //		===	PUBLIC ===
 ////////////////////////////////////////////////////////////////////////////////////////////
 MicroReflectGenerator::MicroReflectGenerator( ) 
+	: MicroReflectEmitter{ }
 { }
 
 void MicroReflectGenerator::PreRun( MicroReflectSourceDeclaration& declaration ) { }
@@ -90,9 +91,12 @@ void MicroReflectGenerator::GenerateFunctions(
 	auto function_id = 0;
 
 	for ( auto& function : declaration ) {
+		if ( !GetCanReflect( function.Annotations ) )
+			continue;
+
 		file << "\t\t\t\tself->Functions[ " << std::to_string( function_id++ ) << " ] = { \""
 			 << function.Name << "\",\n"
-			 << "GetType<" << function.ReturnType << ">( ),\n"
+			 << "GetReflectType<" << function.ReturnType << ">( ),\n"
 			 << "{}\n"
 			 << GenerateAccessor( function.Accessor )
 			 << " };\n";
@@ -122,8 +126,7 @@ void MicroReflectGenerator::GenerateParents(
 
 	while ( parent_id-- > 0 ) {
 		file << "\t\t\t\tself->Parents[ " << std::to_string( parent_id++ ) << " ] = { \""
-			 << parents[ parent_id ].Name
-			 << ", "
+			 << "GetReflectClass<" << parents[parent_id].Name << ">( ), "
 			 << GenerateAccessor( parents[ parent_id ].Accessor )
 			 << "\" };\n";
 	}
@@ -139,7 +142,10 @@ void MicroReflectGenerator::GenerateFields(
 	auto field_id = 0;
 
 	for ( auto& field : declaration ) {
-		file << "\t\t\t\tself->Parents[ " << std::to_string( field_id++ ) << " ] = { \"" 
+		if ( !GetCanReflect( field.Annotations ) )
+			continue;
+
+		file << "\t\t\t\tself->Fields[ " << std::to_string( field_id++ ) << " ] = { \"" 
 			 << field.Name << "\", offsetof( " << owner << ", " << field.Name << " ), GetType<" 
 			 << field.Type << ">( ), "
 			 << GenerateAccessor( field.Accessor ) << " };\n";
@@ -152,6 +158,9 @@ void MicroReflectGenerator::GenerateClass(
 	std::ofstream& file,
 	const MicroReflectClassDeclaration& declaration
 ) {
+	if ( !GetCanReflect( declaration.Annotations ) )
+		return;
+
 	auto& name = declaration.Name;
 
 	file << "// === " << name << " ===\n";
@@ -186,4 +195,13 @@ void MicroReflectGenerator::GenerateNamespace(
 	
 	for ( const auto& class_declaration : declaration.Classes )
 		GenerateClass( file, class_declaration );
+}
+
+////////////////////////////////////////////////////////////////////////////////////////////
+//		===	PRIVATE GET ===
+////////////////////////////////////////////////////////////////////////////////////////////
+micro_inline bool MicroReflectGenerator::GetCanReflect(
+	const std::vector<std::string>& annotations
+) const {
+	return FindAnnotation( annotations, "micro_reflect" );
 }

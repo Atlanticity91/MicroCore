@@ -41,9 +41,9 @@ namespace micro {
 		static auto storage_vec3 = ReflectStorageClass<micro_vec3, 0, 3, 0>{
 			"micro_vec3",
 			[]( auto* self ) {
-				self->Fields[ 0 ] = { "x", GetType<micro_vec2::value_type>( ) };
-				self->Fields[ 1 ] = { "y", offsetof( micro_vec3, y ), GetType<micro_vec2::value_type>( ) };
-				self->Fields[ 2 ] = { "z", offsetof( micro_vec3, z ), GetType<micro_vec2::value_type>( ) };
+				self->Fields[ 0 ] = { "x", GetReflectType<micro_vec3::value_type>( ) };
+				self->Fields[ 1 ] = { "y", offsetof( micro_vec3, y ), GetReflectType<micro_vec3::value_type>( ) };
+				self->Fields[ 2 ] = { "z", offsetof( micro_vec3, z ), GetReflectType<micro_vec3::value_type>( ) };
 			}
 		};
 

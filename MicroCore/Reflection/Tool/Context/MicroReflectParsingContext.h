@@ -39,7 +39,11 @@ extern "C" {
 
 typedef void* MicroReflectParsingNode;
 
-class MicroReflectParsingContext final {
+/**
+ * MicroReflectParsingContext class final
+ * @note : Defined reflection system parsing context.
+ **/
+micro_class MicroReflectParsingContext final {
 
 private:
 	MicroReflectSourceDeclaration m_source;

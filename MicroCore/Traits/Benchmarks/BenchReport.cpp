@@ -29,51 +29,25 @@
  *
  **/
 
-#pragma once 
+#include "__micro_core_pch.h"
 
-#include "MicroReflectParameterDeclaration.h"
+////////////////////////////////////////////////////////////////////////////////////////////
+//		===	PUBLIC ===
+////////////////////////////////////////////////////////////////////////////////////////////
+namespace micro {
 
-/**
- * MicroReflectFunctionDeclaration struct
- * @note : Defined function declaration for reflection system parser.
- **/
-micro_struct MicroReflectFunctionDeclaration : public MicroReflectDeclaration {
+	BenchReport::BenchReport( )
+		: BenchReport{ "", 0 } 
+	{ }
 
-	MicroReflectAccessor Accessor;
-	std::string ReturnType;
-	std::vector<MicroReflectParameterDeclaration> Parameters;
+	BenchReport::BenchReport( micro_string name, const uint32_t step_count )
+		: Name{ name },
+		Results{ step_count } 
+	{ }
 
-	/**
-	 * Constructor
-	 **/
-	MicroReflectFunctionDeclaration( );
-
-	/**
-	 * Constructor
-	 * @param name : Query function name.
-	 **/
-	MicroReflectFunctionDeclaration( std::string&& name );
-
-	/**
-	 * Constructor
-	 * @param name : Query function name.
-	 * @param return_type : Query function return type.
-	 **/
-	MicroReflectFunctionDeclaration( 
-		std::string&& name, 
-		std::string&& return_type 
-	);
-	
-	/**
-	 * Constructor
-	 * @param name : Query function name.
-	 * @param return_type : Query function return type.
-	 * @param accessor : Query function accessor.
-	 **/
-	MicroReflectFunctionDeclaration( 
-		std::string&& name, 
-		std::string&& return_type, 
-		const MicroReflectAccessor accessor 
-	);
+	BenchReport::BenchReport( BenchReport&& other )
+		: Name{ other.Name },
+		Results{ std::move( other.Results ) } 
+	{ }
 
 };

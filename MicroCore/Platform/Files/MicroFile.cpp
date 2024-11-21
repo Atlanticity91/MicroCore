@@ -56,9 +56,9 @@ bool MicroFile::Open(
 	const MicroFileTypes type 
 ) {
 	auto file_mode = GetFileMode( accessor );
-	auto result    = accessor > MicroFileAccessors::None && type > MicroFileTypes::Undefined;
+	auto result    = false;
 
-	if ( result ) {
+	if ( accessor > MicroFileAccessors::None && type > MicroFileTypes::Undefined ) {
 		m_type	   = type;
 		m_accessor = accessor;
 

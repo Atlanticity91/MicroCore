@@ -31,23 +31,7 @@
 
 #pragma once
 
-#include "../Traits/MicroTraits.h"
-
-/**
- * micro_stringifyx macro
- * @note : Stringify text.
- * @param TEXT : Query text to stringify.
- **/
-#define micro_stringifyx( TEXT ) ( #TEXT )
-
-/**
- * micro_stringify macro
- * @note : Wrapper for stringify to prevent macro substitution error.
- * @param TEXT : Query text to stringify.
- **/
-#define micro_stringify( TEXT ) micro_stringifyx( TEXT )
-
-typedef const char* micro_string;
+#include "../Traits/Profilers/MicroProfiler.h"
 
 namespace micro {
 
@@ -56,7 +40,7 @@ namespace micro {
 	 * @note : Get if plaform is little endian.
 	 * @return : True when plaform is little endian.
 	 **/
-	bool is_little_endian( );
+	MICRO_API bool is_little_endian( );
 
 	/**
 	 * copy function
@@ -66,7 +50,7 @@ namespace micro {
 	 * @param dst : Pointer to the destination buffer.
 	 * @return : True for copy success.
 	 **/
-	bool copy( const uint32_t length, const void* src, void* dst );
+	MICRO_API bool copy( const uint32_t length, const void* src, void* dst );
 	
 	/**
 	 * move function
@@ -76,7 +60,7 @@ namespace micro {
 	 * @param dst : Pointer to the destination buffer.
 	 * @return : True for copy success.
 	 **/
-	bool move( const uint32_t length, const void* src, void* dst );
+	MICRO_API bool move( const uint32_t length, const void* src, void* dst );
 
 	/**
 	 * copy template function
@@ -88,7 +72,7 @@ namespace micro {
 	 **/
 	template<typename Type>
 	bool copy( const Type& src, Type& dst ) { 
-		return copy( (uint32_t)sizeof( Type ), &src, &dst );
+		return copy( (uint32_t)sizeof( Type ), micro_ptr( src ), micro_ptr( dst ) );
 	};
 
 	/**
@@ -101,7 +85,7 @@ namespace micro {
 	 **/
 	template<typename Type>
 	bool move( const Type& src, Type& dst ) {
-		return move( (uint32_t)sizeof( Type ), &src, &dst );
+		return move( (uint32_t)sizeof( Type ), micro_ptr( src ), micro_ptr( dst ) );
 	};
 
 	/**

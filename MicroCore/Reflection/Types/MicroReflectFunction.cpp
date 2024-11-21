@@ -37,32 +37,47 @@
 namespace micro { 
 
 	ReflectFunction::ReflectFunction( )
-		: ReflectFunction{ "", MicroReflectAccessor::Public, GetType<void>( ) }
+		: ReflectFunction{ "", MicroReflectAccessor::Public, GetReflectType<void>( ) }
 	{ }
 
 	ReflectFunction::ReflectFunction( micro_string name )
-		: ReflectFunction{ name, MicroReflectAccessor::Public, GetType<void>( ), Parameters_t{ } }
+		: ReflectFunction{ 
+			name, 
+			MicroReflectAccessor::Public, 
+			GetReflectType<void>( ), 
+			Parameters_t{ } 
+		}
 	{ }
 
 	ReflectFunction::ReflectFunction(
 		micro_string name,
 		const MicroReflectAccessor accessor
 	)
-		: ReflectFunction{ name, accessor, GetType<void>( ), Parameters_t{ } }
+		: ReflectFunction{ name, accessor, GetReflectType<void>( ), Parameters_t{ } }
 	{ }
 
 	ReflectFunction::ReflectFunction(
 		micro_string name,
 		const ReflectType* return_type
 	)
-		: ReflectFunction{ name, MicroReflectAccessor::Public, return_type, Parameters_t{ } }
+		: ReflectFunction{ 
+			name, 
+			MicroReflectAccessor::Public,
+			return_type,
+			Parameters_t{ } 
+		}
 	{ }
 
 	ReflectFunction::ReflectFunction(
 		micro_string name,
 		const Parameters_t parameters
 	) 
-		: ReflectFunction{ name, MicroReflectAccessor::Public, GetType<void>( ), parameters }
+		: ReflectFunction{
+			name, 
+			MicroReflectAccessor::Public,
+			GetReflectType<void>( ), 
+			parameters 
+		}
 	{ }
 
 	ReflectFunction::ReflectFunction(
@@ -78,7 +93,7 @@ namespace micro {
 		const MicroReflectAccessor accessor,
 		const Parameters_t parameters
 	)
-		: ReflectFunction{ name, accessor, GetType<void>( ), parameters }
+		: ReflectFunction{ name, accessor, GetReflectType<void>( ), parameters }
 	{ }
 
 	ReflectFunction::ReflectFunction(

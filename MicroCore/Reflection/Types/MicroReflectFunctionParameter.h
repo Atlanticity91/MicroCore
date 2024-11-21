@@ -35,7 +35,11 @@
 
 namespace micro {
 
-	struct ReflectFunctionParameter {
+	/**
+	 * ReflectFunctionParameter struct
+	 * @note : Defined parameter representation for reflection system.
+	 **/
+	micro_struct ReflectFunctionParameter {
 
 		micro_string Name;
 		const ReflectType* Type;

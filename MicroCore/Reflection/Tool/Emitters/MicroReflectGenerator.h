@@ -33,7 +33,11 @@
 
 #include "MicroReflectEmitter.h"
 
-class MicroReflectGenerator final : public MicroReflectEmitter {
+/**
+ * MicroReflectGenerator class final
+ * @note : Defined reflection system default emitter.
+ **/
+micro_class MicroReflectGenerator final : public MicroReflectEmitter {
 
 public:
 	/**
@@ -137,5 +141,8 @@ private:
 		std::ofstream& file,
 		const MicroReflectNamespaceDeclaration& declaration
 	);
+
+private:
+	bool GetCanReflect( const std::vector<std::string>& annotations ) const;
 
 };

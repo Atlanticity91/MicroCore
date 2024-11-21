@@ -41,7 +41,7 @@ namespace micro {
 	 * @param data : Data used to calculate the checksum value.
 	 **/
 	micro_nodiscard_cause( "Cyclic Redundancy Checksum calculation is expensive" ) 
-	uint32_t crc32( const std::vector<uint8_t>& data );
+	micro_nodiscard MICRO_API uint32_t crc32( const std::vector<uint8_t>& data );
 
 	/**
 	 * crc32 function
@@ -50,21 +50,23 @@ namespace micro {
 	 * @param pointer : Pointer to data buffer.
 	 **/
 	micro_nodiscard_cause( "Cyclic Redundancy Checksum calculation is expensive" )
-	uint32_t crc32( const uint32_t length, const uint8_t* pointer );
+	micro_nodiscard MICRO_API uint32_t crc32( const uint32_t length, const uint8_t* pointer );
 	
 	/**
 	 * hash32 function
 	 * @note : Calculate 32 bits based hash for string.
 	 * @param string : String to hash.
 	 **/
-	micro_nodiscard uint32_t hash32( const std::string& string );
+	micro_nodiscard_cause( "Hashing string is expensive" )
+	micro_nodiscard MICRO_API uint32_t hash32( const std::string& string );
 
 	/**
 	 * hash32 function
 	 * @note : Calculate 32 bits based hash for string.
 	 * @param string : String to hash.
 	 **/
-	micro_nodiscard uint32_t hash32( micro_string string );
+	micro_nodiscard_cause( "Hashing string is expensive" )
+	micro_nodiscard MICRO_API uint32_t hash32( micro_string string );
 
 	/**
 	 * hash32 function
@@ -72,21 +74,24 @@ namespace micro {
 	 * @param length : Length of string to hash.
 	 * @param string : String to hash.
 	 **/
-	micro_nodiscard uint32_t hash32( const uint32_t length, micro_string string );
+	micro_nodiscard_cause( "Hashing string is expensive" )
+	micro_nodiscard MICRO_API uint32_t hash32( const uint32_t length, micro_string string );
 
 	/**
 	 * hash64 function
 	 * @note : Calculate 64 bits based hash for string.
 	 * @param string : String to hash.
 	 **/
-	micro_nodiscard uint64_t hash64( const std::string& string );
+	micro_nodiscard_cause( "Hashing string is expensive" )
+	micro_nodiscard MICRO_API uint64_t hash64( const std::string& string );
 
 	/**
 	 * hash32 function
 	 * @note : Calculate 64 bits based hash for string.
 	 * @param string : String to hash.
 	 **/
-	micro_nodiscard uint64_t hash64( micro_string string );
+	micro_nodiscard_cause( "Hashing string is expensive" )
+	micro_nodiscard MICRO_API uint64_t hash64( micro_string string );
 
 	/**
 	 * hash64 function
@@ -94,6 +99,7 @@ namespace micro {
 	 * @param length : Length of string to hash.
 	 * @param string : String to hash.
 	 **/
-	micro_nodiscard uint64_t hash64( const uint32_t length, micro_string string );
+	micro_nodiscard_cause( "Hashing string is expensive" )
+	micro_nodiscard MICRO_API uint64_t hash64( const uint32_t length, micro_string string );
 
 };

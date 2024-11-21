@@ -33,7 +33,7 @@
 
 #include "../Work/MicroWorkManager.h"
 
-class MicroGit final {
+micro_class MicroGit final {
 
 public:
 	/**

@@ -33,7 +33,11 @@
 
 #include "MicroReflectNamespaceDeclaration.h"
 
-struct MicroReflectSourceDeclaration : public MicroReflectNamespaceDeclaration {
+/**
+ * MicroReflectSourceDeclaration struct
+ * @note : Defined translation unit declaration for reflection system parser.
+ **/
+micro_struct MicroReflectSourceDeclaration : public MicroReflectNamespaceDeclaration {
 
 	std::filesystem::path Source;
 	std::vector<MicroReflectNamespaceDeclaration> Namespaces;

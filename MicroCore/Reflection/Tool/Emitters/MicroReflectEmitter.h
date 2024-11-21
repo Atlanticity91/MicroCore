@@ -33,7 +33,11 @@
 
 #include "../Declarations/MicroReflectSourceDeclaration.h"
 
-struct MicroReflectEmitter {
+/**
+ * MicroReflectEmitter interface
+ * @note : Defined reflection system parser emitter requirement.
+ **/
+micro_struct MicroReflectEmitter {
 
 	/**
 	 * Constructor
@@ -59,5 +63,18 @@ struct MicroReflectEmitter {
 	 * @param declaration : Reference to query declaration.
 	 **/
 	virtual void Run( const MicroReflectSourceDeclaration& declaration ) = 0;
+
+protected:
+	/**
+	 * FindAnnotation const function
+	 * @note : Find annotations from annotation list.
+	 * @param annotation_list : Query annotation list.
+	 * @param annotation : Query annotation.
+	 * @return : Return true when annotation is found.
+	 **/
+	bool FindAnnotation( 
+		const std::vector<std::string>& annotation_list,
+		const std::string& annotation
+	) const;
 
 };

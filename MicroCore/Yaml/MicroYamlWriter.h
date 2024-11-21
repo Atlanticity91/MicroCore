@@ -33,7 +33,7 @@
 
 #include "MicroYamlReader.h"
 
-class MicroYamlWriter final { 
+micro_class MicroYamlWriter final { 
 
 private:
 	std::string m_path;

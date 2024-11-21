@@ -35,7 +35,11 @@
 
 namespace micro { 
 
-	struct ReflectFunction : public ReflectType {
+	/**
+	 * ReflectFunction struct
+	 * @note : Defined function representation for reflection system.
+	 **/
+	micro_struct ReflectFunction : public ReflectType {
 
 		using Parameters_t = MicroReflectIteratorStorage<ReflectFunctionParameter>;
 

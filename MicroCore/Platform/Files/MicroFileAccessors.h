@@ -29,51 +29,19 @@
  *
  **/
 
-#pragma once 
+#pragma once
 
-#include "MicroReflectParameterDeclaration.h"
+#include "../MicroAssert.h"
 
 /**
- * MicroReflectFunctionDeclaration struct
- * @note : Defined function declaration for reflection system parser.
+ * MicroFileAccessors enum class
+ * @note : Defined all accessor for file access.
  **/
-micro_struct MicroReflectFunctionDeclaration : public MicroReflectDeclaration {
+micro_enum_class MicroFileAccessors : uint32_t{
 
-	MicroReflectAccessor Accessor;
-	std::string ReturnType;
-	std::vector<MicroReflectParameterDeclaration> Parameters;
-
-	/**
-	 * Constructor
-	 **/
-	MicroReflectFunctionDeclaration( );
-
-	/**
-	 * Constructor
-	 * @param name : Query function name.
-	 **/
-	MicroReflectFunctionDeclaration( std::string&& name );
-
-	/**
-	 * Constructor
-	 * @param name : Query function name.
-	 * @param return_type : Query function return type.
-	 **/
-	MicroReflectFunctionDeclaration( 
-		std::string&& name, 
-		std::string&& return_type 
-	);
-	
-	/**
-	 * Constructor
-	 * @param name : Query function name.
-	 * @param return_type : Query function return type.
-	 * @param accessor : Query function accessor.
-	 **/
-	MicroReflectFunctionDeclaration( 
-		std::string&& name, 
-		std::string&& return_type, 
-		const MicroReflectAccessor accessor 
-	);
+	None  = 0,
+	Read  = 1 << 0,
+	Write = 1 << 1,
+	Edit  = Read | Write
 
 };

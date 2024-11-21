@@ -41,8 +41,8 @@ namespace micro {
 		static auto storage_upoint = ReflectStorageClass<micro_upoint, 0, 2, 0>{ 
 			"micro_upoint",
 			[]( auto* self ){
-				self->Fields[ 0 ] = { "x", GetType<micro_upoint::value_type>( ) };
-				self->Fields[ 1 ] = { "y", offsetof( micro_upoint, y ), GetType<micro_upoint::value_type>( ) };
+				self->Fields[ 0 ] = { "x", GetReflectType<micro_upoint::value_type>( ) };
+				self->Fields[ 1 ] = { "y", offsetof( micro_upoint, y ), GetReflectType<micro_upoint::value_type>( ) };
 			}
 		};
 

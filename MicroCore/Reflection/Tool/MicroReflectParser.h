@@ -33,7 +33,11 @@
 
 #include "Context/MicroReflectParsingContext.h"
 
-class MicroReflectParser {
+/**
+ * MicroReflectParser class
+ * @note : Defined reflection system parser.
+ **/
+micro_class MicroReflectParser {
 
 	using Emitter_t = std::unique_ptr<MicroReflectEmitter>;
 
@@ -119,6 +123,12 @@ public:
 	void InitializeGeneric( );
 
 	/**
+	 * RegisterGeneric method
+	 * @note : Register default emitters.
+	 **/
+	void RegisterGeneric( );
+
+	/**
 	 * AddArguments method
 	 * @note : Parse command lines arguments.
 	 * @param argument_count : Command lines arguments count.
@@ -128,6 +138,14 @@ public:
 		const int32_t argument_count,
 		micro_string* argument_values
 	);
+
+	/**
+	 * Run method
+	 * @note : Run parser on string source code.
+	 * @param name : Query source name.
+	 * @param source : Query source to parse.
+	 **/
+	void Run( const std::string& name, const std::string& source );
 
 	/**
 	 * Run method
@@ -154,40 +172,52 @@ public:
 		requires ( std::is_base_of<MicroReflectEmitter, Type>::value )
 	void Register( ) {
 		if ( auto emitter = std::make_unique<Type>( ) )
-			m_emitters.emplace_back( emitter );
+			m_emitters.emplace_back( std::move( emitter ) );
 	};
 
-private:
+protected:
 	/**
-	 * RunParser method
+	 * RunParser virtual method
 	 * @note : Run parser on specific file or directory.
 	 * @param arguments : Reference to argument list converted as native string list.
 	 * @param source_path : Query source path.
 	 **/
-	void RunParser(
+	virtual void RunParser(
 		const std::vector<micro_string>& arguments, 
 		const std::filesystem::path& source_path 
 	);
 
 	/**
-	 * ProcessClang function
+	 * ProcessClang virtual function
 	 * @note : Parse source file with libclang.
 	 * @param arguments : Reference to argument list converted as native string list.
 	 * @param context : Reference to the parsing context instance.
 	 **/
-	bool ProcessClang( 
+	virtual bool ProcessClang(
 		const std::vector<micro_string>& arguments,
-		MicroReflectParsingContext& declaration 
+		MicroReflectParsingContext& context
 	);
 
 	/**
-	 * RunEmitters method
+	 * ProcessClang virtual function
+	 * @note : Parse source file with libclang.
+	 * @param arguments : Reference to argument list converted as native string list.
+	 * @param context : Reference to the parsing context instance.
+	 **/
+	virtual bool ProcessClangSource(
+		const std::vector<micro_string>& arguments,
+		CXUnsavedFile& save,
+		MicroReflectParsingContext& context
+	);
+
+	/**
+	 * RunEmitters virtual method
 	 * @note : Run parser emitters for context.
 	 * @param context : Query reflection parsing context to execute.
 	 **/
-	void RunEmitters( MicroReflectParsingContext& context );
+	virtual void RunEmitters( MicroReflectParsingContext& context );
 
-private:
+protected:
 	/**
 	 * ClangVisitor static function
 	 * @note : Represent Clang visitor function for source parsing phase.
@@ -228,23 +258,23 @@ public:
 		return std::move( result );
 	};
 
-private:
+protected:
 	/**
 	 * CanParse function
 	 * @note : Get if an extension match supported extension.
 	 * @param extension : Query extension.
 	 * @return : Return true when extension is found.
 	 **/
-	bool CanParse( const std::filesystem::path& extension ) const;
+	virtual bool CanParse( const std::filesystem::path& extension ) const;
 
 	/**
 	 * GetArguments const function
 	 * @note : Convert argument list to c-style string for libclang.
 	 * @return : Return argument list as native string list.
 	 **/
-	std::vector<micro_string> GetArguments( ) const;
+	virtual std::vector<micro_string> GetArguments( ) const;
 
-private:
+protected:
 	/**
 	 * GetIsFunction static function
 	 * @note : Get if a clang cursor kind represent a function.
