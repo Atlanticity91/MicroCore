@@ -35,7 +35,8 @@
 //		===	PUBLIC ===
 ////////////////////////////////////////////////////////////////////////////////////////////
 MicroReflectParser::MicroReflectParser( )
-	: m_extensions{ },
+	: m_report_mode{ MicroReflectParserReportModes::None },
+	m_extensions{ },
 	m_arguments{ },
 	m_directories{ },
 	m_emitters{ },
@@ -81,9 +82,13 @@ void MicroReflectParser::AddDirectories( std::initializer_list<std::string> dire
 		AddDirectory( directory );
 }
 
+void MicroReflectParser::SetReportMode( MicroReflectParserReportModes mode ) {
+	m_report_mode = mode;
+}
+
 void MicroReflectParser::InitializeGeneric( ) {
 	AddExtensions( { ".h", ".hpp" } );
-	AddArguments( { "-x", "c++", "-std=c++20", "-D__MICRO_REFLECT__" } );
+	AddArguments( { "-x", "c++", "-std=c++20", "-fshow-source-location", "-D__MICRO_REFLECT__" } );
 	AddOptions( {
 		CXTranslationUnit_IncludeAttributedTypes,
 		CXTranslationUnit_VisitImplicitAttributes
@@ -120,15 +125,17 @@ void MicroReflectParser::ParseArguments(
 
 void MicroReflectParser::Run( const std::string& name, const std::string& source ) {
 	const auto arguments = GetArguments( );
-	auto unsaved_file	 = CXUnsavedFile{ };
-	auto context		 = MicroReflectParsingContext{ "unsaved.txt" };
+	auto clang_unsaved   = CXUnsavedFile{ };
+	auto context		 = MicroReflectParsingContext{ "unsaved.txt", m_report_mode };
 	
-	unsaved_file.Filename = "unsaved.txt";
-	unsaved_file.Contents = source.c_str( );
-	unsaved_file.Length   = (uint32_t)source.size( );
+	clang_unsaved.Filename = context.GetPath( );
+	clang_unsaved.Contents = source.c_str( );
+	clang_unsaved.Length   = (uint32_t)source.size( );
 
-	if ( ProcessClangSource( arguments, unsaved_file, context ) )
+	if ( ProcessClang( arguments, context, clang_unsaved ) )
 		RunEmitters( context );
+
+	DumpReports( context );
 }
 
 void MicroReflectParser::Run( const std::filesystem::path& source_path ) {
@@ -152,77 +159,77 @@ void MicroReflectParser::Run(
 ////////////////////////////////////////////////////////////////////////////////////////////
 //		===	PROTECTED ===
 ////////////////////////////////////////////////////////////////////////////////////////////
-void MicroReflectParser::RunParser(
+CXTranslationUnit MicroReflectParser::CreateTranslationUnit(
+	CXIndex& clang_index,
 	const std::vector<micro_string>& arguments,
-	const std::filesystem::path& source_path
+	const MicroReflectParsingContext& context,
+	CXUnsavedFile& clang_unsaved
 ) {
-	micro_assert( m_extensions.size( ) > 0, "You can't run reflection parser without supported extensions filled." );
-	micro_assert( m_arguments.size( ) > 0, "You can't run reflection parser without at least one argument for language specification." );
-
-	if ( !std::filesystem::is_directory( source_path ) ) {
-		auto entry_ext = source_path.extension( );
-		auto extension = entry_ext.string( );
-		auto context   = MicroReflectParsingContext{ std::move( source_path ) };
-
-		if ( CanParse( extension ) && ProcessClang( arguments, context ) )
-			RunEmitters( context );
-	} else {
-		for ( const auto& entry : std::filesystem::directory_iterator{ source_path } ) {
-			const auto entry_path = entry.path( );
-
-			Run( entry_path );
-		}
-	}
-}
-
-bool MicroReflectParser::ProcessClang( 
-	const std::vector<micro_string>& arguments, 
-	MicroReflectParsingContext& context 
-) {
-	const auto* path = context.GetPath( );
 	const auto* argv = arguments.data( );
 	const auto argc  = (uint32_t)arguments.size( );
-	auto clang_index = clang_createIndex( 0, 0 );
-	auto result		 = false;
-	
-	if ( auto clang_unit = clang_parseTranslationUnit( clang_index, path, argv, argc, NULL, 0, m_options ) ) {
-		auto* user_data  = micro_ptr_as( context, CXClientData );
-		auto root		 = clang_getTranslationUnitCursor( clang_unit );
+	auto clang_unit  = (CXTranslationUnit)NULL;
 
-		clang_visitChildren( root, ClangVisitor, user_data );
-		clang_disposeTranslationUnit( clang_unit );
+	if ( clang_unsaved.Filename == NULL ) {
+		auto* path = context.GetPath( );
 
-		result = context.GetIsValid( );
-	}
+		clang_unit = clang_parseTranslationUnit( clang_index, path, argv, argc, NULL, 0, m_options );
+	} else
+		clang_unit = clang_parseTranslationUnit( clang_index, clang_unsaved.Filename, argv, argc, micro_ptr( clang_unsaved ), 1, m_options );
 
-	clang_disposeIndex( clang_index );
-
-	return result;
+	return clang_unit;
 }
 
-bool MicroReflectParser::ProcessClangSource(
-	const std::vector<micro_string>& arguments,
-	CXUnsavedFile& save,
+void MicroReflectParser::CreateReport(
+	const CXTranslationUnit& clang_unit,
 	MicroReflectParsingContext& context
 ) {
-	const auto* argv = arguments.data( );
-	const auto argc  = (uint32_t)arguments.size( );
+	auto clang_diagnostic_count = clang_getNumDiagnostics( clang_unit );
+	auto file_column			= (uint32_t)0;
+	auto file_line				= (uint32_t)0;
+	auto location				= CXSourceLocation{ };
+	auto file					= CXFile{ };
+
+	while ( clang_diagnostic_count-- > 0 ) {
+		auto clang_diagnostic = clang_getDiagnostic( clang_unit, clang_diagnostic_count );
+		auto severity		  = clang_getDiagnosticSeverity( clang_diagnostic );		
+		
+		if ( severity != CXDiagnostic_Ignored ) {
+			location = clang_getDiagnosticLocation( clang_diagnostic );
+			
+			clang_getExpansionLocation( location, micro_ptr( file ), micro_ptr( file_line ), micro_ptr( file_column ), NULL );
+			
+			auto diagnostic  = ClangGetString( clang_getDiagnosticSpelling, clang_diagnostic );
+			auto file_name   = ClangGetString( clang_getFileName, file );
+			auto report_line = std::format( "{}:[{}:{}]\n\t\t{}", file_name, file_line, file_column, diagnostic );
+
+			context.PushReport( severity, std::move( report_line ) );
+		}
+
+		clang_disposeDiagnostic( clang_diagnostic );
+	}
+}
+
+bool MicroReflectParser::ProcessClang(
+	const std::vector<micro_string>& arguments,
+	MicroReflectParsingContext& context,
+	CXUnsavedFile& clang_unsaved
+) {
 	auto clang_index = clang_createIndex( 0, 0 );
-	auto result		 = false;
 
-	if ( auto clang_unit = clang_parseTranslationUnit( clang_index, save.Filename, argv, argc, micro_ptr( save ), 1, m_options ) ) {
+	if ( auto clang_unit = CreateTranslationUnit( clang_index, arguments, context, clang_unsaved ) ) {
 		auto* user_data = micro_ptr_as( context, CXClientData );
-		auto root		= clang_getTranslationUnitCursor( clang_unit );
+		auto root_node	= clang_getTranslationUnitCursor( clang_unit );
 
-		clang_visitChildren( root, ClangVisitor, user_data );
+		clang_visitChildren( root_node, ClangVisitor, user_data );
+
+		CreateReport( clang_unit, context );
+
 		clang_disposeTranslationUnit( clang_unit );
-
-		result = context.GetIsValid( );
 	}
 
 	clang_disposeIndex( clang_index );
 
-	return result;
+	return context.GetIsValid( );
 }
 
 void MicroReflectParser::RunEmitters( MicroReflectParsingContext& context ) {
@@ -234,6 +241,37 @@ void MicroReflectParser::RunEmitters( MicroReflectParsingContext& context ) {
 			break;
 		
 		emitter->Run( context );
+	}
+}
+
+void MicroReflectParser::DumpReports( MicroReflectParsingContext& context ) {
+	if ( context.GetHasReport( ) )
+		context.DumpReport( );
+}
+
+void MicroReflectParser::RunParser(
+	const std::vector<micro_string>& arguments,
+	const std::filesystem::path& source_path
+) {
+	micro_assert( m_extensions.size( ) > 0, "You can't run reflection parser without supported extensions filled." );
+	micro_assert( m_arguments.size( ) > 0, "You can't run reflection parser without at least one argument for language specification." );
+
+	if ( !std::filesystem::is_directory( source_path ) ) {
+		auto clang_unsaved = CXUnsavedFile{ NULL, NULL, 0 };
+		auto entry_ext	   = source_path.extension( );
+		auto extension	   = entry_ext.string( );
+		auto context	   = MicroReflectParsingContext{ std::move( source_path ), m_report_mode };
+
+		if ( CanParse( extension ) && ProcessClang( arguments, context, clang_unsaved ) )
+			RunEmitters( context );
+
+		DumpReports( context );
+	} else {
+		for ( const auto& entry : std::filesystem::directory_iterator{ source_path } ) {
+			const auto entry_path = entry.path( );
+
+			Run( entry_path );
+		}
 	}
 }
 

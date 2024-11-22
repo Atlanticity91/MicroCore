@@ -47,6 +47,7 @@ micro_class MicroReflectParsingContext final {
 
 private:
 	MicroReflectSourceDeclaration m_source;
+	MicroReflectParserReport m_report;
 	MicroReflectParsingTypes m_type;
 	MicroReflectParsingNode m_node;
 	MicroReflectAccessor m_accessor;
@@ -56,8 +57,12 @@ public:
 	/**
 	 * Constructor
 	 * @param source_path : Query source file path.
+	 * @param report_mode : Query report mode.
 	 **/
-	MicroReflectParsingContext( const std::filesystem::path&& source_path );
+	MicroReflectParsingContext( 
+		const std::filesystem::path&& source_path,
+		const MicroReflectParserReportModes report_mode
+	);
 
 	/**
 	 * CreateDeclaration method
@@ -115,6 +120,51 @@ public:
 	 **/
 	void CreateParameter( std::string&& type, std::string&& name );
 
+	/**
+	 * SetReportMode method
+	 * @note : Set report mode.
+	 * @param mode : Query report mode.
+	 **/
+	void SetReportMode( MicroReflectParserReportModes mode );
+
+	/**
+	 * PushReport method
+	 * @note : Push report line to report.
+	 * @param severity : Query report line severity.
+	 * @param report_line : Query formated report line.
+	 **/
+	void PushReport( CXDiagnosticSeverity severity, std::string&& report_line );
+
+	/**
+	 * DumpReport method
+	 * @note : Dump parser report to console.
+	 * @return : Return true when report as been dumped.
+	 **/
+	bool DumpReport( );
+
+	/**
+	 * DumpReportLog method
+	 * @note : Dump parser report to logs.
+	 * @return : Return true when report as been dumped.
+	 **/
+	bool DumpReportLog( );
+
+	/**
+	 * DumpReportFile method
+	 * @note : Dump parser report to file.
+	 * @param path : Path to the file directory.
+	 * @return : Return true when report as been dumped.
+	 **/
+	bool DumpReportFile( const std::string& path );
+
+	/**
+	 * DumpReportFile method
+	 * @note : Dump parser report to file.
+	 * @param path : Path to the file directory.
+	 * @return : Return true when report as been dumped.
+	 **/
+	bool DumpReportFile( const std::filesystem::path& path );
+
 private:
 	/**
 	 * CreateNamespace method
@@ -158,6 +208,20 @@ public:
 	 * @return : Return true when context can be use by emitters.
 	 **/
 	bool GetCanEmit( ) const;
+
+	/**
+	 * GetReportMode const function
+	 * @note : Get current report mode.
+	 * @return : Return current report mode value.
+	 **/
+	MicroReflectParserReportModes GetReportMode( ) const;
+
+	/**
+	 * GetHasReport const function
+	 * @note : Get if context has report.
+	 * @return : Return true when context has report.
+	 **/
+	bool GetHasReport( ) const;
 
 private:
 	/**

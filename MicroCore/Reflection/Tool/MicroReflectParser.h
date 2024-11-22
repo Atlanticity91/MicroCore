@@ -42,6 +42,7 @@ micro_class MicroReflectParser {
 	using Emitter_t = std::unique_ptr<MicroReflectEmitter>;
 
 private:
+	MicroReflectParserReportModes m_report_mode;
 	std::vector<std::string> m_extensions;
 	std::vector<std::string> m_arguments;
 	std::vector<std::string> m_directories;
@@ -116,6 +117,13 @@ public:
 	void AddDirectories( std::initializer_list<std::string> directories );
 
 	/**
+	 * SetReportMode method
+	 * @note : Set report mode.
+	 * @param mode : Query report mode.
+	 **/
+	void SetReportMode( MicroReflectParserReportModes mode );
+
+	/**
 	 * InitializeGeneric method
 	 * @note : Initialize parser with default extensions, arguments and options,
 	 *		   ready for Micro reflection production.
@@ -177,14 +185,30 @@ public:
 
 protected:
 	/**
-	 * RunParser virtual method
-	 * @note : Run parser on specific file or directory.
-	 * @param arguments : Reference to argument list converted as native string list.
-	 * @param source_path : Query source path.
+	 * CreateTranslationUnit function
+	 * @note : Wrapper for clang translation unit creation.
+	 * @param clang_index : Query clang index.
+	 * @param arguments : Query argument list.
+	 * @param context : Query parser context.
+	 * @param clang_unsaved : Query clang unsaved.
+	 * @return : Return clang translation unit value.
 	 **/
-	virtual void RunParser(
-		const std::vector<micro_string>& arguments, 
-		const std::filesystem::path& source_path 
+	CXTranslationUnit CreateTranslationUnit(
+		CXIndex& clang_index,
+		const std::vector<micro_string>& arguments,
+		const MicroReflectParsingContext& context,
+		CXUnsavedFile& clang_unsaved
+	);
+
+	/**
+	 * CreateReport method
+	 * @note : Create report for parsing context.
+	 * @param clang_unit : Query clang translation unit.
+	 * @param context : Query parsing context.
+	 **/
+	void CreateReport(
+		const CXTranslationUnit& clang_unit,
+		MicroReflectParsingContext& context
 	);
 
 	/**
@@ -195,19 +219,8 @@ protected:
 	 **/
 	virtual bool ProcessClang(
 		const std::vector<micro_string>& arguments,
-		MicroReflectParsingContext& context
-	);
-
-	/**
-	 * ProcessClang virtual function
-	 * @note : Parse source file with libclang.
-	 * @param arguments : Reference to argument list converted as native string list.
-	 * @param context : Reference to the parsing context instance.
-	 **/
-	virtual bool ProcessClangSource(
-		const std::vector<micro_string>& arguments,
-		CXUnsavedFile& save,
-		MicroReflectParsingContext& context
+		MicroReflectParsingContext& context,
+		CXUnsavedFile& clang_unsaved
 	);
 
 	/**
@@ -216,6 +229,24 @@ protected:
 	 * @param context : Query reflection parsing context to execute.
 	 **/
 	virtual void RunEmitters( MicroReflectParsingContext& context );
+
+	/**
+	 * DumpReports method
+	 * @note : Dump report for current context.
+	 * @param context : Query parsing context.
+	 **/
+	virtual void DumpReports( MicroReflectParsingContext& context );
+
+	/**
+	 * RunParser virtual method
+	 * @note : Run parser on specific file or directory.
+	 * @param arguments : Reference to argument list converted as native string list.
+	 * @param source_path : Query source path.
+	 **/
+	virtual void RunParser(
+		const std::vector<micro_string>& arguments,
+		const std::filesystem::path& source_path
+	);
 
 protected:
 	/**

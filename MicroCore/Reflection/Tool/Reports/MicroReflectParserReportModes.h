@@ -31,50 +31,16 @@
 
 #pragma once 
 
-#include "../Reports/MicroReflectParserReport.h"
+#include "../Declarations/MicroReflectSourceDeclaration.h"
 
 /**
- * MicroReflectEmitter interface
- * @note : Defined reflection system parser emitter requirement.
+ * MicroReflectParserReportModes enum class
+ * @note : Defined all parser report output modes.
  **/
-micro_struct MicroReflectEmitter {
+enum class MicroReflectParserReportModes : uint32_t {
 
-	/**
-	 * Constructor
-	 **/
-	MicroReflectEmitter( ) = default;
-
-	/**
-	 * Destructor
-	 **/
-	virtual ~MicroReflectEmitter( ) = default;
-
-	/**
-	 * PreRun method
-	 * @note : Executed after declaration generation, used to manually add 
-	 *		   declaration to the source.
-	 * @param declaration : Current source declaration.
-	 **/
-	virtual void PreRun( MicroReflectSourceDeclaration& declaration ) = 0;
-
-	/**
-	 * Run method
-	 * @note : Generator run execution.
-	 * @param declaration : Reference to query declaration.
-	 **/
-	virtual void Run( const MicroReflectSourceDeclaration& declaration ) = 0;
-
-protected:
-	/**
-	 * FindAnnotation const function
-	 * @note : Find annotations from annotation list.
-	 * @param annotation_list : Query annotation list.
-	 * @param annotation : Query annotation.
-	 * @return : Return true when annotation is found.
-	 **/
-	bool FindAnnotation( 
-		const std::vector<std::string>& annotation_list,
-		const std::string& annotation
-	) const;
+	None = 0,
+	Warn,
+	Errr
 
 };

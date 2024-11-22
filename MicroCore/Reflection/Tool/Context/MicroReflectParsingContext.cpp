@@ -34,10 +34,12 @@
 ////////////////////////////////////////////////////////////////////////////////////////////
 //		===	PUBLIC ===
 ////////////////////////////////////////////////////////////////////////////////////////////
-MicroReflectParsingContext::MicroReflectParsingContext( 
-	const std::filesystem::path&& source_path
+MicroReflectParsingContext::MicroReflectParsingContext(
+	const std::filesystem::path&& source_path,
+	const MicroReflectParserReportModes report_mode
 )
 	: m_source{ std::move( source_path ) },
+	m_report{ report_mode },
 	m_type{ MRP_TYPE_ROOT },
 	m_accessor{ MicroReflectAccessor::Public }
 { 
@@ -113,6 +115,40 @@ void MicroReflectParsingContext::CreateParameter( std::string&& type, std::strin
 		declaration->Parameters.emplace_back( std::move( name ), std::move( type ) );
 }
 
+void MicroReflectParsingContext::SetReportMode( MicroReflectParserReportModes mode ) {
+	m_report.SetReportMode( mode );
+}
+
+void MicroReflectParsingContext::PushReport( 
+	CXDiagnosticSeverity severity, 
+	std::string&& report_line 
+) {
+	switch ( severity ) {
+		case CXDiagnostic_Note    : m_report.PushInfo( std::move( report_line ) ); break;
+		case CXDiagnostic_Warning : m_report.PushWarn( std::move( report_line ) ); break;
+		case CXDiagnostic_Error   :
+		case CXDiagnostic_Fatal   : m_report.PushErrr( std::move( report_line ) ); break;
+
+		default : break;
+	}
+}
+
+bool MicroReflectParsingContext::DumpReport( ) {
+	return m_report.Dump( m_path );
+}
+
+bool MicroReflectParsingContext::DumpReportLog( ) {
+	return m_report.DumpLog( m_path );
+}
+
+bool MicroReflectParsingContext::DumpReportFile( const std::string& path ) {
+	return m_report.DumpFile( path, m_path );
+}
+
+bool MicroReflectParsingContext::DumpReportFile( const std::filesystem::path& path ) {
+	return m_report.DumpFile( path, m_path );
+}
+
 ////////////////////////////////////////////////////////////////////////////////////////////
 //		===	PRIVATE ===
 ////////////////////////////////////////////////////////////////////////////////////////////
@@ -153,7 +189,7 @@ bool MicroReflectParsingContext::GetIsValid( ) const {
 }
 
 bool MicroReflectParsingContext::GetCanEmit( ) const {
-	return true;
+	return !m_report.GetHasFatal( );
 }
 
 MicroReflectNamespaceDeclaration* MicroReflectParsingContext::GetRoot( ) {
@@ -163,6 +199,14 @@ MicroReflectNamespaceDeclaration* MicroReflectParsingContext::GetRoot( ) {
 		result = micro_ptr_as( m_source, MicroReflectNamespaceDeclaration* );
 
 	return result;
+}
+
+MicroReflectParserReportModes MicroReflectParsingContext::GetReportMode( ) const {
+	return m_report.GetMode( );
+}
+
+bool MicroReflectParsingContext::GetHasReport( ) const {
+	return m_report.GetHasAny( );
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////

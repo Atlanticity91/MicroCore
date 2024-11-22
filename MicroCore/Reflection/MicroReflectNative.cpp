@@ -76,4 +76,24 @@ namespace micro {
 		return &type_info;
 	}
 
+	template<>
+	const ReflectClass* GetClassImpl( ReflectClassTag<std::string> ) noexcept {
+		static auto storage_string = ReflectStorageClass<std::string, 0, 0, 0>{
+			"std::string",
+			[]( auto* self ) { }
+		};
+
+		return storage_string;
+	}
+
+	template<class T>
+	const ReflectClass* GetClassImpl( ReflectClassTag<std::vector<T>> ) noexcept {
+		static auto storage_vector = ReflectStorageClass<std::vector<T>, 0, 0, 0>{
+			"std::vector",
+			[]( auto* self ) { }
+		};
+
+		return storage_vector;
+	}
+
 };

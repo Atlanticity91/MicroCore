@@ -54,4 +54,10 @@ namespace micro {
 	REFLECT_TYPE( std::string );
 	REFLECT_TYPE( micro_string );
 
+	template<>
+	extern const ReflectClass* GetClassImpl( ReflectClassTag<std::string> ) noexcept;
+
+	template<class T>
+	extern const ReflectClass* GetClassImpl( ReflectClassTag<std::vector<T>> ) noexcept;
+
 };
