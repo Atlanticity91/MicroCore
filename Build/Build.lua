@@ -1,19 +1,34 @@
-workspace "MicroCore"
+include "Premake/CSExtensions.lua"
+include "Premake/VSExtensions.lua"
+include "Build-Dependencies.lua"
+
+workspace "Micro Solution"
 	architecture "x64"
-	configurations { "Debug", "Release", "Dist" }
 	startproject "MicroCore"
 	location "../"
+	configurations { 
+		"Debug", 
+		"Release", 
+		"Dist" 
+	}
 
+	flags "MultiProcessorCompile"
+	
 	-- Workspace-wide build options for MSVC
 	filter "system:windows"
-		buildoptions { "/EHsc", "/Zc:preprocessor", "/Zc:__cplusplus" }
+		buildoptions { 
+			"/EHsc",
+			"/Zc:preprocessor", 
+			"/Zc:__cplusplus" 
+		}
 
+	--- Thirdparty Projects
 	group "Thirdparty"
-		include "Build-Spdlog.lua"
-		include "Build-GLM.lua"
-		include "Build-Yaml.lua"
-		include "Build-Libssh2.lua"
-		include "Build-Libgit2.lua"
+		include "Thirdparty/Build-HeaderOnly.lua"
+		include "Thirdparty/Build-Yaml.lua"
+		include "Thirdparty/Build-Libssh2.lua"
+		include "Thirdparty/Build-Libgit2.lua"
 	group ""
 
+	--- Main Project
 	include "Build-MicroCore.lua"

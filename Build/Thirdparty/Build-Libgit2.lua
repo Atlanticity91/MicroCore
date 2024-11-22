@@ -1,29 +1,24 @@
-project "Yaml"
+project "Libgit2"
 	kind "StaticLib"
-	language "C++"
-	cppdialect "C++20"
-	staticruntime "off"
-	location "../Solution/"
-
-	defines { "YAML_CPP_STATIC_DEFINE" }
+	language "C"
+	location "%{wks.location}/Solution/"
 
 	files { 
-		"../Thirdparty/yaml-cpp/src/**.h",
-		"../Thirdparty/yaml-cpp/src/**.cpp"
+		"{IncludeDirs.yaml}/src/**.h",
+		"{IncludeDirs.yaml}/src/**.cpp"
 	}
 
-	includedirs {
-		"%{wks.location}/Thirdparty/yaml-cpp/include/"
-	}
+	includedirs "{IncludeDirs.yaml}/include/"
 
-	targetdir "%{wks.location}/bin/"
-	objdir "%{wks.location}/bin-int/%{prj.name}"
+	targetdir "%{wks.location}/bin/%{cfg.buildcfg}/"
+	objdir "%{wks.location}/bin-int/%{prj.name}-%{cfg.buildcfg}"
 
 	--- WINDOWS
 	filter "system:windows"
 		systemversion "latest"
-		defines { "WINDOWS" }
-		flags { "MultiProcessorCompile" }
+		cdialect "C17"
+		staticruntime "off"
+		defines "WINDOWS"
 
 	--- LINUX
 	filter "system:linux"

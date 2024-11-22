@@ -125,7 +125,7 @@ void MicroReflectParser::Run( const std::string& name, const std::string& source
 	
 	unsaved_file.Filename = "unsaved.txt";
 	unsaved_file.Contents = source.c_str( );
-	unsaved_file.Length   = source.size( );
+	unsaved_file.Length   = (uint32_t)source.size( );
 
 	if ( ProcessClangSource( arguments, unsaved_file, context ) )
 		RunEmitters( context );

@@ -31,6 +31,14 @@
 
 #pragma once 
 
+/*
+insert on premake build file
+
+buildcommands {
+	"MicroReflectParserName ..."
+}
+*/
+
 #include "Tool/MicroReflectParser.h"
 
 #ifndef __MICRO_REFLECT__
