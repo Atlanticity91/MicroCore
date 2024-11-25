@@ -31,7 +31,7 @@
 
 #pragma once 
 
-#include "../../Platform/Files/MicroFile.h"
+#include "../../Platform/Files/MicroFileVirtual.h"
 
 /**
  * MicroReflectAccessor enum class

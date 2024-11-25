@@ -190,6 +190,12 @@ extern "C" {
 #define micro_struct struct MICRO_API
 
 /**
+ * micro_interface macro
+ * @note : Wrapper for 'interface'.
+ **/
+#define micro_interface micro_struct
+
+/**
  * micro_class macro
  * @note : Wrapper for exposing class.
  **/
@@ -209,4 +215,15 @@ extern "C" {
  **/
 #define micro_stringify( TEXT ) micro_stringifyx( TEXT )
 
+/**
+ * micro_sizeof macro
+ * @note : Wrapper for sizeof operator.
+ * @param TYPE : Query type for sizeof operation.
+ **/
+#define micro_sizeof( TYPE ) ( (uint32_t)sizeof( TYPE ) )
+
+/**
+ * micro_string typedef
+ * @note : Wrapper for C style string.
+ **/
 typedef const char* micro_string;

@@ -34,3 +34,37 @@
 ////////////////////////////////////////////////////////////////////////////////////////////
 //		===	PUBLIC ===
 ////////////////////////////////////////////////////////////////////////////////////////////
+namespace YAML {
+
+	Emitter& operator<<( Emitter& out, const micro_upoint& value ) {
+		out << YAML::Flow << YAML::BeginSeq << value.x << value.y << YAML::EndSeq;
+
+		return out;
+	}
+
+	Emitter& operator<<( Emitter& out, const micro_point& value ) {
+		out << YAML::Flow << YAML::BeginSeq << value.x << value.y << YAML::EndSeq;
+
+		return out;
+	}
+
+	Emitter& operator<<( Emitter& out, const micro_vec2& value ) {
+		out << YAML::Flow << YAML::BeginSeq << value.x << value.y << YAML::EndSeq;
+
+		return out;
+	}
+
+	Emitter& operator<<( Emitter& out, const micro_vec3& value ) {
+		out << YAML::Flow << YAML::BeginSeq << value.x << value.y << value.z << YAML::EndSeq;
+
+		return out;
+	}
+
+	Emitter& operator<<( Emitter& out, const micro_vec4& value ) {
+		out << YAML::Flow;
+		out << YAML::BeginSeq << value.x << value.y << value.z << value.w << YAML::EndSeq;
+
+		return out;
+	}
+
+};

@@ -37,12 +37,14 @@
  * MicroFile final class
  * @note : Represent file, replace FILE*.
  **/
-micro_class MicroFile final {
+micro_class MicroFile : public std::streambuf {
 
-private:
+protected:
+	using int_t = std::streambuf::int_type;
+
+protected:
 	MicroFileTypes m_type;
 	MicroFileAccessors m_accessor;
-	FILE* m_handle;
 
 public:
 	/**
@@ -53,54 +55,26 @@ public:
 	/**
 	 * Destructor
 	 **/
-	~MicroFile( ) = default;
-
-	/**
-	 * Open function
-	 * @note : Open file specified by the path.
-	 * @param path : Path with extension to the query file.
-	 * @param mode : File opening mode, actualy same as native c fopen.
-	 * @param type : Query file type.
-	 * @return : True for succes.
-	 **/
-	bool Open( 
-		const std::string path,
-		const MicroFileAccessors accessor,
-		const MicroFileTypes type 
-	);
-
-	/**
-	 * Open function
-	 * @note : Open file specified by the path.
-	 * @param path : Path with extension to the query file.
-	 * @param accessor : File opening mode, actualy same as native c fopen.
-	 * @param type : Query file type.
-	 * @return : True for succes.
-	 **/
-	bool Open( 
-		micro_string path,
-		const MicroFileAccessors accessor,
-		const MicroFileTypes type
-	);
+	~MicroFile( );
 
 	/**
 	 * Seek procedure
 	 * @note : Seek from current file position.
 	 * @param offset : Offset in byte count.
 	 **/
-	void Seek( const uint32_t offset );
+	virtual void Seek( const uint32_t offset ) = 0;
 
 	/**
 	 * SeekBegin procedure
 	 * @note : Seek to begin of the file.
 	 **/
-	void SeekBegin( );
+	virtual void SeekBegin( ) = 0;
 
 	/**
 	 * SeekEnd procedure
 	 * @note : Seek to end of the file.
 	 **/
-	void SeekEnd( );
+	virtual void SeekEnd( ) = 0;
 	
 	/**
 	 * Read function
@@ -109,7 +83,7 @@ public:
 	 * @param buffer : Pointer to the buffer to store readed data.
 	 * @return : Count of bytes loaded to the buffer
 	 **/
-	uint32_t Read( const uint32_t length, void* buffer );
+	virtual uint32_t Read( const uint32_t length, uint8_t* buffer ) = 0;
 
 	/**
 	 * Read function
@@ -118,13 +92,24 @@ public:
 	 * @param buffer : Pointer to the buffer to write.
 	 * @return : Count of bytes writed to the file
 	 **/
-	uint32_t Write( const uint32_t length, const void* buffer );
+	virtual uint32_t Write( const uint32_t length, const uint8_t* buffer ) = 0;
 
 	/**
 	 * Close procedure
 	 * @note : Close current file.
 	 **/
-	void Close( );
+	virtual void Close( ) = 0;
+
+protected:
+	/**
+	 * Constructor
+	 * @param type : Query file type.
+	 * @param accessor : Query file accessor.
+	 **/
+	MicroFile(
+		const MicroFileTypes type,
+		const MicroFileAccessors accessor
+	);
 
 public:
 	/**
@@ -135,9 +120,28 @@ public:
 	 * @return : Count of bytes loaded from file.
 	 **/
 	template<typename Type>
+		requires ( !std::is_pointer<Type>::value )
 	uint32_t Read( Type& data ) {
-		auto* buffer = micro_ptr_as( data, const void* );
-		auto length  = (uint32_t)sizeof( Type );
+		auto* buffer = micro_ptr_as( data, uint8_t* );
+
+		return Read( micro_sizeof( Type ), buffer );
+	};
+
+	/**
+	 * Read template function
+	 * @note : Read string from file.
+	 * @param data : Query string storage.
+	 * @return : Count of bytes loaded from file.
+	 **/
+	template<>
+	uint32_t Read( std::string& data ) {
+		auto length = (uint32_t)0;
+
+		Read( length );
+
+		data.resize( (size_t)length );
+
+		auto* buffer = micro_cast( data.data( ), uint8_t* );
 
 		return Read( length, buffer );
 	};
@@ -150,6 +154,7 @@ public:
 	 * @return : Count of bytes loaded from file.
 	 **/
 	template<typename Type>
+		requires ( !std::is_pointer<Type>::value )
 	uint32_t Read( std::vector<Type>& data ) {
 		auto length = (uint32_t)0;
 
@@ -157,9 +162,9 @@ public:
 
 		data.resize( (size_t)length );
 
-		auto* buffer = data.data( );
+		auto* buffer = micro_cast( data.data( ), uint8_t* );
 
-		return Read( length * (uint32_t)sizeof( Type ), buffer );
+		return Read( length * micro_sizeof( Type ), buffer );
 	};
 
 	/**
@@ -170,9 +175,25 @@ public:
 	 * @return : Count of bytes writed to the file.
 	 **/
 	template<typename Type>
+		requires ( !std::is_pointer<Type>::value )
 	uint32_t Write( const Type& data ) {
-		auto* buffer = data.data( );
+		auto* buffer = micro_ptr_as( data, const uint8_t* );
+		
+		return Write( micro_sizeof( Type ), buffer );
+	};
+
+	/**
+	 * Write template function
+	 * @note : Write string to file.
+	 * @param data : Query string to write.
+	 * @return : Count of bytes writed to the file.
+	 **/
+	template<>
+	uint32_t Write( const std::string& data ) {
+		auto* buffer = micro_cast( data.c_str( ), const uint8_t* );
 		auto length  = (uint32_t)data.size( );
+
+		Write( length );
 
 		return Write( length, buffer );
 	};
@@ -185,13 +206,14 @@ public:
 	 * @return : Count of bytes writed to the file.
 	 **/
 	template<typename Type>
+		requires ( !std::is_pointer<Type>::value )
 	uint32_t Write( const std::vector<Type>& data ) {
-		auto* buffer = data.data( );
+		auto* buffer = micro_cast( data.data( ), const uint8_t* );
 		auto length  = (uint32_t)data.size( );
 
 		Write( length );
 
-		return Write( length * (uint32_t)sizeof( Type ), buffer );
+		return Write( length * micro_sizeof( Type ), buffer );
 	};
 
 public:
@@ -200,13 +222,7 @@ public:
 	 * @note : Get if the file is valid.
 	 * @return : True for succes.
 	 **/
-	bool GetIsValid( ) const;
-
-	/**
-	 * GetNative const function
-	 * @note : Get the FILE* handle.
-	 **/
-	FILE* GetNative( ) const;
+	virtual bool GetIsValid( ) const;
 
 	/**
 	 * GetType const function
@@ -224,7 +240,7 @@ public:
 	 * GetSize const function
 	 * @note : Get current file size.
 	 **/
-	uint32_t GetSize( ) const;
+	virtual uint32_t GetSize( ) const = 0;
 
 	/**
 	 * GetCanRead const function
@@ -237,6 +253,20 @@ public:
 	 * @note : Get if the file as write access.
 	 **/
 	bool GetCanWrite( ) const;
+
+	/**
+	 * GetInputStream function
+	 * @note : Get file as input stream.
+	 * @return : Return new instance of input stream pointing to the file.
+	 **/
+	std::istream GetInputStream( );
+
+	/**
+	 * GetOutputStream function
+	 * @note : Get file as output stream.
+	 * @return : Return new instance of output stream pointing to the file.
+	 **/
+	std::ostream GetOutputStream( );
 
 public:
 	/**
@@ -266,14 +296,5 @@ public:
 
 		return micro_self;
 	};
-
-private:
-	/**
-	 * GetFileMode const function
-	 * @note : Convert file accessor to native file open mode.
-	 * @param accessor : Query accessor to convert.
-	 * @return : Native file open string.
-	 **/
-	micro_string GetFileMode( const MicroFileAccessors accessor ) const;
 
 };

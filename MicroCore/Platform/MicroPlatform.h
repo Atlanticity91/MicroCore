@@ -63,6 +63,25 @@ namespace micro {
 	MICRO_API bool move( const uint32_t length, const void* src, void* dst );
 
 	/**
+	 * file_open function
+	 * @note : Wrapper for platform specific fopen call.
+	 * @param path : Query file path.
+	 * @param mode : Query file opening mode.
+	 * @return : Return pointer to query file or NULL for failure.
+	 **/
+	MICRO_API FILE* file_open( micro_string path, micro_string mode );
+
+	/**
+	 * file_read function
+	 * @note : Wrapper for platform specific fread call.
+	 * @param file : Query file for reading operation.
+	 * @param length : Query read buffer length.
+	 * @param buffer : Query buffer.
+	 * @return : Return readed bytes count.
+	 **/
+	MICRO_API uint32_t file_read( FILE*& file, const uint32_t length, uint8_t* buffer );
+
+	/**
 	 * copy template function
 	 * @note : Template wrapper for the memcopy function.
 	 * @param template Type : Type of the element to copy.

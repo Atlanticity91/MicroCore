@@ -28,6 +28,8 @@ workspace "Micro Solution"
 		include "Thirdparty/Build-Yaml.lua"
 		include "Thirdparty/Build-Libssh2.lua"
 		include "Thirdparty/Build-Libgit2.lua"
+	group "Test"
+		include "Test/Build-MicroTest.lua"
 	group ""
 
 	--- Main Project

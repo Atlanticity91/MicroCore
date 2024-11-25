@@ -67,4 +67,30 @@ namespace micro {
 	#	endif
 	}
 
+	FILE* file_open( micro_string path, micro_string mode ) {
+		auto file = (FILE*)NULL;
+
+	#	ifdef _WIN64
+		fopen_s( &file, path, mode );
+	#	else
+		file = fopen( path, mode );
+	#	endif
+
+		return file;
+	}
+
+	uint32_t file_read( FILE*& file, const uint32_t length, uint8_t* buffer ) {
+		auto count = (uint32_t)0;
+
+		if ( file != NULL ) {
+	#		ifdef _WIN64
+			count = (uint32_t)fread_s( buffer, length, sizeof( uint8_t ), length, file );
+	#		else
+			count = (uint32_t)fread( buffer, sizeof( uint8_t ), length, file );
+	#		endif
+		}
+
+		return count;
+	}
+
 };

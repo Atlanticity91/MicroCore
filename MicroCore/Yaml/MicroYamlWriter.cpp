@@ -44,13 +44,8 @@ MicroYamlWriter::~MicroYamlWriter( ) {
 }
 
 bool MicroYamlWriter::Open( const std::string& path ) {
-	auto* path_ = path.c_str( );
-
-	return Open( path_ );
-}
-
-bool MicroYamlWriter::Open( micro_string path ) {
 	m_path = path;
+
 	m_emitter << YAML::BeginMap;
 
 	return !m_path.empty( );
@@ -58,15 +53,15 @@ bool MicroYamlWriter::Open( micro_string path ) {
 
 void MicroYamlWriter::Close( ) {
 	if ( !m_path.empty( ) ) {
-		auto file = MicroFile{ };
+		auto file = MicroFilePhysical{ };
 
-		if ( file.Open( m_path, MicroFileAccessors::Write, MicroFileTypes::Text ) ) {
+		if ( file.Open( std::move( m_path ), MicroFileAccessors::Write, MicroFileTypes::Text ) ) {
 			m_emitter << YAML::EndMap;
 
 			auto* string = m_emitter.c_str( );
 			auto length  = (uint32_t)strlen( string );
 
-			file.Write( length, string );
+			file.Write( length, micro_cast( string, uint8_t* ) );
 			file.Close( );
 		}
 

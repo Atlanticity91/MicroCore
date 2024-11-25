@@ -1,10 +1,10 @@
-/** 
+/**
  * 
- *  __  __ _             ___             
- * |  \/  (_)__ _ _ ___ / __|___ _ _ ___ 
- * | |\/| | / _| '_/ _ \ (__/ _ \ '_/ -_)
- * |_|  |_|_\__|_| \___/\___\___/_| \___|
- *                                      
+ *  __  __ _           _____       _ 
+ * |  \/  (_)__ _ _ __|_   _|__ __| |_
+ * | |\/| | / _| '_/ _ \| |/ -_|_-<  _|
+ * |_|  |_|_\__|_| \___/|_|\___/__/\__|
+ *
  * MIT License
  *
  * Copyright (c) 2024 Alves Quentin
@@ -29,44 +29,37 @@
  * 
  **/
 
-#include <__micro_core_pch.h>
+#include "CppUnitTest.h"
+#include <MicroCore.h>
+
+using namespace Microsoft::VisualStudio::CppUnitTestFramework;
 
 ////////////////////////////////////////////////////////////////////////////////////////////
-//		===	PUBLIC ===
+//		===	TEST ===
 ////////////////////////////////////////////////////////////////////////////////////////////
-MicroYamlReader::MicroYamlReader( )
-	: m_document{ }
-{ }
+namespace UnitTest1 {
 
-bool MicroYamlReader::Open( const std::string& path ) {
-	auto f = MicroFilePhysical{ };
-	f.Open( path, MicroFileAccessors::Read, MicroFileTypes::Text );
+	TEST_CLASS( MicroPlatform ) {
 
-	auto s = f.GetInputStream( );
+	public:
+		TEST_METHOD( Copy ) {
+			auto var_a = 1240;
+			auto var_b = 0;
 
-	m_document = YAML::Load( s );
+			micro::copy( var_a, var_b );
 
-	return m_document.IsDefined( );
-}
+			Assert::AreEqual( var_a, var_b );
+		};
+		
+		TEST_METHOD( Move ) {
+			auto var_a = 1240;
+			auto var_b = 0;
 
-void MicroYamlReader::Close( ) {
-	m_document.reset( );
-}
+			micro::move( var_a, var_b );
 
-////////////////////////////////////////////////////////////////////////////////////////////
-//		===	PUBLIC GET ===
-////////////////////////////////////////////////////////////////////////////////////////////
-YAML::Node& MicroYamlReader::Get( ) {
-	return m_document;
-}
+			Assert::AreEqual( var_a, var_b );
+		};
 
-////////////////////////////////////////////////////////////////////////////////////////////
-//		===	OPERATOR ===
-////////////////////////////////////////////////////////////////////////////////////////////
-YAML::Node MicroYamlReader::operator[]( const std::string& name ) {
-	return m_document[ name ];
-}
+	};
 
-YAML::Node MicroYamlReader::operator[]( micro_string name ) {
-	return m_document[ name ];
-}
+};

@@ -1,10 +1,10 @@
-/** 
+/**
  * 
- *  __  __ _             ___             
- * |  \/  (_)__ _ _ ___ / __|___ _ _ ___ 
- * | |\/| | / _| '_/ _ \ (__/ _ \ '_/ -_)
- * |_|  |_|_\__|_| \___/\___\___/_| \___|
- *                                      
+ *  __  __ _           _____       _ 
+ * |  \/  (_)__ _ _ __|_   _|__ __| |_
+ * | |\/| | / _| '_/ _ \| |/ -_|_-<  _|
+ * |_|  |_|_\__|_| \___/|_|\___/__/\__|
+ *
  * MIT License
  *
  * Copyright (c) 2024 Alves Quentin
@@ -29,44 +29,6 @@
  * 
  **/
 
-#include <__micro_core_pch.h>
-
 ////////////////////////////////////////////////////////////////////////////////////////////
-//		===	PUBLIC ===
+//		===	TEST ===
 ////////////////////////////////////////////////////////////////////////////////////////////
-MicroYamlReader::MicroYamlReader( )
-	: m_document{ }
-{ }
-
-bool MicroYamlReader::Open( const std::string& path ) {
-	auto f = MicroFilePhysical{ };
-	f.Open( path, MicroFileAccessors::Read, MicroFileTypes::Text );
-
-	auto s = f.GetInputStream( );
-
-	m_document = YAML::Load( s );
-
-	return m_document.IsDefined( );
-}
-
-void MicroYamlReader::Close( ) {
-	m_document.reset( );
-}
-
-////////////////////////////////////////////////////////////////////////////////////////////
-//		===	PUBLIC GET ===
-////////////////////////////////////////////////////////////////////////////////////////////
-YAML::Node& MicroYamlReader::Get( ) {
-	return m_document;
-}
-
-////////////////////////////////////////////////////////////////////////////////////////////
-//		===	OPERATOR ===
-////////////////////////////////////////////////////////////////////////////////////////////
-YAML::Node MicroYamlReader::operator[]( const std::string& name ) {
-	return m_document[ name ];
-}
-
-YAML::Node MicroYamlReader::operator[]( micro_string name ) {
-	return m_document[ name ];
-}

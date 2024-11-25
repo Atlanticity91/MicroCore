@@ -59,14 +59,6 @@ public:
 	bool Open( const std::string& path );
 
 	/**
-	 * Open function
-	 * @note : Open file specified by the path.
-	 * @param path : Path with extension to the query file.
-	 * @return : True for succes.
-	 **/
-	bool Open( micro_string path );
-
-	/**
 	 * Close procedure
 	 * @note : Close current file.
 	 **/
@@ -83,7 +75,7 @@ public:
 	MicroYamlWriter& operator<<( const Type& data ) { 
 		m_emitter << data;
 
-		return *this;
+		return micro_self;
 	};
 
 };
