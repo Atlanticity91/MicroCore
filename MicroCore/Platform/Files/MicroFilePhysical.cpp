@@ -165,3 +165,88 @@ micro_string MicroFilePhysical::GetFileMode( const MicroFileAccessors accessor )
 
 	return file_mode;
 }
+
+/*
+#include <iostream>
+#include <streambuf>
+#include <cstdio>
+
+class filebuf : public std::streambuf {
+public:
+	filebuf(FILE* file) : file_(file) {
+		// Set the buffer size and allocate memory for the buffer
+		setp(buffer_, buffer_ + sizeof(buffer_) - 1); // write area
+		setg(buffer_, buffer_, buffer_); // read area starts empty
+	}
+
+	~filebuf() {
+		sync(); // Flush on destruction
+	}
+
+protected:
+	// Reading from the stream (underflow)
+	int underflow() override {
+		if (gptr() < egptr()) {
+			return *gptr(); // Return the next byte if the buffer is full
+		}
+
+		size_t bytesRead = std::fread(buffer_, 1, sizeof(buffer_), file_);
+		if (bytesRead == 0) {
+			return EOF; // EOF or error
+		}
+
+		setg(buffer_, buffer_, buffer_ + bytesRead); // Reset the get pointers
+		return *gptr(); // Return the next byte
+	}
+
+	// Writing to the stream (overflow)
+	int overflow(int ch) override {
+		if (ch != EOF) {
+			// Write the buffered data
+			if (pptr() > pbase()) {
+				std::fwrite(pbase(), 1, pptr() - pbase(), file_);
+				setp(buffer_, buffer_ + sizeof(buffer_) - 1); // Reset the put pointers
+			}
+			// Write the single character
+			*pptr() = static_cast<char>(ch);
+			pbump(1);
+		}
+
+		return 0; // Return success
+	}
+
+	// Sync the buffer (flush)
+	int sync() override {
+		if (pptr() > pbase()) {
+			std::fwrite(pbase(), 1, pptr() - pbase(), file_);
+			setp(buffer_, buffer_ + sizeof(buffer_) - 1); // Reset the put pointers
+		}
+		return 0; // Success
+	}
+
+private:
+	FILE* file_;  // The C99 file pointer
+	char buffer_[1024]; // Buffer for data
+};
+
+int main() {
+	// Open a file in write mode
+	FILE* file = std::fopen("example.txt", "w");
+	if (!file) {
+		std::cerr << "Error opening file." << std::endl;
+		return 1;
+	}
+
+	filebuf fbuf(file);
+	std::ostream out(&fbuf);
+
+	// Now you can use the stream like any other std::ostream
+	out << "Hello, file!" << std::endl;
+
+	// Close the file
+	std::fclose(file);
+
+	return 0;
+}
+
+*/

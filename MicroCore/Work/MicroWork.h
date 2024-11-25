@@ -87,7 +87,7 @@ micro_struct MicroWork {
 	MicroWork( Execute_t execute, const Type& data ) 
 		: MicroWork{ execute }
 	{ 
-		micro::move( (uint32_t)sizeof( Type ), &data, Storage );
+		micro::move( micro_sizeof( Type ), &data, Storage );
 	};
 
 	/**
@@ -105,7 +105,7 @@ micro_struct MicroWork {
 	MicroWork( Execute_t execute, Callback_t on_succed, Callback_t on_failed, const Type& data )
 		: MicroWork{ execute, on_succed, on_failed }
 	{
-		micro::move( (uint32_t)sizeof( Type ), &data, Storage );
+		micro::move( micro_sizeof( Type ), &data, Storage );
 	};
 
 	/**

@@ -35,16 +35,16 @@
 //		===	PUBLIC ===
 ////////////////////////////////////////////////////////////////////////////////////////////
 MicroYamlReader::MicroYamlReader( )
-	: m_document{ }
+	: m_file{ },
+	m_document{ }
 { }
 
 bool MicroYamlReader::Open( const std::string& path ) {
-	auto f = MicroFilePhysical{ };
-	f.Open( path, MicroFileAccessors::Read, MicroFileTypes::Text );
+	if ( std::filesystem::exists( path ) && m_file.Open( path, MicroFileAccessors::Read, MicroFileTypes::Text ) ) {
+		auto stream = m_file.GetInputStream( );
 
-	auto s = f.GetInputStream( );
-
-	m_document = YAML::Load( s );
+		m_document = YAML::Load( stream );
+	}
 
 	return m_document.IsDefined( );
 }

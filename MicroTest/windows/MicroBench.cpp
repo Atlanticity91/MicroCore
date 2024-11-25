@@ -1,9 +1,9 @@
 /**
  *
- *  __  __ _             ___
- * |  \/  (_)__ _ _ ___ / __|___ _ _ ___
- * | |\/| | / _| '_/ _ \ (__/ _ \ '_/ -_)
- * |_|  |_|_\__|_| \___/\___\___/_| \___|
+ *  __  __ _           _____       _
+ * |  \/  (_)__ _ _ __|_   _|__ __| |_
+ * | |\/| | / _| '_/ _ \| |/ -_|_-<  _|
+ * |_|  |_|_\__|_| \___/|_|\___/__/\__|
  *
  * MIT License
  *
@@ -29,46 +29,43 @@
  *
  **/
 
-#include "__micro_core_pch.h"
+#include "CppUnitTest.h"
+#include <MicroCore.h>
+
+using namespace Microsoft::VisualStudio::CppUnitTestFramework;
 
 ////////////////////////////////////////////////////////////////////////////////////////////
-//		===	PUBLIC ===
+//		===	TEST ===
 ////////////////////////////////////////////////////////////////////////////////////////////
-namespace micro {
+namespace UnitBench {
 
-	BenchReport Bench(
-		micro_string name,
-		std::initializer_list<uint32_t> step_counts,
-		std::function<double( BenchTimer& timer, uint32_t )> lambda
-	) {
-		auto step_id = step_counts.size( );
-		auto report = BenchReport{ name, (uint32_t)step_id };
-		auto timer = BenchTimer{ };
+	TEST_CLASS( MicroBench ) {
 
-		while ( step_id-- > 0 ) {
-			auto& result = report.Results[ step_id ];
+	public:
+		TEST_METHOD( BenchVector ) {
+			auto report_string = std::string{ "" };
+			auto report = micro::Bench(
+				report_string,
+				"Vector<uint32_t>",
+				{ 100, 1000, 10000 },
+				[]( micro::BenchTimer& timer, uint32_t steps ) {
+					auto vec = std::vector<uint32_t>{ };
+					auto s = steps;
 
-			result.Steps	= micro_ref( step_counts.begin( ) + step_id );
-			result.Duration = std::invoke( lambda, timer, result.Steps );
-		}
+					timer.Start( );
 
-		return std::move( report );
-	}
+					while ( steps-- > 0 )
+						vec.emplace_back( steps * s + steps - s );
 
-	BenchReport Bench(
-		std::string& report_string,
-		micro_string name,
-		std::initializer_list<uint32_t> step_counts,
-		std::function<double( BenchTimer& timer, uint32_t )> lambda
-	) {
-		auto report = Bench( name, step_counts, lambda );
+					return timer.Resolve( );
+				}
+			);
 
-		report_string = std::format( "{} : {}\n", name, step_counts.size( ) );
+			auto* message = report_string.c_str( );
 
-		for ( const auto& result : report.Results )
-			report_string += std::format( "\t{:6}/{}\n", result.Steps, result.Duration );
+			Logger::WriteMessage( message );
+		};
 
-		return std::move( report );
-	}
+	};
 
 };

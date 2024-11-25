@@ -36,6 +36,7 @@
 micro_class MicroYamlReader final {
 
 private:
+	MicroFilePhysical m_file;
 	YAML::Node m_document;
 
 public:
