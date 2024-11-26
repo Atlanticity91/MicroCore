@@ -223,7 +223,21 @@ extern "C" {
 #define micro_sizeof( TYPE ) ( (uint32_t)sizeof( TYPE ) )
 
 /**
+ * micro_variadic_expand macro
+ * @note : Wrapper for template variadic parameter folf expression, simplify reading.
+ **/
+#define micro_variadic_expand( ... ) ( [&] { __VA_ARGS__ }, ... )
+
+/**
  * micro_string typedef
  * @note : Wrapper for C style string.
  **/
 typedef const char* micro_string;
+
+/**
+ * micro_array_size template
+ * @note : Restrict Count to never be 0, 0 size array is illegal.
+ * @template Count : Query array size.
+ **/
+template<size_t Count>
+constexpr size_t micro_array_size = ( Count > 0 ) ? Count : 1;

@@ -41,7 +41,7 @@ namespace micro {
 		using IteratorStorage_t = MicroReflectIteratorStorage<T>;
 		using IteratorPointer_t = typename IteratorStorage_t::IteratorPointer_t;
 
-		T Elements[ ( Count > 0 ) ? Count : 1 ];
+		T Elements[ micro_array_size<Count> ];
 
 		/**
 		 * constructor

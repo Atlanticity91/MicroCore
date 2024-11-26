@@ -112,7 +112,7 @@ namespace micro {
 			m_first = other.begin( );
 			m_last  = other.end( );
 
-			return *this;
+			return micro_self;
 		};
 
 		/**

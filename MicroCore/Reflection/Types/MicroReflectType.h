@@ -49,7 +49,6 @@ namespace micro {
 		 **/
 		ReflectType( );
 
-
 		/**
 		 * Constructor
 		 * @param name : Name of the type.

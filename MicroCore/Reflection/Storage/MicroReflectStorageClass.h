@@ -45,6 +45,14 @@ namespace micro {
 
 		/**
 		 * Constructor
+		 * @param name : Name of the class.
+		 **/
+		ReflectStorageClass( micro_string name )
+			: ReflectStorageClass{ name, []( auto* ) { } }
+		{ };
+
+		/**
+		 * Constructor
 		 * @template Lambda : Lambda signature taking pointer to self.
 		 * @param name : Name of the class.
 		 * @param lambda : Query construction lambda.
@@ -66,7 +74,7 @@ namespace micro {
 		 * @return : Return pointer to class detail.
 		 **/
 		operator const ReflectClass* ( ) const {
-			return &Detail;
+			return micro_ptr( Detail );
 		};
 
 	};

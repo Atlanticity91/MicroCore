@@ -69,7 +69,7 @@ namespace micro {
 		 * @return : Return const reference to internal value.
 		 **/
 		const reference operator*( ) const {
-			return *m_value;
+			return micro_ref( m_value );
 		};
 
 		/**
@@ -89,7 +89,7 @@ namespace micro {
 		MicroReflectIterator& operator++( ) {
 			m_value++;
 
-			return *this;
+			return micro_self;
 		};
 
 		/**
@@ -98,9 +98,9 @@ namespace micro {
 		 * @return : Return iterator berfore incrementation.
 		 **/
 		MicroReflectIterator operator++( int ) {
-			MicroReflectIterator tmp = *this;
+			MicroReflectIterator tmp = micro_self;
 
-			++( *this );
+			++( micro_self );
 
 			return tmp;
 		};
@@ -114,7 +114,7 @@ namespace micro {
 		MicroReflectIterator& operator=( const MicroReflectIterator& other ) {
 			m_value = other.m_value;
 
-			return *this;
+			return micro_self;
 		};
 
 		/**

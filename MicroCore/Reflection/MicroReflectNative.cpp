@@ -39,14 +39,14 @@ namespace micro {
 	#define REFLECT_TYPE_IMP( TYPE )\
 		template<> const ReflectType* GetTypeImpl( ReflectTypeTag<TYPE> ) noexcept {\
 			static auto type_info = ReflectType{ micro_stringify( TYPE ), sizeof( TYPE ) };\
-			return &type_info;\
+			return micro_ptr( type_info );\
 		}
 
 	template<>
 	const ReflectType* GetTypeImpl( ReflectTypeTag<void> ) noexcept {
 		static auto void_type = ReflectType{ "void", 0 };
 
-		return &void_type;
+		return micro_ptr( void_type );
 	}
 
 	REFLECT_TYPE_IMP( int8_t );
@@ -66,21 +66,20 @@ namespace micro {
 	const ReflectType* GetTypeImpl( ReflectTypeTag<std::string> ) noexcept {
 		static auto type_info = ReflectType{ "std::string", sizeof( std::string ) };
 
-		return &type_info;
+		return micro_ptr( type_info );
 	}
 
 	template<>
 	const ReflectType* GetTypeImpl( ReflectTypeTag<micro_string> ) noexcept {
 		static auto type_info = ReflectType{ "const char*", sizeof( micro_string ) };
 
-		return &type_info;
+		return micro_ptr( type_info );
 	}
 
 	template<>
 	const ReflectClass* GetClassImpl( ReflectClassTag<std::string> ) noexcept {
 		static auto storage_string = ReflectStorageClass<std::string, 0, 0, 0>{
-			"std::string",
-			[]( auto* self ) { }
+			"std::string" 
 		};
 
 		return storage_string;
@@ -89,8 +88,7 @@ namespace micro {
 	template<class T>
 	const ReflectClass* GetClassImpl( ReflectClassTag<std::vector<T>> ) noexcept {
 		static auto storage_vector = ReflectStorageClass<std::vector<T>, 0, 0, 0>{
-			"std::vector",
-			[]( auto* self ) { }
+			"std::vector"
 		};
 
 		return storage_vector;

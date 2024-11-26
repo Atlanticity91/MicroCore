@@ -241,7 +241,7 @@ private:
 	 **/
 	template<MicroReflectParsingTypes Type, typename DeclarationType>
 	DeclarationType* GetDeclaration( ) {
-		return ( m_type == Type ) ? (DeclarationType*)m_node : nullptr;
+		return ( m_type == Type ) ? micro_cast( m_node, DeclarationType* ) : nullptr;
 	};
 
 public:

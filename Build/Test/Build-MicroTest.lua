@@ -61,3 +61,8 @@ project "MicroTest"
 	filter "system:linux"
 		systemversion "latest"
 		defines { "LINUX" }
+
+		files {
+			"%{IncludeDirs.test}/linux/**.h",
+			"%{IncludeDirs.test}/linux/**.cpp"
+		}
