@@ -42,14 +42,14 @@ namespace micro {
 
 	ReflectClass::ReflectClass(
 		micro_string name,
-		const size_t size
+		const uint32_t size
 	)
 		: ReflectClass{ name, size, { }, { } }
 	{ }
 
 	ReflectClass::ReflectClass( 
 		micro_string name,
-		const size_t size,
+		const uint32_t size,
 		const Fields_t fields,
 		const Functions_t functions
 	)
@@ -58,7 +58,7 @@ namespace micro {
 
 	ReflectClass::ReflectClass(
 		micro_string name,
-		const size_t size,
+		const uint32_t size,
 		const Parent_t parents,
 		const Fields_t fields,
 		const Functions_t functions

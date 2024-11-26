@@ -42,7 +42,7 @@ namespace micro {
 	micro_struct ReflectType {
 
 		micro_string Name;
-		size_t Size;
+		uint32_t Size;
 
 		/**
 		 * Constructor
@@ -60,7 +60,7 @@ namespace micro {
 		 * @param name : Name of the type.
 		 * @param size : Size of the type.
 		 **/
-		ReflectType( micro_string name, const size_t size );
+		ReflectType( micro_string name, const uint32_t size );
 
 	};
 

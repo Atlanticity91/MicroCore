@@ -35,7 +35,7 @@
 
 namespace micro { 
 
-	template<class T, size_t ParentCount, size_t FieldCount, size_t FunctionCount>
+	template<class T, uint32_t ParentCount, uint32_t FieldCount, uint32_t FunctionCount>
 	struct ReflectStorageClass {
 
 		ReflectStorage<ReflectParent, ParentCount> Parents;
@@ -53,13 +53,14 @@ namespace micro {
 
 		/**
 		 * Constructor
-		 * @template Lambda : Lambda signature taking pointer to self.
 		 * @param name : Name of the class.
 		 * @param lambda : Query construction lambda.
 		 **/
-		template<typename Lambda>
-		ReflectStorageClass( micro_string name, Lambda&& lambda ) 
-			: Detail{ name, sizeof( T ) } 
+		ReflectStorageClass( 
+			micro_string name, 
+			std::function<void( ReflectStorageClass* )> lambda
+		)
+			: Detail{ name, micro_sizeof( T ) }
 		{
 			std::invoke( lambda, this );
 			

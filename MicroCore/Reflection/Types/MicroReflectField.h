@@ -67,7 +67,7 @@ namespace micro {
 		 **/
 		ReflectField(
 			micro_string name,
-			const size_t offset,
+			const uint32_t offset,
 			const ReflectType* type
 		);
 
@@ -80,7 +80,7 @@ namespace micro {
 		 **/
 		ReflectField( 
 			micro_string name,
-			const size_t offset,
+			const uint32_t offset,
 			const ReflectType* type,
 			const MicroReflectAccessor accessor
 		);

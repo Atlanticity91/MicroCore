@@ -239,5 +239,5 @@ typedef const char* micro_string;
  * @note : Restrict Count to never be 0, 0 size array is illegal.
  * @template Count : Query array size.
  **/
-template<size_t Count>
-constexpr size_t micro_array_size = ( Count > 0 ) ? Count : 1;
+template<uint32_t Count>
+constexpr uint32_t micro_array_size = ( Count > 0 ) ? Count : 1;

@@ -45,7 +45,7 @@ namespace micro {
 	private:
 		Iterator_t m_first;
 		Iterator_t m_last;
-		size_t m_count;
+		uint32_t m_count;
 
 	public:
 		/**
@@ -60,7 +60,7 @@ namespace micro {
 		 * @param first : First element of the iteration.
 		 * @param count : Count of element to iterate.
 		 **/
-		MicroReflectIteratorStorage( const IteratorPointer_t first, const size_t count )
+		MicroReflectIteratorStorage( const IteratorPointer_t first, const uint32_t count )
 			: m_first{ first },
 			m_last{ first + count },
 			m_count{ count }
@@ -80,7 +80,7 @@ namespace micro {
 		 * @note : Get iterator element count.
 		 * @return : Return current iterator element count.
 		 **/
-		size_t GetCount( ) const {
+		uint32_t GetCount( ) const {
 			return m_count;
 		};
 

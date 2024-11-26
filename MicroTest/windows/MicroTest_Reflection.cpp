@@ -37,27 +37,24 @@ using namespace Microsoft::VisualStudio::CppUnitTestFramework;
 ////////////////////////////////////////////////////////////////////////////////////////////
 //		===	TEST ===
 ////////////////////////////////////////////////////////////////////////////////////////////
-namespace UnitTest1 {
+namespace UnitTest {
 
-	TEST_CLASS( MicroPlatform ) {
+	TEST_CLASS( MicroReflection ) {
 
 	public:
-		TEST_METHOD( Copy ) {
-			auto var_a = 1240;
-			auto var_b = 0;
+		TEST_METHOD( GetReflectType ) {
+			const auto* test_int = micro::GetReflectType<int32_t>( );
 
-			micro::copy( var_a, var_b );
-
-			Assert::AreEqual( var_a, var_b );
+			Assert::AreEqual( test_int->Name, "int32_t" );
+			Assert::AreEqual( test_int->Size, (const uint32_t)4 );
 		};
-		
-		TEST_METHOD( Move ) {
-			auto var_a = 1240;
-			auto var_b = 0;
 
-			micro::move( var_a, var_b );
-
-			Assert::AreEqual( var_a, var_b );
+		TEST_METHOD( GetReflectClass ) {
+			const auto* test_vector = micro::GetReflectClass<std::vector<uint32_t>>( );
+			
+			Assert::AreEqual( test_vector->Name, "std::vector" );
+			Assert::AreEqual( test_vector->Fields.GetCount( ), (const uint32_t)0 );
+			Assert::AreEqual( test_vector->Functions.GetCount( ), (const uint32_t)0 );
 		};
 
 	};

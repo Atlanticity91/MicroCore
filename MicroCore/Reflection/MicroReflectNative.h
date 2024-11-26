@@ -58,6 +58,12 @@ namespace micro {
 	extern const ReflectClass* GetClassImpl( ReflectClassTag<std::string> ) noexcept;
 
 	template<class T>
-	extern const ReflectClass* GetClassImpl( ReflectClassTag<std::vector<T>> ) noexcept;
+	extern const ReflectClass* GetClassImpl( ReflectClassTag<std::vector<T>> ) noexcept {
+		static auto storage_vector = ReflectStorageClass<std::vector<T>, 0, 0, 0>{
+			"std::vector"
+		};
+
+		return storage_vector;
+	};
 
 };

@@ -35,7 +35,7 @@
 
 namespace micro {
 
-	template<class T, size_t Count>
+	template<class T, uint32_t Count>
 	struct ReflectStorage {
 
 		using IteratorStorage_t = MicroReflectIteratorStorage<T>;
@@ -78,7 +78,7 @@ namespace micro {
 		 * @param elment_id : Index of the query element in range [ 0 : Count - 1 ].
 		 * @return : Return reference to query element.
 		 **/
-		T& operator[]( const size_t element_id ) {
+		T& operator[]( const uint32_t element_id ) {
 			micro_assert( element_id < Count, "You can't access element outside storage range [ 0 : %u ]", Count - 1 );
 
 			return Elements[ element_id ];
