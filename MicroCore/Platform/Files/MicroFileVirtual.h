@@ -60,7 +60,7 @@ public:
 	/**
 	 * Destructor
 	 **/
-	~MicroFileVirtual( ) = default;
+	~MicroFileVirtual( );
 
 	/**
 	 * Open function

@@ -31,7 +31,7 @@
 
 #pragma once
 
-#include "../Traits/Profilers/MicroProfiler.h"
+#include "MicroAssert.h"
 
 namespace micro {
 

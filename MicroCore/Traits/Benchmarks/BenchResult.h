@@ -35,6 +35,10 @@
 
 namespace micro {
 
+	/**
+	 * BenchResult struct
+	 * @note : Defined benchmark result for one call.
+	 **/
 	micro_struct BenchResult {
 
 		uint32_t Steps;

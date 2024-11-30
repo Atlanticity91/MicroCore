@@ -34,78 +34,38 @@
 ////////////////////////////////////////////////////////////////////////////////////////////
 //		===	PUBLIC ===
 ////////////////////////////////////////////////////////////////////////////////////////////
-MicroFileVirtual::MicroFileVirtual( )
-	: MicroFile{ },
-	m_pointer{ nullptr },
-	m_length{ 0 }
+MicroLibraryProcedure::MicroLibraryProcedure( )
+	: MicroLibraryProcedure{ "" }
 { }
 
-MicroFileVirtual::MicroFileVirtual( MicroFileVirtual&& other ) noexcept
-	: MicroFile{ other.m_type, other.m_accessor },
-	m_pointer{ other.m_pointer },
-	m_length{ other.m_length }
-{ 
-	other.m_type	 = MicroFileTypes::Undefined;
-	other.m_accessor = MicroFileAccessors::None;
-	other.m_pointer  = nullptr;
-	other.m_length   = 0;
+MicroLibraryProcedure::MicroLibraryProcedure( const std::string& name )
+	: m_name{ std::move( name ) },
+	m_callable{ NULL }
+{ }
+
+////////////////////////////////////////////////////////////////////////////////////////////
+//		===	PUBLIC GET ===
+////////////////////////////////////////////////////////////////////////////////////////////
+bool MicroLibraryProcedure::GetIsCallable( ) const {
+	return !m_name.empty( ) && m_callable != NULL;
 }
 
-MicroFileVirtual::~MicroFileVirtual( ) {
-	sync( );
-}
-
-bool MicroFileVirtual::Open(
-	const void* data,
-	const uint32_t length,
-	const MicroFileAccessors accessor,
-	const MicroFileTypes type
-) {
-	m_pointer = micro_cast( data, uint8_t* );
-	m_length  = length;
-
-	auto* buffer = micro_cast( m_pointer, char* );
-
-	setp( buffer, micro_ptr_as( m_pointer[ length - 1 ], char* ) );
-	setg( buffer, buffer, micro_ptr_as( m_pointer[ length ], char* ) );
-
-	return false;
-}
-
-void MicroFileVirtual::Seek( const uint32_t offset ) {
-}
-
-void MicroFileVirtual::SeekBegin( ) {
-}
-
-void MicroFileVirtual::SeekEnd( ) {
-}
-
-uint32_t MicroFileVirtual::Read( const uint32_t length, uint8_t* buffer ) {
-	return 0;
-}
-
-uint32_t MicroFileVirtual::Write(
-	const uint32_t length,
-	const uint8_t* buffer
-) {
-	return 0;
-}
-
-void MicroFileVirtual::Close( ) {
+const std::string& MicroLibraryProcedure::GetName( ) const {
+	return m_name;
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////
-//		===	PUBLIC ===
+//		===	PUBLIC OPERATOR ===
 ////////////////////////////////////////////////////////////////////////////////////////////
-bool MicroFileVirtual::GetIsValid( ) const {
-	return MicroFile::GetIsValid( ) && m_pointer != nullptr && m_length > 0;
+MicroLibraryProcedure::operator bool( ) const {
+	return GetIsCallable( );
 }
 
-uint32_t MicroFileVirtual::GetSize( ) const {
-	return m_length;
-}
+////////////////////////////////////////////////////////////////////////////////////////////
+//		===	PRIVATE OPERATOR ===
+////////////////////////////////////////////////////////////////////////////////////////////
+MicroLibraryProcedure& MicroLibraryProcedure::operator=( void* callable ) {
+	m_callable = callable;
 
-void* MicroFileVirtual::GetNative( ) const {
-	return micro_cast( m_pointer, void* );
+	return micro_self;
 }

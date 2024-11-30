@@ -53,13 +53,12 @@ namespace micro {
 
 		/**
 		 * Constructor
+		 * @template Lambda : Lambda signature taking pointer to self.
 		 * @param name : Name of the class.
 		 * @param lambda : Query construction lambda.
 		 **/
-		ReflectStorageClass( 
-			micro_string name, 
-			std::function<void( ReflectStorageClass* )> lambda
-		)
+		template<typename Lambda>
+		ReflectStorageClass( micro_string name, Lambda&& lambda )
 			: Detail{ name, micro_sizeof( T ) }
 		{
 			std::invoke( lambda, this );

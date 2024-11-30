@@ -35,6 +35,10 @@
 
 namespace micro {
 
+	/**
+	 * BenchReport struct
+	 * @note : Defined benchmark call result value.
+	 **/
 	micro_struct BenchReport {
 
 		micro_string Name;

@@ -31,17 +31,62 @@
 
 #pragma once
 
-#include "../Libraries/MicroLibrary.h"
+#include "../../Containers/MicroDictionary.h"
 
 /**
- * MicroFileAccessors enum class
- * @note : Defined all accessor for file access.
+ * MicroLibraryProcedure class final
+ * @note : Defined wrapper for dynamic library procedure interaction.
  **/
-micro_enum_class MicroFileAccessors : uint32_t{
+micro_class MicroLibraryProcedure final { 
 
-	None  = 0,
-	Read  = 1 << 0,
-	Write = 1 << 1,
-	Edit  = Read | Write
+	friend class MicroLibrary;
+
+private:
+	std::string m_name;
+	void* m_callable;
+
+public:
+	/**
+	 * Constructor
+	 **/
+	MicroLibraryProcedure( );
+
+	/**
+	 * Constructor
+	 * @param name : Query procedure name.
+	 **/
+	MicroLibraryProcedure( const std::string& name );
+
+public:
+	/**
+	 * GetIsCallable const function
+	 * @note : Get if procedure is ready for call.
+	 * @return : Return true when procedure is ready for calling.
+	 **/
+	bool GetIsCallable( ) const;
+
+	/**
+	 * GetName const function
+	 * @note : Get procedure name.
+	 * @return : Return procedure name value.
+	 **/
+	const std::string& GetName( ) const;
+
+public:
+	/**
+	 * Cast operator
+	 * @note : Get if procedure is ready for call.
+	 * @return : Return GetIsCallable( ) call value.
+	 **/
+	operator bool ( ) const;
+
+private:
+	/**
+	 * = operator
+	 * @note : Asign procedure call pointer.
+	 * @param callable : Procedure call pointer from library.
+	 * @return : Return current procedure instance.
+	 **/
+	MicroLibraryProcedure& operator=( void* callable );
 
 };

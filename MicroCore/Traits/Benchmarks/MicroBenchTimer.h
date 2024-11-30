@@ -31,10 +31,14 @@
 
 #pragma once
 
-#include "../MicroTraits.h"
+#include "../MicroHelper.h"
 
 namespace micro {
 
+	/**
+	 * BenchTimer class final
+	 * @note : Defined timer implementation for benchmarks.
+	 **/
 	micro_class BenchTimer final {
 
 	private:

@@ -35,6 +35,10 @@
 
 namespace micro {
 
+	/**
+	 * Profiler class final
+	 * @note : Defined internal profiler implementation.
+	 **/
 	micro_class Profiler final {
 
 	public:

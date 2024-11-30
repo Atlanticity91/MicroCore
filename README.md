@@ -3,13 +3,13 @@
 This repository contains the code for the Micro Core Library, this project defined Assertion, File wrapper, math types definitions and functions, platform's specific wrapper function, Multi-threading work management and Yaml file support.
 
 > [!CAUTION]
-> This repository use submodules for Thirdparty. Make sure to setup submodules before any action.
+> This repository use submodules for Thirdparty. Make sure to setup submodules before any action. 
 > `git submodule update --init --recursive`
 
 # Build System
-MicroCore as part of the Micro project use the Premake5 build system. Premake5 instance is present in this repository under Build/Premake5.
+MicroCore as part of the Micro project use the [Premake5](https://github.com/premake/premake-core) build system. [Premake5](https://github.com/premake/premake-core) instance is present in this repository under Build/[Premake5](https://github.com/premake/premake-core).
 
-Build files for Premake5 are inside Build folder under :
+Build files for [Premake5](https://github.com/premake/premake-core) are inside Build folder under :
 
 | File  					    | Usage 								 					  |
 | ----------------------------- | ----------------------------------------------------------- |
@@ -29,6 +29,12 @@ To build the project files simply run Setup-Windows.bat
 > Linux isn't implemented yet.
 
 To build the project files simply run Setup-Linux.sh
+
+## Macos
+> [!CAUTION]
+> Macos isn't implemented yet.
+
+To build the project files simply run Setup-Macos.sh
 
 # Documentation
 Documentation for the library can be found under [Documentation/index.html](./Documentation/index.html)
