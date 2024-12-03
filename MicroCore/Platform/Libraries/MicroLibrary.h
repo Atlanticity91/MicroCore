@@ -33,6 +33,19 @@
 
 #include "MicroLibraryProcedure.h"
 
+#ifdef _WIN64
+#	include <Windows.h>
+//#	include <libloaderapi.h>
+
+typedef HMODULE MicroNativeHandle;
+#else
+extern "C" {
+	#include <dlfcn.h>
+};
+
+typedef void* MicroNativeHandle;
+#endif
+
 /**
  * MicroLibrary final class
  * @note : Defined wrapper for dynamic library interaction.
@@ -40,15 +53,22 @@
 micro_class MicroLibrary final {
 
 private:
-	void* m_handle;
+	MicroNativeHandle m_handle;
 	bool m_is_local;
 	std::string m_path;
+	MicroLibraryProcedure m_root_procedure;
 
 public:
 	/**
 	 * Constructor
 	 **/
 	MicroLibrary( );
+
+	/**
+	 * Constructor
+	 * @param path : Query dynamic library path.
+	 **/
+	MicroLibrary( const std::string& path );
 
 	/**
 	 * Constructor
@@ -93,11 +113,25 @@ public:
 	bool Acquire( MicroLibraryProcedure& procedure );
 
 	/**
+	 * Release method
+	 * @note : Release procedure.
+	 * @param procedure : Query procedure to release.
+	 **/
+	void Release( MicroLibraryProcedure& procedure );
+
+	/**
 	 * Close function
 	 * @note : Close dynamic library.
 	 * @return : Return true when operation succeeded.
 	 **/
 	bool Close( );
+
+private:
+	/**
+	 * FreeProcedures method
+	 * @note : Free all procedure of the link list.
+	 **/
+	void FreeProcedures( );
 
 public:
 	/**

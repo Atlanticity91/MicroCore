@@ -44,6 +44,8 @@ micro_class MicroLibraryProcedure final {
 private:
 	std::string m_name;
 	void* m_callable;
+	MicroLibraryProcedure* m_previous;
+	MicroLibraryProcedure* m_next;
 
 public:
 	/**
@@ -56,6 +58,57 @@ public:
 	 * @param name : Query procedure name.
 	 **/
 	MicroLibraryProcedure( const std::string& name );
+
+	/**
+	 * Desstructor
+	 **/
+	~MicroLibraryProcedure( );
+
+private:
+	/**
+	 * Reset method
+	 * @note : Retset procedure to empty state.
+	 **/
+	void Reset( );
+
+	/**
+	 * Insert method
+	 * @note : Insert new procedure in the link list.
+	 * @param procedure : Insert new procedure in the link list.
+	 **/
+	void Insert( MicroLibraryProcedure* procedure );
+
+	/**
+	 * Free method
+	 * @note : Free the link list.
+	 **/
+	void Free( );
+
+public:
+	/**
+	 * Invoke template function
+	 * @note : Invoke procedure function.
+	 * @template ReturnType : Query procedure return value type.
+	 * @template Args : Query arguments type list.
+	 * @param args : Query arguments list.
+	 * @return : Return procedure return value as ReturnType.
+	 **/
+	template<typename ReturnType, typename... Args>
+	micro_inline ReturnType Invoke( Args&&... args ) {
+		typedef ReturnType( *Signature )( Args... );
+
+		micro_compile_if( !std::is_void<ReturnType>::value ) {
+			auto result = ReturnType{ };
+
+			if ( GetIsCallable( ) )
+				result = std::invoke( micro_cast( m_callable, Signature ), std::forward<Args>( args )... );
+
+			return result;
+		} micro_compile_else{
+			if ( GetIsCallable( ) )
+				std::invoke( micro_cast( m_callable, Signature ), std::forward<Args>( args )... );
+		}
+	};
 
 public:
 	/**
@@ -88,5 +141,13 @@ private:
 	 * @return : Return current procedure instance.
 	 **/
 	MicroLibraryProcedure& operator=( void* callable );
+
+	/**
+	 * = operator
+	 * @note : Asign procedure state from procedure to move.
+	 * @param other : Procedure to move.
+	 * @return : Return current procedure instance.
+	 **/
+	MicroLibraryProcedure& operator=( MicroLibraryProcedure&& other );
 
 };

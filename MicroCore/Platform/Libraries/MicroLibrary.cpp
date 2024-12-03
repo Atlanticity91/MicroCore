@@ -32,23 +32,17 @@
 #include <__micro_core_pch.h>
 
 ////////////////////////////////////////////////////////////////////////////////////////////
-//		===	INTERNAL ===
-////////////////////////////////////////////////////////////////////////////////////////////
-#ifdef _WIN64
-#	include <libloaderapi.h>
-#else
-extern "C" {
-	#include <dlfcn.h>
-};
-#endif
-
-////////////////////////////////////////////////////////////////////////////////////////////
 //		===	PUBLIC ===
 ////////////////////////////////////////////////////////////////////////////////////////////
 MicroLibrary::MicroLibrary( )
 	: m_handle{ NULL },
 	m_is_local{ false }, 
-	m_path{ "" }
+	m_path{ "" }, 
+	m_root_procedure{ }
+{ }
+
+MicroLibrary::MicroLibrary( const std::string& path )
+	: MicroLibrary{ std::move( path ), false }
 { }
 
 MicroLibrary::MicroLibrary( const std::string& path, bool load_local )
@@ -60,12 +54,12 @@ MicroLibrary::MicroLibrary( const std::string& path, bool load_local )
 MicroLibrary::MicroLibrary( MicroLibrary&& other ) 
 	: MicroLibrary{ }
 { 
-	if ( other.GetIsValid( ) )
-		Close( );
+	Close( );
 
-	m_handle   = other.m_handle;
-	m_is_local = other.m_is_local;
-	m_path     = std::move( other.m_path );
+	m_handle		 = other.m_handle;
+	m_is_local		 = other.m_is_local;
+	m_path			 = std::move( other.m_path );
+	m_root_procedure = std::move( other.m_root_procedure );
 
 	other.m_handle = NULL;
 }
@@ -79,9 +73,9 @@ bool MicroLibrary::Open( const std::string& path, bool load_local ) {
 
 #	ifdef _WIN64
 	if ( load_local )
-		m_handle = micro_cast( GetModuleHandleA( library_path ), void* );
+		m_handle = GetModuleHandleA( library_path );
 	else
-		m_handle = micro_cast( LoadLibraryA( library_path ), void* );
+		m_handle = LoadLibraryA( library_path );
 #	else
 	const auto flags = RTLD_NOW;
 
@@ -104,7 +98,7 @@ void* MicroLibrary::Acquire( const std::string& procedure) {
 		auto* procedure_name = procedure.c_str( );
 
 	#	ifdef _WIN64
-		procedure_address = micro_cast( GetProcAddress( (HMODULE)m_handle, procedure_name ), void* );
+		procedure_address = micro_cast( GetProcAddress( m_handle, procedure_name ), void* );
 	#	else
 		procedure_address = dlsym( m_handle, procedure_name );
 	#	endif
@@ -116,17 +110,27 @@ void* MicroLibrary::Acquire( const std::string& procedure) {
 bool MicroLibrary::Acquire( MicroLibraryProcedure& procedure ) {
 	const auto& procedure_name = procedure.GetName( );
 
-	procedure = Acquire( procedure_name );
+	if ( procedure = Acquire( procedure_name ) ) {
+		auto* new_procedure = micro_ptr( procedure );
+
+		m_root_procedure.Insert( new_procedure );
+	}
 
 	return procedure.GetIsCallable( );
+}
+
+void MicroLibrary::Release( MicroLibraryProcedure& procedure ) {
+	procedure.~MicroLibraryProcedure( );
 }
 
 bool MicroLibrary::Close( ) {
 	auto result = false;
 
 	if ( GetIsValid( ) ) {
+		FreeProcedures( );
+
 	#	ifdef _WIN64
-		result = ( FreeLibrary( (HMODULE)m_handle ) == TRUE );
+		result = ( FreeLibrary( m_handle ) == TRUE );
 	#	else
 		result = ( dlclose( m_handle ) == 0 );
 	#	endif
@@ -136,6 +140,13 @@ bool MicroLibrary::Close( ) {
 	}
 
 	return result;
+}
+
+////////////////////////////////////////////////////////////////////////////////////////////
+//		===	PRIVATE ===
+////////////////////////////////////////////////////////////////////////////////////////////
+void MicroLibrary::FreeProcedures( ) {
+	m_root_procedure.Free( );
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////

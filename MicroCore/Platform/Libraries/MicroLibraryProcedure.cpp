@@ -40,8 +40,45 @@ MicroLibraryProcedure::MicroLibraryProcedure( )
 
 MicroLibraryProcedure::MicroLibraryProcedure( const std::string& name )
 	: m_name{ std::move( name ) },
-	m_callable{ NULL }
+	m_callable{ NULL },
+	m_previous{ nullptr },
+	m_next{ nullptr }
 { }
+
+MicroLibraryProcedure::~MicroLibraryProcedure( ) {
+	if ( m_previous != nullptr )
+		m_previous->m_next = m_next;
+
+	if ( m_next != nullptr )
+		m_next->m_previous = m_previous;
+
+	Reset( );
+}
+
+
+void MicroLibraryProcedure::Reset( ) {
+	m_name	   = "";
+	m_callable = NULL;
+	m_previous = nullptr;
+	m_next	   = nullptr;
+}
+
+void MicroLibraryProcedure::Insert( MicroLibraryProcedure* procedure ) {
+	if ( procedure == nullptr )
+		return;
+}
+
+void MicroLibraryProcedure::Free( ) { 
+	auto* procedure = this;
+
+	while ( procedure != nullptr ) {
+		auto* swap = procedure->m_next;
+
+		procedure->Reset( );
+
+		procedure = swap;
+	}
+}
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 //		===	PUBLIC GET ===
@@ -57,7 +94,7 @@ const std::string& MicroLibraryProcedure::GetName( ) const {
 ////////////////////////////////////////////////////////////////////////////////////////////
 //		===	PUBLIC OPERATOR ===
 ////////////////////////////////////////////////////////////////////////////////////////////
-MicroLibraryProcedure::operator bool( ) const {
+MicroLibraryProcedure::operator bool ( ) const {
 	return GetIsCallable( );
 }
 
@@ -66,6 +103,23 @@ MicroLibraryProcedure::operator bool( ) const {
 ////////////////////////////////////////////////////////////////////////////////////////////
 MicroLibraryProcedure& MicroLibraryProcedure::operator=( void* callable ) {
 	m_callable = callable;
+
+	return micro_self;
+}
+
+MicroLibraryProcedure& MicroLibraryProcedure::operator=( MicroLibraryProcedure&& other ) {
+	m_name	   = std::move( other.m_name );
+	m_callable = other.m_callable;
+	m_previous = other.m_previous;
+	m_next	   = other.m_next;
+
+	if ( m_previous != nullptr )
+		m_previous->m_next = this;
+	
+	if ( m_next != nullptr  )
+		m_next->m_previous = this;
+
+	other.Reset( );
 
 	return micro_self;
 }

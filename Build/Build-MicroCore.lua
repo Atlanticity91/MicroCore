@@ -8,6 +8,7 @@ project "MicroCore"
 	}
 
 	targetdir "%{wks.location}/bin/%{cfg.buildcfg}/"
+	debugdir "%{wks.location}/bin/%{cfg.buildcfg}/"
 	objdir "%{wks.location}/bin-int/%{prj.name}-%{cfg.buildcfg}"
 
 	includedirs {
