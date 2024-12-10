@@ -35,23 +35,18 @@
 //		===	PUBLIC ===
 ////////////////////////////////////////////////////////////////////////////////////////////
 MicroFile::MicroFile( )
-	: MicroFile{ MicroFileTypes::Undefined, MicroFileAccessors::None }
+	: m_type{ MicroFileTypes::Undefined },
+	m_accessor{ MicroFileAccessors::None }
 { }
 
 MicroFile::~MicroFile( ) {
 	Close( );
 }
 
-////////////////////////////////////////////////////////////////////////////////////////////
-//		===	PROTECTED ===
-////////////////////////////////////////////////////////////////////////////////////////////
-MicroFile::MicroFile(
-	const MicroFileTypes type,
-	const MicroFileAccessors accessor
-)
-	: m_type{ type },
-	m_accessor{ accessor }
-{ }
+void MicroFile::Close( ) {
+	m_type	   = MicroFileTypes::Undefined;
+	m_accessor = MicroFileAccessors::None;
+}
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 //		===	PUBLIC GET ===
@@ -74,12 +69,4 @@ bool MicroFile::GetCanRead( ) const {
 
 bool MicroFile::GetCanWrite( ) const {
 	return GetIsValid( ) && ( (uint32_t)m_accessor & (uint32_t)MicroFileAccessors::Write );
-}
-
-std::istream MicroFile::GetInputStream( ) {
-	return std::istream{ this };
-}
-
-std::ostream MicroFile::GetOutputStream( ) {
-	return std::ostream{ this };
 }

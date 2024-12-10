@@ -35,14 +35,25 @@
 //		===	PUBLIC ===
 ////////////////////////////////////////////////////////////////////////////////////////////
 MicroFilePhysical::MicroFilePhysical( ) 
-	: MicroFile{ }, 
+	: MicroFile{ },
 	m_handle{ NULL }
 { }
 
+MicroFilePhysical::MicroFilePhysical(
+	const std::string& path,
+	const MicroFileAccessors accessor,
+	const MicroFileTypes type
+)
+	: MicroFilePhysical{ }
+{
+	Open( path, accessor, type );
+}
+
 MicroFilePhysical::MicroFilePhysical( MicroFilePhysical&& other ) noexcept
-	: MicroFile{ other.m_type, other.m_accessor },
-	m_handle{ other.m_handle }
-{ 
+	: MicroFilePhysical{ }
+{
+	micro::move( other, micro_self );
+	
 	other.m_type	 = MicroFileTypes::Undefined;
 	other.m_accessor = MicroFileAccessors::None;
 	other.m_handle   = NULL;
@@ -55,37 +66,29 @@ bool MicroFilePhysical::Open(
 ) {
 	if ( accessor > MicroFileAccessors::None && type > MicroFileTypes::Undefined ) {
 		auto* file_path = path.c_str( );
-		auto file_mode  = GetFileMode( accessor );
-		
+		auto file_mode = GetFileMode( accessor );
+
 		m_accessor = accessor;
-		m_type	   = type;
-		m_handle   = micro::file_open( file_path, file_mode );
+		m_type = type;
+		m_handle = micro::file_open( file_path, file_mode );
 	}
 
-	return m_handle != NULL;
-}
-
-MicroFilePhysical::int_t MicroFilePhysical::underflow( ) {
-	return MicroFilePhysical::traits_type::eof( );
-}
-
-MicroFilePhysical::int_t MicroFilePhysical::overflow( int_t ch ) {
-	return MicroFilePhysical::traits_type::eof( );
+	return GetIsValid( );
 }
 
 void MicroFilePhysical::Seek( const uint32_t offset ) {
 	if ( GetIsValid( ) )
-		fseek( m_handle, offset, SEEK_CUR );
+		micro::file_seek( m_handle, SEEK_CUR, offset );
 }
 
 void MicroFilePhysical::SeekBegin( ) {
 	if ( GetIsValid( ) )
-		fseek( m_handle, 0, SEEK_SET );
+		micro::file_seek( m_handle, SEEK_SET, 0 );
 }
 
 void MicroFilePhysical::SeekEnd( ) {
 	if ( GetIsValid( ) )
-		fseek( m_handle, 0, SEEK_END );
+		micro::file_seek( m_handle, SEEK_END, 0 );
 }
 
 uint32_t MicroFilePhysical::Read( const uint32_t length, uint8_t* buffer ) {
@@ -94,7 +97,7 @@ uint32_t MicroFilePhysical::Read( const uint32_t length, uint8_t* buffer ) {
 
 	auto count = (uint32_t)0;
 
-	if ( GetCanRead( ) )
+	if ( GetCanRead( ) && !GetIsEOF( ) )
 		count = micro::file_read( m_handle, length, buffer );
 
 	return count;
@@ -107,16 +110,16 @@ uint32_t MicroFilePhysical::Write( const uint32_t length, const uint8_t* buffer 
 	auto count = (uint32_t)0;
 
 	if ( GetCanWrite( ) )
-		count = (uint32_t)fwrite( buffer, sizeof( uint8_t ), length, m_handle );
+		count = micro::file_write( m_handle, length, buffer );
 
 	return count;
 }
 
 void MicroFilePhysical::Close( ) {
 	if ( GetIsValid( ) ) {
-		fclose( m_handle );
+		MicroFile::Close( );
 
-		m_handle = nullptr;
+		micro::file_close( m_handle );
 	}
 
 	m_accessor = MicroFileAccessors::None;
@@ -126,27 +129,35 @@ void MicroFilePhysical::Close( ) {
 //		===	PUBLIC GET ===
 ////////////////////////////////////////////////////////////////////////////////////////////
 bool MicroFilePhysical::GetIsValid( ) const {
-	return MicroFile::GetIsValid( ) && m_handle != NULL;
+	return MicroFile::GetIsValid( ) && ( m_handle != NULL );
 }
 
 uint32_t MicroFilePhysical::GetSize( ) const {
-	auto size = (uint32_t)0;
+	auto result = (uint32_t)0;
 
 	if ( GetCanRead( ) ) {
-		auto cursor = ftell( m_handle );
-
-		fseek( m_handle, 0, SEEK_END );
-
-		size = (uint32_t)ftell( m_handle );
-
-		fseek( m_handle, cursor, SEEK_SET );
+		result = micro::file_seek( m_handle, SEEK_END, 0 );
+		result = micro::file_seek( m_handle, SEEK_SET, result );
 	}
 
-	return size;
+	return result;
+}
+uint32_t MicroFilePhysical::GetCursor( ) const {
+	auto result = (uint32_t)0;
+
+	if ( GetIsValid( ) )
+		result = micro::file_tell( m_handle );
+
+	return result;
 }
 
-FILE* MicroFilePhysical::GetNative( ) const {
-	return m_handle;
+bool MicroFilePhysical::GetIsEOF( ) const {
+	auto result = true;
+
+	if ( GetIsValid( ) )
+		result = micro::file_is_eof( m_handle );
+
+	return result;
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////
@@ -156,8 +167,8 @@ micro_string MicroFilePhysical::GetFileMode( const MicroFileAccessors accessor )
 	auto file_mode = "";
 
 	switch ( accessor ) {
-		case MicroFileAccessors::Read  : file_mode = ( m_type == MicroFileTypes::Text ) ? "r" : "rb";   break;
-		case MicroFileAccessors::Write : file_mode = ( m_type == MicroFileTypes::Text ) ? "w" : "wb";   break;
+		case MicroFileAccessors::Read  : file_mode = ( m_type == MicroFileTypes::Text ) ? "r"  : "rb";  break;
+		case MicroFileAccessors::Write : file_mode = ( m_type == MicroFileTypes::Text ) ? "w"  : "wb";  break;
 		case MicroFileAccessors::Edit  : file_mode = ( m_type == MicroFileTypes::Text ) ? "a+" : "ab+"; break;
 
 		default: break;
@@ -166,87 +177,9 @@ micro_string MicroFilePhysical::GetFileMode( const MicroFileAccessors accessor )
 	return file_mode;
 }
 
-/*
-#include <iostream>
-#include <streambuf>
-#include <cstdio>
-
-class filebuf : public std::streambuf {
-public:
-	filebuf(FILE* file) : file_(file) {
-		// Set the buffer size and allocate memory for the buffer
-		setp(buffer_, buffer_ + sizeof(buffer_) - 1); // write area
-		setg(buffer_, buffer_, buffer_); // read area starts empty
-	}
-
-	~filebuf() {
-		sync(); // Flush on destruction
-	}
-
-protected:
-	// Reading from the stream (underflow)
-	int underflow() override {
-		if (gptr() < egptr()) {
-			return *gptr(); // Return the next byte if the buffer is full
-		}
-
-		size_t bytesRead = std::fread(buffer_, 1, sizeof(buffer_), file_);
-		if (bytesRead == 0) {
-			return EOF; // EOF or error
-		}
-
-		setg(buffer_, buffer_, buffer_ + bytesRead); // Reset the get pointers
-		return *gptr(); // Return the next byte
-	}
-
-	// Writing to the stream (overflow)
-	int overflow(int ch) override {
-		if (ch != EOF) {
-			// Write the buffered data
-			if (pptr() > pbase()) {
-				std::fwrite(pbase(), 1, pptr() - pbase(), file_);
-				setp(buffer_, buffer_ + sizeof(buffer_) - 1); // Reset the put pointers
-			}
-			// Write the single character
-			*pptr() = static_cast<char>(ch);
-			pbump(1);
-		}
-
-		return 0; // Return success
-	}
-
-	// Sync the buffer (flush)
-	int sync() override {
-		if (pptr() > pbase()) {
-			std::fwrite(pbase(), 1, pptr() - pbase(), file_);
-			setp(buffer_, buffer_ + sizeof(buffer_) - 1); // Reset the put pointers
-		}
-		return 0; // Success
-	}
-
-private:
-	FILE* file_;  // The C99 file pointer
-	char buffer_[1024]; // Buffer for data
-};
-
-int main() {
-	// Open a file in write mode
-	FILE* file = std::fopen("example.txt", "w");
-	if (!file) {
-		std::cerr << "Error opening file." << std::endl;
-		return 1;
-	}
-
-	filebuf fbuf(file);
-	std::ostream out(&fbuf);
-
-	// Now you can use the stream like any other std::ostream
-	out << "Hello, file!" << std::endl;
-
-	// Close the file
-	std::fclose(file);
-
-	return 0;
+////////////////////////////////////////////////////////////////////////////////////////////
+//		===	OPERATOR ===
+////////////////////////////////////////////////////////////////////////////////////////////
+MicroFilePhysical::operator FILE* ( ) {
+	return GetNative( );
 }
-
-*/

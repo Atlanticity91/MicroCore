@@ -93,4 +93,30 @@ namespace micro {
 		return count;
 	}
 
+	uint32_t file_write( FILE*& file, const uint32_t length, const uint8_t* buffer ) {
+		return (uint32_t)fwrite( micro_cast( buffer, const void* ), sizeof( uint8_t ), length, file );
+	}
+
+	void file_close( FILE*& file ) {
+		fclose( file );
+
+		file = NULL;
+	}
+
+	uint32_t file_seek( FILE* file, const uint32_t origin, const uint32_t offset ) {
+		auto result = file_tell( file );
+
+		fseek( file, offset, origin );
+
+		return result;
+	}
+
+	uint32_t file_tell( FILE* file ) {
+		return (uint32_t)ftell( file );
+	}
+
+	bool file_is_eof( FILE* file ) {
+		return ( feof( file ) != 0 );
+	}
+
 };

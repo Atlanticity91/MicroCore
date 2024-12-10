@@ -37,22 +37,31 @@
 MicroFileVirtual::MicroFileVirtual( )
 	: MicroFile{ },
 	m_pointer{ nullptr },
+	m_cursor{ 0 },
 	m_length{ 0 }
 { }
 
+MicroFileVirtual::MicroFileVirtual(
+	const void* data,
+	const uint32_t length,
+	const MicroFileAccessors accessor,
+	const MicroFileTypes type
+)
+	: MicroFileVirtual{ }
+{
+	Open( data, length, accessor, type );
+}
+
 MicroFileVirtual::MicroFileVirtual( MicroFileVirtual&& other ) noexcept
-	: MicroFile{ other.m_type, other.m_accessor },
-	m_pointer{ other.m_pointer },
-	m_length{ other.m_length }
-{ 
+	: MicroFileVirtual{ }
+{
+	micro::move( other, micro_self );
+
 	other.m_type	 = MicroFileTypes::Undefined;
 	other.m_accessor = MicroFileAccessors::None;
 	other.m_pointer  = nullptr;
+	other.m_cursor   = 0;
 	other.m_length   = 0;
-}
-
-MicroFileVirtual::~MicroFileVirtual( ) {
-	sync( );
 }
 
 bool MicroFileVirtual::Open(
@@ -61,51 +70,97 @@ bool MicroFileVirtual::Open(
 	const MicroFileAccessors accessor,
 	const MicroFileTypes type
 ) {
-	m_pointer = micro_cast( data, uint8_t* );
-	m_length  = length;
+	auto result = false;
 
-	auto* buffer = micro_cast( m_pointer, char* );
+	if ( data != nullptr && length > 0 ) {
+		m_pointer = micro_cast( data, uint8_t* );
+		m_length  = length;
+	}
 
-	setp( buffer, micro_ptr_as( m_pointer[ length - 1 ], char* ) );
-	setg( buffer, buffer, micro_ptr_as( m_pointer[ length ], char* ) );
-
-	return false;
+	return result;
 }
 
 void MicroFileVirtual::Seek( const uint32_t offset ) {
+	if ( ( m_length - m_cursor ) <= offset )
+		m_cursor += offset;
+	else
+		SeekEnd( );
 }
 
 void MicroFileVirtual::SeekBegin( ) {
+	m_cursor = 0;
 }
 
 void MicroFileVirtual::SeekEnd( ) {
+	m_cursor = m_length;
 }
 
 uint32_t MicroFileVirtual::Read( const uint32_t length, uint8_t* buffer ) {
-	return 0;
+	auto result = (uint32_t)0;
+
+	if ( GetCanRead( ) && !GetIsEOF( ) ) {
+		auto query_length = ( m_length - m_cursor );
+
+		if ( length < query_length )
+			query_length = length;
+
+		micro::move( query_length, micro_cast( m_pointer + m_cursor, const void* ), micro_cast( buffer, void* ) );
+
+		m_cursor += query_length;
+	}
+
+	return result;
 }
 
 uint32_t MicroFileVirtual::Write(
 	const uint32_t length,
 	const uint8_t* buffer
 ) {
-	return 0;
+	auto result = (uint32_t)0;
+
+	if ( GetCanWrite( ) && !GetIsEOF( ) ) {
+		auto query_length = ( m_length - m_cursor );
+
+		if ( length < query_length )
+			query_length = length;
+
+		micro::move( query_length, micro_cast( buffer, const void* ), micro_cast( m_pointer + m_cursor, void* ) );
+
+		m_cursor += query_length;
+	}
+
+	return result;
 }
 
 void MicroFileVirtual::Close( ) {
+	if ( GetIsValid( ) ) {
+		MicroFile::Close( );
+
+		m_pointer = nullptr;
+		m_cursor  = 0;
+		m_length  = 0;
+	}
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 //		===	PUBLIC ===
 ////////////////////////////////////////////////////////////////////////////////////////////
 bool MicroFileVirtual::GetIsValid( ) const {
-	return MicroFile::GetIsValid( ) && m_pointer != nullptr && m_length > 0;
+	return MicroFile::GetIsValid( ) && ( m_pointer != nullptr ) && ( m_length > 0 );
 }
 
 uint32_t MicroFileVirtual::GetSize( ) const {
 	return m_length;
 }
 
-void* MicroFileVirtual::GetNative( ) const {
-	return micro_cast( m_pointer, void* );
+uint8_t* MicroFileVirtual::GetNative( ) const {
+	return m_pointer;
+}
+
+uint32_t MicroFileVirtual::GetCursor( ) const {
+	return m_cursor;
+}
+
+bool MicroFileVirtual::GetIsEOF( ) const {
+	return ( m_cursor == m_length );
 }

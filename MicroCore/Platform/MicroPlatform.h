@@ -82,6 +82,49 @@ namespace micro {
 	MICRO_API uint32_t file_read( FILE*& file, const uint32_t length, uint8_t* buffer );
 
 	/**
+	 * file_write function
+	 * @note : Wrapper for platform specific fwrite call.
+	 * @param file : Query file for write operation.
+	 * @param length : Query write buffer length.
+	 * @param buffer : Query buffer.
+	 * @return : Return writed bytes count.
+	 **/
+	MICRO_API uint32_t file_write( FILE*& file, const uint32_t length, const uint8_t* buffer );
+
+	/**
+	 * file_close method
+	 * @note : Wrapper for platform specific fclose call.
+	 * @param file : Query file for close operation.
+	 **/
+	MICRO_API void file_close( FILE*& file );
+
+	/**
+	 * file_seek function
+	 * @note : Wrapper for platform specific fseek call.
+	 * @param file : Query file for seek operation.
+	 * @param origin : Query file seek origin flag.
+	 * @param offset : Query file seek offset from origin int bytes.
+	 * @return : Return old cursor position.
+	 **/
+	MICRO_API uint32_t file_seek( FILE* file, const uint32_t origin, const uint32_t offset );
+
+	/**
+	 * file_tell function
+	 * @note : Wrapper for platform specific ftell call.
+	 * @param file : Query file for tell operation.
+	 * @return : Return current file position value.
+	 **/
+	MICRO_API uint32_t file_tell( FILE* file );
+
+	/**
+	 * file_is_eof function
+	 * @note : Wrapper for platform specific feof call.
+	 * @param file : Query file for operation.
+	 * @return : Return true 
+	 **/
+	MICRO_API bool file_is_eof( FILE* file );
+
+	/**
 	 * copy template function
 	 * @note : Template wrapper for the memcopy function.
 	 * @param template Type : Type of the element to copy.

@@ -37,6 +37,7 @@ micro_class MicroFileVirtual final : public MicroFile {
 
 private:
 	uint8_t* m_pointer;
+	uint32_t m_cursor;
 	uint32_t m_length;
 
 public:
@@ -44,6 +45,20 @@ public:
 	 * Constructor
 	 **/
 	MicroFileVirtual( );
+
+	/**
+	 * Constructor
+	 * @param data : Query buffer.
+	 * @param length : Query buffer length.
+	 * @param accessor : Query buffer accessor.
+	 * @param type : Query buffer type.
+	 **/
+	MicroFileVirtual( 
+		const void* data,
+		const uint32_t length,
+		const MicroFileAccessors accessor,
+		const MicroFileTypes type
+	);
 
 	/**
 	 * Copy-Constructor
@@ -60,13 +75,15 @@ public:
 	/**
 	 * Destructor
 	 **/
-	~MicroFileVirtual( );
+	~MicroFileVirtual( ) = default;
 
 	/**
 	 * Open function
 	 * @note : Open virtual file.
-	 * @param mode : File opening mode, actualy same as native c fopen.
-	 * @param type : Query file type.
+	 * @param data : Query buffer.
+	 * @param length : Query buffer length.
+	 * @param accessor : Query buffer accessor.
+	 * @param type : Query buffer type.
 	 * @return : True for succes.
 	 **/
 	bool Open(
@@ -141,7 +158,21 @@ public:
 	 * @note : Get internal memory pointer.
 	 * @return : Return memory pointer value.
 	 **/
-	void* GetNative( ) const;
+	uint8_t* GetNative( ) const;
+
+	/**
+	 * GetCursor const function
+	 * @note : Get current file cursor position.
+	 * @return : Return current file cursor position value.
+	 **/
+	virtual uint32_t GetCursor( ) const override;
+
+	/**
+	 * GetIsEOF const function
+	 * @note : Get if the current handle has reached end of file.
+	 * @return : Return true when file has reached end of file value.
+	 **/
+	virtual bool GetIsEOF( ) const override;
 
 public:
 	/**

@@ -40,11 +40,8 @@ MicroYamlReader::MicroYamlReader( )
 { }
 
 bool MicroYamlReader::Open( const std::string& path ) {
-	if ( std::filesystem::exists( path ) && m_file.Open( path, MicroFileAccessors::Read, MicroFileTypes::Text ) ) {
-		auto stream = m_file.GetInputStream( );
-
-		m_document = YAML::Load( stream );
-	}
+	if ( std::filesystem::exists( path ) )
+		m_document = YAML::LoadFile( path );
 
 	return m_document.IsDefined( );
 }

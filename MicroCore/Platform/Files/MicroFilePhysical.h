@@ -35,8 +35,6 @@
 
 micro_class MicroFilePhysical final : public MicroFile {
 
-	using int_t = MicroFile::int_t;
-
 private:
 	FILE* m_handle;
 
@@ -45,6 +43,18 @@ public:
 	 * Constructor
 	 **/
 	MicroFilePhysical( );
+
+	/**
+	 * Constructor
+	 * @param path : Path with extension to the query file.
+	 * @param mode : File opening mode, actualy same as native c fopen.
+	 * @param type : Query file type.
+	 **/
+	MicroFilePhysical( 
+		const std::string& path,
+		const MicroFileAccessors accessor,
+		const MicroFileTypes type
+	);
 
 	/**
 	 * Copy-Constructor
@@ -76,21 +86,6 @@ public:
 		const MicroFileAccessors accessor,
 		const MicroFileTypes type
 	);
-
-	/**
-	 * underflow function
-	 * @note : Underflow function override from std::streambuf.
-	 * @return : Return count of new characters.
-	 **/
-	virtual int_t underflow( ) override;
-
-	/**
-	 * overflow function
-	 * @note : overflow function override from std::streambuf.
-	 * @param ch : Character to write.
-	 * @return : Return Traits::eof() on failure.
-	 **/
-	virtual int_t overflow( int_t ch ) override;
 
 	/**
 	 * Seek procedure
@@ -151,12 +146,26 @@ public:
 	 * @note : Get current file size.
 	 **/
 	virtual uint32_t GetSize( ) const override;
-
+	
 	/**
 	 * GetNative const function
 	 * @note : Get the FILE* handle.
 	 **/
 	FILE* GetNative( ) const;
+
+	/**
+	 * GetCursor const function
+	 * @note : Get current file cursor position.
+	 * @return : Return current file cursor position value.
+	 **/
+	virtual uint32_t GetCursor( ) const override;
+
+	/**
+	 * GetIsEOF const function
+	 * @note : Get if the current handle has reached end of file.
+	 * @return : Return true when file has reached end of file value.
+	 **/
+	virtual bool GetIsEOF( ) const override;
 
 private:
 	/**
@@ -166,5 +175,13 @@ private:
 	 * @return : Native file open string.
 	 **/
 	micro_string GetFileMode( const MicroFileAccessors accessor ) const;
+
+public:
+	/**
+	 * Cast operator
+	 * @note : Cast file handle to is native internal handle.
+	 * @return : Return GetNative( ) call value.
+	 **/
+	operator FILE* ( );
 
 };

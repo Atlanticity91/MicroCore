@@ -104,7 +104,7 @@ public:
 				result = std::invoke( micro_cast( m_callable, Signature ), std::forward<Args>( args )... );
 
 			return result;
-		} micro_compile_else{
+		} micro_compile_else {
 			if ( GetIsCallable( ) )
 				std::invoke( micro_cast( m_callable, Signature ), std::forward<Args>( args )... );
 		}

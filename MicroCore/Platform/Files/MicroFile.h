@@ -37,10 +37,7 @@
  * MicroFile final class
  * @note : Represent file, replace FILE*.
  **/
-micro_class MicroFile : public std::streambuf {
-
-protected:
-	using int_t = std::streambuf::int_type;
+micro_class MicroFile {
 
 protected:
 	MicroFileTypes m_type;
@@ -98,18 +95,7 @@ public:
 	 * Close procedure
 	 * @note : Close current file.
 	 **/
-	virtual void Close( ) = 0;
-
-protected:
-	/**
-	 * Constructor
-	 * @param type : Query file type.
-	 * @param accessor : Query file accessor.
-	 **/
-	MicroFile(
-		const MicroFileTypes type,
-		const MicroFileAccessors accessor
-	);
+	virtual void Close( );
 
 public:
 	/**
@@ -243,6 +229,20 @@ public:
 	virtual uint32_t GetSize( ) const = 0;
 
 	/**
+	 * GetCursor const function
+	 * @note : Get current file cursor position.
+	 * @return : Return current file cursor position value.
+	 **/
+	virtual uint32_t GetCursor( ) const = 0;
+
+	/**
+	 * GetIsEOF const function
+	 * @note : Get if the current handle has reached end of file.
+	 * @return : Return true when file has reached end of file value.
+	 **/
+	virtual bool GetIsEOF( ) const = 0;
+
+	/**
 	 * GetCanRead const function
 	 * @note : Get if the file as read access.
 	 **/
@@ -253,20 +253,6 @@ public:
 	 * @note : Get if the file as write access.
 	 **/
 	bool GetCanWrite( ) const;
-
-	/**
-	 * GetInputStream function
-	 * @note : Get file as input stream.
-	 * @return : Return new instance of input stream pointing to the file.
-	 **/
-	std::istream GetInputStream( );
-
-	/**
-	 * GetOutputStream function
-	 * @note : Get file as output stream.
-	 * @return : Return new instance of output stream pointing to the file.
-	 **/
-	std::ostream GetOutputStream( );
 
 public:
 	/**

@@ -35,7 +35,6 @@
 
 #ifdef _WIN64
 #	include <Windows.h>
-//#	include <libloaderapi.h>
 
 typedef HMODULE MicroNativeHandle;
 #else
@@ -132,6 +131,20 @@ private:
 	 * @note : Free all procedure of the link list.
 	 **/
 	void FreeProcedures( );
+
+public:
+	/**
+	 * AcquireAs template function
+	 * @note : Acquire procedure from the library.
+	 * @template Type : Query function pointer type.
+	 * @param procedure : Query procedure to acquire.
+	 * @return : Return procedure address value casted as function pointer.
+	 **/
+	template<typename Type>
+		requires ( std::is_pointer<Type>::value )
+	Type AcquireAs( const std::string& procedure ) { 
+		return micro_cast( Acquire( procedure ), Type );
+	};
 
 public:
 	/**
