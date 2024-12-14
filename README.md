@@ -7,7 +7,7 @@ This repository contains the code for the Micro Core Library, this project defin
 > Current repository documentation is not updated with actual code version.
 
 # Cloning
-> [!CAUTION]
+> [!WARNING]
 > This repository use submodules for Thirdparty. Make sure to setup submodules before any action. 
 
 Using [git-cli](https://git-scm.com/) :
