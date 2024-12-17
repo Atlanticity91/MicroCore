@@ -54,4 +54,4 @@ To build the project files simply run Setup-Linux.sh
 To build the project files simply run Setup-Macos.sh
 
 # Documentation
-Documentation for the library can be found under [Documentation/index.html](./Documentation/index.html)
+Documentation for the library can be found under [Documentation/index.html](https://atlanticity91.github.io/MicroCore/)
