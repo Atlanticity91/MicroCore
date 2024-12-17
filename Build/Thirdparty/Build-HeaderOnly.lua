@@ -2,11 +2,12 @@
 project "GLM"
 	kind "StaticLib"
 	language "C++"
-	location "%{wks.location}/Solution/"
+	location "%{OutputDirs.Solution}"
 
+	--- GLOBAL SOURCE FILES
 	files { 
-		"%{IncludeDirs.glm}/glm/**.h", 
-		"%{IncludeDirs.glm}/glm/**.hpp" 
+		"%{IncludeDirs.Glm}/glm/**.h", 
+		"%{IncludeDirs.Glm}/glm/**.hpp" 
 	}
 
 	--- WINDOWS
@@ -17,9 +18,10 @@ project "GLM"
 project "libclang"
 	kind "StaticLib"
 	language "C"
-	location "%{wks.location}/Solution/"
+	location "%{OutputDirs.Solution}"
 
-	files "%{IncludeDirs.libclang}/clang-c/**.h"
+	--- GLOBAL SOURCE FILES
+	files "%{IncludeDirs.Libclang}/clang-c/**.h"
 
 	--- WINDOWS
 	filter "system:windows"
@@ -29,9 +31,10 @@ project "libclang"
 project "Spdlog"
 	kind "StaticLib"
 	language "C++"
-	location "%{wks.location}/Solution/"
+	location "%{OutputDirs.Solution}"
 
-	files "%{IncludeDirs.spdlog}/include/spdlog/**.h"
+	--- GLOBAL SOURCE FILES
+	files "%{IncludeDirs.Spdlog}/include/spdlog/**.h"
 
 	--- WINDOWS
 	filter "system:windows"

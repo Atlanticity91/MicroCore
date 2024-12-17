@@ -31,7 +31,7 @@
 
 #pragma once
 
-#include "../../Containers/MicroDictionary.h"
+#include "../../Platform/MicroPlatform.h"
 
 /**
  * MicroLibraryProcedure class final

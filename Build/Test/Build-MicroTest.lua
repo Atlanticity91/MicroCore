@@ -1,27 +1,31 @@
 project "MicroTest"
 	kind "SharedLib"
 	language "C++"
-	location "%{wks.location}/Solution/"
+	location "%{OutputDirs.Solution}"
 
-	targetdir "%{wks.location}/bin/%{cfg.buildcfg}/"
-	debugdir "%{wks.location}/bin/%{cfg.buildcfg}/"
-	objdir "%{wks.location}/bin-int/%{prj.name}-%{cfg.buildcfg}"
+	--- OUTPUT
+	targetdir "%{OutputDirs.Bin}/%{cfg.buildcfg}/"
+	debugdir "%{OutputDirs.Bin}/%{cfg.buildcfg}/"
+	objdir "%{OutputDirs.BinInt}/%{prj.name}-%{cfg.buildcfg}"
 
+	--- GLOBAL INCLUDES
 	includedirs {
-		"%{wks.location}/MicroCore/",
-		"%{IncludeDirs.glm}",
-		"%{IncludeDirs.libclang}",
-		"%{IncludeDirs.spdlog}/include/",
-		"%{IncludeDirs.yaml}/include/"
-	}
-	externalincludedirs { 
-		"%{wks.location}/MicroCore/",
-		"%{IncludeDirs.glm}",
-		"%{IncludeDirs.libclang}",
-		"%{IncludeDirs.spdlog}/include/",
-		"%{IncludeDirs.yaml}/include/"
+		"%{IncludeDirs.MicroCore}",
+		"%{IncludeDirs.Glm}",
+		"%{IncludeDirs.Libclang}",
+		"%{IncludeDirs.Spdlog}/include/",
+		"%{IncludeDirs.Yaml}/include/"
 	}
 
+	externalincludedirs { 
+		"%{IncludeDirs.MicroCore}",
+		"%{IncludeDirs.Glm}",
+		"%{IncludeDirs.Libclang}",
+		"%{IncludeDirs.Spdlog}/include/",
+		"%{IncludeDirs.Yaml}/include/"
+	}
+
+	--- GLOBAL LINKS
 	links { "Yaml", "MicroCore" }
 
 	--- CONFIGURATION
@@ -48,14 +52,16 @@ project "MicroTest"
 		cppdialect "C++20"
 		staticruntime "off"
 		
+		--- DEFINES
 		defines { 
 			"WINDOWS",
 			"_CRT_SECURE_NO_WARNINGS" 
 		}
 
+		--- SOURCES FILES
 		files {
-			"%{IncludeDirs.test}/windows/**.h",
-			"%{IncludeDirs.test}/windows/**.cpp"
+			"%{IncludeDirs.MicroTest}/windows/**.h",
+			"%{IncludeDirs.MicroTest}/windows/**.cpp"
 		}
 
 	--- LINUX
@@ -63,7 +69,8 @@ project "MicroTest"
 		systemversion "latest"
 		defines { "LINUX" }
 
+		--- SOURCES FILESs
 		files {
-			"%{IncludeDirs.test}/linux/**.h",
-			"%{IncludeDirs.test}/linux/**.cpp"
+			"%{IncludeDirs.MicroTest}/linux/**.h",
+			"%{IncludeDirs.MicroTest}/linux/**.cpp"
 		}

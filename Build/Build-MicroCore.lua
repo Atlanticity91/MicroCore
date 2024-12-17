@@ -2,30 +2,38 @@ project "MicroCore"
 	kind "StaticLib"
 	language "C++"
 
-	files {
-		"../MicroCore/**.h",
-		"../MicroCore/**.cpp" 
-	}
+	--- OUTPUT
+	targetdir "%{OutputDirs.Bin}/%{cfg.buildcfg}/"
+	debugdir "%{OutputDirs.Bin}/%{cfg.buildcfg}/"
+	objdir "%{OutputDirs.BinInt}/%{prj.name}-%{cfg.buildcfg}"
 
-	targetdir "%{wks.location}/bin/%{cfg.buildcfg}/"
-	debugdir "%{wks.location}/bin/%{cfg.buildcfg}/"
-	objdir "%{wks.location}/bin-int/%{prj.name}-%{cfg.buildcfg}"
-
+	--- GLOBAL INCLUDES
 	includedirs {
-		"%{wks.location}/MicroCore/",
-		"%{IncludeDirs.glm}",
-		"%{IncludeDirs.libclang}",
-		"%{IncludeDirs.spdlog}/include/",
-		"%{IncludeDirs.yaml}/include/"
-	}
-	externalincludedirs { 
-		"%{wks.location}/MicroCore/",
-		"%{IncludeDirs.glm}",
-		"%{IncludeDirs.libclang}",
-		"%{IncludeDirs.spdlog}/include/",
-		"%{IncludeDirs.yaml}/include/"
+		"%{IncludeDirs.MicroCore}",
+		"%{IncludeDirs.Glm}",
+		"%{IncludeDirs.Libclang}",
+		"%{IncludeDirs.Spdlog}/include/",
+		"%{IncludeDirs.Yaml}/include/"
 	}
 
+	externalincludedirs { 
+		"%{IncludeDirs.MicroCore}",
+		"%{IncludeDirs.Glm}",
+		"%{IncludeDirs.Libclang}",
+		"%{IncludeDirs.Spdlog}/include/",
+		"%{IncludeDirs.Yaml}/include/"
+	}
+
+	--- PRECOMPILED HEADERS
+	pchheader "__micro_core_pch.h"
+
+	--- GLOBAL SOURCE FILES
+	files {
+		"%{IncludeDirs.MicroCore}/**.h",
+		"%{IncludeDirs.MicroCore}/**.cpp" 
+	}
+
+	--- GLOBAL LINKS
 	links "Yaml"
 
 	--- CONFIGURATION
@@ -52,17 +60,19 @@ project "MicroCore"
 		cppdialect "C++20"
 		staticruntime "off"
 		
+		--- DEFINES
 		defines { 
 			"WINDOWS",
 			"_CRT_SECURE_NO_WARNINGS" 
 		}
 		
-		pchheader "__micro_core_pch.h"
+		--- PRECOMPILED HEADERS
 		pchsource "../MicroCore/__micro_core_pch.cpp"
 
+		--- POST BUILD
 		postbuildcommands {
-			"{COPYFILE} %{IncludeDirs.libclang}/windows/libclang.lib bin/%{cfg.buildcfg}/",
-			"{COPYFILE} %{IncludeDirs.libclang}/windows/libclang.dll bin/%{cfg.buildcfg}/"
+			"{COPYFILE} %{IncludeDirs.Libclang}/windows/libclang.lib bin/%{cfg.buildcfg}/",
+			"{COPYFILE} %{IncludeDirs.Libclang}/windows/libclang.dll bin/%{cfg.buildcfg}/"
 		}
 
 	--- LINUX

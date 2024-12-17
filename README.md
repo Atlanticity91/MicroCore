@@ -2,12 +2,11 @@
 ---
 This repository contains the code for the Micro Core Library, this project defined Assertion, File wrapper, math types definitions and functions, platform's specific wrapper function, Multi-threading work management and Yaml file support.
 
-
 > [!CAUTION]
 > Current repository documentation is not updated with actual code version.
 
 # Cloning
-> [!CAUTION]
+> [!WARNING]
 > This repository use submodules for Thirdparty. Make sure to setup submodules before any action. 
 
 Using [git-cli](https://git-scm.com/) :
@@ -16,7 +15,7 @@ Using [git-cli](https://git-scm.com/) :
 git clone --recursive https://github.com/Atlanticity91/MicroCore.git
 ```
 
-Existing repositories can be updated manually:
+Existing repositories can be updated manually :
 
 ```
 git submodule init

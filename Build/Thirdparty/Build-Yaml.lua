@@ -1,20 +1,25 @@
 project "Yaml"
 	kind "StaticLib"
 	language "C++"
-	location "%{wks.location}/Solution/"
+	location "%{OutputDirs.Solution}"
 
+	--- OUTPUT
+	targetdir "%{OutputDirs.Bin}/%{cfg.buildcfg}/"
+	debugdir "%{OutputDirs.Bin}/%{cfg.buildcfg}/"
+	objdir "%{OutputDirs.BinInt}/%{prj.name}-%{cfg.buildcfg}"
+
+	--- GLOBAL INCLUDES
+	includedirs "%{IncludeDirs.Yaml}/include/"
+	externalincludedirs "%{IncludeDirs.Yaml}/include/"
+
+	--- GLOBAL DEFINES
 	defines "YAML_CPP_STATIC_DEFINE"
 
+	--- GLOBAL FILES
 	files { 
-		"%{IncludeDirs.yaml}/src/**.h",
-		"%{IncludeDirs.yaml}/src/**.cpp"
+		"%{IncludeDirs.Yaml}/src/**.h",
+		"%{IncludeDirs.Yaml}/src/**.cpp"
 	}
-
-	targetdir "%{wks.location}/bin/%{cfg.buildcfg}/"
-	debugdir "%{wks.location}/bin/%{cfg.buildcfg}/"
-	objdir "%{wks.location}/bin-int/%{prj.name}-%{cfg.buildcfg}"
-
-	includedirs "%{wks.location}/Thirdparty/yaml-cpp/include/"
 
 	--- CONFIGURATION
 	filter "configurations:Debug"
