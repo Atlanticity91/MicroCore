@@ -243,15 +243,40 @@
 <h1 id="microcore"><a class="header" href="#microcore">MicroCore</a></h1>
 <hr />
 <p>This repository contains the code for the Micro Core Library, this project defined Assertion, File wrapper, math types definitions and functions, platform's specific wrapper function, Multi-threading work management and Yaml file support.</p>
+<div class="mdbook-alerts mdbook-alerts-caution">
+<p class="mdbook-alerts-title">
+  <span class="mdbook-alerts-icon"></span>
+  caution
+</p>
+<p>Current repository documentation is not updated with actual code version.</p>
+</div>
+<h1 id="cloning"><a class="header" href="#cloning">Cloning</a></h1>
+<div class="mdbook-alerts mdbook-alerts-warning">
+<p class="mdbook-alerts-title">
+  <span class="mdbook-alerts-icon"></span>
+  warning
+</p>
+<p>This repository use submodules for Thirdparty. Make sure to setup submodules before any action.</p>
+</div>
+<p>Using <a href="https://git-scm.com/">git-cli</a> :</p>
+<pre><code>git clone --recursive https://github.com/Atlanticity91/MicroCore.git
+</code></pre>
+<p>Existing repositories submodules can be updated manually :</p>
+<pre><code>git submodule init
+git submodule update
+</code></pre>
 <h1 id="build-system"><a class="header" href="#build-system">Build System</a></h1>
-<p>MicroCore as part of the Micro project use the <a href="https://premake.github.io/">Premake5</a> build system. Premake5 instance is present in this repository under Build/Premake5.</p>
-<p>Build files for Premake5 are inside Build folder under :</p>
+<p>MicroCore as part of the Micro project use the <a href="https://github.com/premake/premake-core">Premake5</a> build system. <a href="https://github.com/premake/premake-core">Premake5</a> instance is present in this repository under Build/<a href="https://github.com/premake/premake-core">Premake5</a>.</p>
+<p>Build files for <a href="https://github.com/premake/premake-core">Premake5</a> are inside Build folder under :</p>
 <div class="table-wrapper"><table><thead><tr><th>File</th><th>Usage</th></tr></thead><tbody>
 <tr><td><code>Build/Build.lua</code></td><td>Define global solution build.</td></tr>
+<tr><td><code>Build/Build-Dependencies.lua</code></td><td>Define dependencies solution build.</td></tr>
 <tr><td><code>Build/Build-MicroCore.lua</code></td><td>Define MicroCore solution build.</td></tr>
-<tr><td><code>Build/Build-GLM.lua</code></td><td>Define GLM Thirdparty solution.</td></tr>
-<tr><td><code>Build/Build-Spdlog.lua</code></td><td>Define Spdlog Thirdparty solution.</td></tr>
-<tr><td><code>Build/Build-Yaml.lua</code></td><td>Define <a href="https://yaml.org/">Yaml</a> Thirdparty solution build.</td></tr>
+<tr><td><code>Build/Test/Build-MicroTest.lua</code></td><td>Define test solution build.</td></tr>
+<tr><td><code>Build/Thirdparty/Build-Header-Glm.lua</code></td><td>Define GLM header only thirdparty library.</td></tr>
+<tr><td><code>Build/Thirdparty/Build-Header-Libclang.lua</code></td><td>Define GLM header only thirdparty library.</td></tr>
+<tr><td><code>Build/Thirdparty/Build-Header-Spdlog.lua</code></td><td>Define GLM header only thirdparty library.</td></tr>
+<tr><td><code>Build/Thirdparty/Build-Yaml.lua</code></td><td>Define <a href="https://yaml.org/">Yaml</a> thirdparty solution build.</td></tr>
 </tbody></table>
 </div>
 <h2 id="windows"><a class="header" href="#windows">Windows</a></h2>
@@ -266,6 +291,15 @@
 <p>Linux isn't implemented yet.</p>
 </div>
 <p>To build the project files simply run Setup-Linux.sh</p>
+<h2 id="macos"><a class="header" href="#macos">Macos</a></h2>
+<div class="mdbook-alerts mdbook-alerts-caution">
+<p class="mdbook-alerts-title">
+  <span class="mdbook-alerts-icon"></span>
+  caution
+</p>
+<p>Macos isn't implemented yet.</p>
+</div>
+<p>To build the project files simply run Setup-Macos.sh</p>
 
                     </main>
 
