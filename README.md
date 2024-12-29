@@ -15,7 +15,7 @@ Using [git-cli](https://git-scm.com/) :
 git clone --recursive https://github.com/Atlanticity91/MicroCore.git
 ```
 
-Existing repositories can be updated manually :
+Existing repositories submodules can be updated manually :
 
 ```
 git submodule init
@@ -27,14 +27,16 @@ MicroCore as part of the Micro project use the [Premake5](https://github.com/pre
 
 Build files for [Premake5](https://github.com/premake/premake-core) are inside Build folder under :
 
-| File 									  | Usage 								 					    |
-| --------------------------------------- | ----------------------------------------------------------- |
-| `Build/Build.lua` 					  | Define global solution build. 		 					    |
-| `Build/Build-Dependencies.lua` 		  | Define dependencies solution build.  	 					|
-| `Build/Build-MicroCore.lua` 			  | Define MicroCore solution build. 							|
-| `Build/Test/Build-MicroTest.lua` 		  | Define test solution build. 								|
-| `Build/Thirdparty/Build-HeaderOnly.lua` | Define general header only thirdparties builds. 			|
-| `Build/Thirdparty/Build-Yaml.lua`  	  | Define [Yaml](https://yaml.org/) thirdparty solution build. |
+| File 									  	   | Usage 								 					     |
+| -------------------------------------------- | ----------------------------------------------------------- |
+| `Build/Build.lua` 					  	   | Define global solution build. 		 					     |
+| `Build/Build-Dependencies.lua` 		  	   | Define dependencies solution build.  	 					 |
+| `Build/Build-MicroCore.lua` 			  	   | Define MicroCore solution build. 							 |
+| `Build/Test/Build-MicroTest.lua` 		  	   | Define test solution build. 								 |
+| `Build/Thirdparty/Build-Header-Glm.lua` 	   | Define GLM header only thirdparty library. 				 |
+| `Build/Thirdparty/Build-Header-Libclang.lua` | Define GLM header only thirdparty library. 				 |
+| `Build/Thirdparty/Build-Header-Spdlog.lua`   | Define GLM header only thirdparty library. 				 |
+| `Build/Thirdparty/Build-Yaml.lua`  	 	   | Define [Yaml](https://yaml.org/) thirdparty solution build. |
 
 ## Windows
 For Windows build you need at least visual studio 2022 community edition or visual studio C++.

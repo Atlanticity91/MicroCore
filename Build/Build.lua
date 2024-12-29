@@ -25,8 +25,12 @@ workspace "Micro Solution"
 
 	--- Thirdparty Projects
 	group "Thirdparty"
-		include "Thirdparty/Build-HeaderOnly.lua"
+		include "Thirdparty/Build-Header-Glm.lua"
+		include "Thirdparty/Build-Header-Libclang.lua"
+		include "Thirdparty/Build-Header-Spdlog.lua"
 		include "Thirdparty/Build-Yaml.lua"
+
+	--- Test Projects
 	group "Test"
 		include "Test/Build-MicroTest.lua"
 	group ""

@@ -254,6 +254,13 @@
 <p>(<code>uint32_t</code>) Returns the checksum value for the data using the <a href="https://en.wikipedia.org/wiki/Cyclic_redundancy_check">crc32</a> algorithm.</p>
 <h2 id="remarks"><a class="header" href="#remarks">Remarks</a></h2>
 <p>Crc32 implementation for the library came from the <a href="https://web.mit.edu/freebsd/head/sys/libkern/crc32.c">freebsd crc32</a> implementation. If length of the vector is 0 the return value is 0.</p>
+<div class="mdbook-alerts mdbook-alerts-caution">
+<p class="mdbook-alerts-title">
+  <span class="mdbook-alerts-icon"></span>
+  caution
+</p>
+<p>Function return value can't be discarded.</p>
+</div>
 <hr />
 <h2 id="syntax-1"><a class="header" href="#syntax-1">Syntax</a></h2>
 <pre><code class="language-cpp">uint32_t micro::crc32( const uint32_t length, const uint8_t* data );
@@ -268,6 +275,13 @@
 <p>(<code>uint32_t</code>) Returns the checksum value for the data using the <a href="https://en.wikipedia.org/wiki/Cyclic_redundancy_check">crc32</a> algorithm.</p>
 <h2 id="remarks-1"><a class="header" href="#remarks-1">Remarks</a></h2>
 <p>Crc32 implementation for the library came from the <a href="https://web.mit.edu/freebsd/head/sys/libkern/crc32.c">freebsd crc32</a> implementation. If length of the vector is 0 the return value is 0.</p>
+<div class="mdbook-alerts mdbook-alerts-caution">
+<p class="mdbook-alerts-title">
+  <span class="mdbook-alerts-icon"></span>
+  caution
+</p>
+<p>Function return value can't be discarded.</p>
+</div>
 
                     </main>
 
