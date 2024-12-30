@@ -5,8 +5,8 @@ project "GLM"
 
 	--- GLOBAL SOURCE FILES
 	files { 
-		"%{IncludeDirs.Glm}/glm/**.h", 
-		"%{IncludeDirs.Glm}/glm/**.hpp" 
+		"%{IncludeDirs.Glm}glm/**.h", 
+		"%{IncludeDirs.Glm}glm/**.hpp" 
 	}
 
 	--- WINDOWS

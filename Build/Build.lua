@@ -1,7 +1,9 @@
+--- TOOL INCLUDES
 include "Premake/CSExtensions.lua"
 include "Premake/VSExtensions.lua"
 include "Build-Dependencies.lua"
 
+--- PROJECT CONFIGURATION
 workspace "Micro Solution"
 	architecture "x64"
 	startproject "MicroCore"
@@ -15,25 +17,25 @@ workspace "Micro Solution"
 	--- GLOBAL FLAGS
 	flags "MultiProcessorCompile"
 	
-	-- Workspace-wide build options for MSVC
+	--- WINDOWS
 	filter "system:windows"
+		-- WORKSPACE-WIDE BUILD OPTIONS FOR MSVC
 		buildoptions { 
-			"/EHsc",
+			"/EHsc", 
 			"/Zc:preprocessor", 
 			"/Zc:__cplusplus" 
 		}
 
-	--- Thirdparty Projects
+	--- THIRDPARTY PROJECTS
 	group "Thirdparty"
 		include "Thirdparty/Build-Header-Glm.lua"
 		include "Thirdparty/Build-Header-Libclang.lua"
 		include "Thirdparty/Build-Header-Spdlog.lua"
 		include "Thirdparty/Build-Yaml.lua"
-
-	--- Test Projects
+	--- TEST PROJECTS
 	group "Test"
 		include "Test/Build-MicroTest.lua"
 	group ""
 
-	--- Main Project
+	--- MAIN PROJECT
 	include "Build-MicroCore.lua"

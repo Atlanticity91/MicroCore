@@ -4,7 +4,7 @@ project "Spdlog"
 	location "%{OutputDirs.Solution}"
 
 	--- GLOBAL SOURCE FILES
-	files "%{IncludeDirs.Spdlog}/include/spdlog/**.h"
+	files "%{IncludeDirs.Spdlog}include/spdlog/**.h"
 
 	--- WINDOWS
 	filter "system:windows"

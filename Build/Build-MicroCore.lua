@@ -4,25 +4,25 @@ project "MicroCore"
 	location "%{OutputDirs.Solution}"
 
 	--- OUTPUT
-	targetdir "%{OutputDirs.Bin}/%{cfg.buildcfg}/"
-	debugdir "%{OutputDirs.Bin}/%{cfg.buildcfg}/"
-	objdir "%{OutputDirs.BinInt}/%{prj.name}-%{cfg.buildcfg}"
+	targetdir "%{OutputDirs.Bin}%{cfg.buildcfg}/"
+	debugdir "%{OutputDirs.Bin}%{cfg.buildcfg}/"
+	objdir "%{OutputDirs.BinInt}%{prj.name}-%{cfg.buildcfg}"
 
 	--- GLOBAL INCLUDES
 	includedirs {
 		"%{IncludeDirs.MicroCore}",
 		"%{IncludeDirs.Glm}",
 		"%{IncludeDirs.Libclang}",
-		"%{IncludeDirs.Spdlog}/include/",
-		"%{IncludeDirs.Yaml}/include/"
+		"%{IncludeDirs.Spdlog}include/",
+		"%{IncludeDirs.Yaml}include/"
 	}
 
 	externalincludedirs { 
 		"%{IncludeDirs.MicroCore}",
 		"%{IncludeDirs.Glm}",
 		"%{IncludeDirs.Libclang}",
-		"%{IncludeDirs.Spdlog}/include/",
-		"%{IncludeDirs.Yaml}/include/"
+		"%{IncludeDirs.Spdlog}include/",
+		"%{IncludeDirs.Yaml}include/"
 	}
 
 	--- PRECOMPILED HEADERS
@@ -30,30 +30,19 @@ project "MicroCore"
 
 	--- GLOBAL SOURCE FILES
 	files {
-		"%{IncludeDirs.MicroCore}/**.h",
-		"%{IncludeDirs.MicroCore}/**.cpp" 
+		"%{IncludeDirs.MicroCore}**.h",
+		"%{IncludeDirs.MicroCore}**.cpp" 
 	}
 
 	--- GLOBAL LINKS
 	links "Yaml"
 
-	--- CONFIGURATION
-	filter "configurations:Debug"
-		defines { "DEBUG" }
-		runtime "Debug"
-		symbols "On"
+	--- LINUX
+	filter "system:linux"
+		systemversion "latest"
 
-	filter "configurations:Release"
-		defines { "RELEASE" }
-		runtime "Release"
-		optimize "On"
-		symbols "On"
-
-	filter "configurations:Dist"
-		defines { "DIST" }
-		runtime "Release"
-		optimize "On"
-		symbols "Off"
+		--- LINUX SPECIFIC DEFINES
+		defines { "LINUX" }
 
 	--- WINDOWS
 	filter "system:windows"
@@ -70,13 +59,35 @@ project "MicroCore"
 		--- PRECOMPILED HEADERS
 		pchsource "../MicroCore/__micro_core_pch.cpp"
 
-		--- POST BUILD
-		postbuildcommands {
+		--- PRE-BUILD COMMAND
+		prebuildcommands  {
 			"{COPYFILE} %{IncludeDirs.Libclang}windows/libclang.lib %{OutputDirs.Bin}%{cfg.buildcfg}/",
 			"{COPYFILE} %{IncludeDirs.Libclang}windows/libclang.dll %{OutputDirs.Bin}%{cfg.buildcfg}/"
 		}
 
-	--- LINUX
-	filter "system:linux"
-		systemversion "latest"
-		defines { "LINUX" }
+		--- WINDOWS LINK
+		links "%{OutputDirs.Bin}%{cfg.buildcfg}/libclang.lib"
+
+	--- CONFIGURATION
+	filter "configurations:Debug"
+		runtime "Debug"
+		symbols "On"
+
+		--- DEFINE
+		defines { "DEBUG" }
+
+	filter "configurations:Release"
+		runtime "Release"
+		optimize "On"
+		symbols "On"
+
+		--- DEFINE
+		defines { "RELEASE" }
+
+	filter "configurations:Dist"
+		runtime "Release"
+		optimize "On"
+		symbols "Off"
+
+		--- DEFINE
+		defines { "DIST" }

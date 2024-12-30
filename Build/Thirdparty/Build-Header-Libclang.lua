@@ -4,7 +4,7 @@ project "libclang"
 	location "%{OutputDirs.Solution}"
 
 	--- GLOBAL SOURCE FILES
-	files "%{IncludeDirs.Libclang}/clang-c/**.h"
+	files "%{IncludeDirs.Libclang}clang-c/**.h"
 
 	--- WINDOWS
 	filter "system:windows"
