@@ -72,7 +72,7 @@ project "MicroCore"
 
 		--- POST BUILD
 		postbuildcommands {
-			"{COPYFILE} %{IncludeDirs.Libclang}windows/libclang.lib %{OutputDirs.Bin}/%{cfg.buildcfg}/",
+			"{COPYFILE} %{IncludeDirs.Libclang}windows/libclang.lib %{OutputDirs.Bin}%{cfg.buildcfg}/",
 			"{COPYFILE} %{IncludeDirs.Libclang}windows/libclang.dll %{OutputDirs.Bin}%{cfg.buildcfg}/"
 		}
 
