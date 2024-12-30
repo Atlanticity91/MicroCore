@@ -1,6 +1,7 @@
 project "MicroCore"
 	kind "StaticLib"
 	language "C++"
+	location "%{OutputDirs.Solution}"
 
 	--- OUTPUT
 	targetdir "%{OutputDirs.Bin}/%{cfg.buildcfg}/"
