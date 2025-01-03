@@ -50,7 +50,7 @@ project "MicroCore"
 		cppdialect "C++20"
 		staticruntime "off"
 		
-		--- DEFINES
+		--- WINDOWS SPECIFIC DEFINES
 		defines { 
 			"WINDOWS",
 			"_CRT_SECURE_NO_WARNINGS" 
@@ -59,13 +59,14 @@ project "MicroCore"
 		--- PRECOMPILED HEADERS
 		pchsource "../MicroCore/__micro_core_pch.cpp"
 
-		--- PRE-BUILD COMMAND
+		--- WINDOWS SPECIFIC PRE-BUILD COMMAND
+		prebuildmessage "Copy Libclang"
 		prebuildcommands  {
 			"{COPYFILE} %{IncludeDirs.Libclang}windows/libclang.lib %{OutputDirs.Bin}%{cfg.buildcfg}/",
 			"{COPYFILE} %{IncludeDirs.Libclang}windows/libclang.dll %{OutputDirs.Bin}%{cfg.buildcfg}/"
 		}
 
-		--- WINDOWS LINK
+		--- WINDOWS SPECIFIC LINK
 		links "%{OutputDirs.Bin}%{cfg.buildcfg}/libclang.lib"
 
 	--- CONFIGURATION
