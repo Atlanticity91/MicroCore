@@ -7,7 +7,7 @@
  *
  * MIT License
  *
- * Copyright (c) 2024 Alves Quentin
+ * Copyright (c) 2024- Alves Quentin
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -46,6 +46,7 @@ extern "C" {
 #include <concepts>
 #include <condition_variable>
 #include <filesystem>
+#include <format>
 #include <functional>
 #include <iterator>
 #include <limits>
@@ -58,6 +59,7 @@ extern "C" {
 #include <random>
 #include <regex>
 #include <set>
+#include <shared_mutex>
 #include <string>
 #include <thread>
 #include <type_traits>
@@ -201,6 +203,19 @@ extern "C" {
  * @note : Wrapper for exposing class.
  **/
 #define micro_class class MICRO_API
+
+/**
+ * micro_abstract macro
+ * @note : Wrapper for C++ abstract function syntax.
+ **/
+#define micro_abstract( SIGNATURE ) virtual SIGNATURE = 0
+
+/**
+ * micro_implement macro
+ * @note : Wrapper for C++ override function syntax, to use in 
+ *		   addition of micro_abstract for clarity.
+ **/
+#define micro_implement( SIGNATURE ) virtual SIGNATURE override
 
 /**
  * micro_stringifyx macro

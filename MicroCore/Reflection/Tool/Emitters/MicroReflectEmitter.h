@@ -7,7 +7,7 @@
  *
  * MIT License
  *
- * Copyright (c) 2024 Alves Quentin
+ * Copyright (c) 2024- Alves Quentin
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -55,14 +55,14 @@ micro_struct MicroReflectEmitter {
 	 *		   declaration to the source.
 	 * @param declaration : Current source declaration.
 	 **/
-	virtual void PreRun( MicroReflectSourceDeclaration& declaration ) = 0;
+	micro_abstract( void PreRun( MicroReflectSourceDeclaration& declaration ) );
 
 	/**
 	 * Run method
 	 * @note : Generator run execution.
 	 * @param declaration : Reference to query declaration.
 	 **/
-	virtual void Run( const MicroReflectSourceDeclaration& declaration ) = 0;
+	micro_abstract( void Run( const MicroReflectSourceDeclaration& declaration ) );
 
 protected:
 	/**

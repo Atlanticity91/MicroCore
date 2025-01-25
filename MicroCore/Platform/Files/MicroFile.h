@@ -7,7 +7,7 @@
  *
  * MIT License
  *
- * Copyright (c) 2024 Alves Quentin
+ * Copyright (c) 2024- Alves Quentin
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -59,19 +59,19 @@ public:
 	 * @note : Seek from current file position.
 	 * @param offset : Offset in byte count.
 	 **/
-	virtual void Seek( const uint32_t offset ) = 0;
+	micro_abstract( void Seek( const uint32_t offset ) );
 
 	/**
 	 * SeekBegin procedure
 	 * @note : Seek to begin of the file.
 	 **/
-	virtual void SeekBegin( ) = 0;
+	micro_abstract( void SeekBegin( ) );
 
 	/**
 	 * SeekEnd procedure
 	 * @note : Seek to end of the file.
 	 **/
-	virtual void SeekEnd( ) = 0;
+	micro_abstract( void SeekEnd( ) );
 	
 	/**
 	 * Read function
@@ -80,7 +80,7 @@ public:
 	 * @param buffer : Pointer to the buffer to store readed data.
 	 * @return : Count of bytes loaded to the buffer
 	 **/
-	virtual uint32_t Read( const uint32_t length, uint8_t* buffer ) = 0;
+	micro_abstract( uint32_t Read( const uint32_t length, uint8_t* buffer ) );
 
 	/**
 	 * Read function
@@ -89,7 +89,7 @@ public:
 	 * @param buffer : Pointer to the buffer to write.
 	 * @return : Count of bytes writed to the file
 	 **/
-	virtual uint32_t Write( const uint32_t length, const uint8_t* buffer ) = 0;
+	micro_abstract( uint32_t Write( const uint32_t length, const uint8_t* buffer ) );
 
 	/**
 	 * Close procedure
@@ -226,21 +226,21 @@ public:
 	 * GetSize const function
 	 * @note : Get current file size.
 	 **/
-	virtual uint32_t GetSize( ) const = 0;
+	micro_abstract( uint32_t GetSize( ) const );
 
 	/**
 	 * GetCursor const function
 	 * @note : Get current file cursor position.
 	 * @return : Return current file cursor position value.
 	 **/
-	virtual uint32_t GetCursor( ) const = 0;
+	micro_abstract( uint32_t GetCursor( ) const );
 
 	/**
 	 * GetIsEOF const function
 	 * @note : Get if the current handle has reached end of file.
 	 * @return : Return true when file has reached end of file value.
 	 **/
-	virtual bool GetIsEOF( ) const = 0;
+	micro_abstract( bool GetIsEOF( ) const );
 
 	/**
 	 * GetCanRead const function

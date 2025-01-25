@@ -7,7 +7,7 @@
  *
  * MIT License
  *
- * Copyright (c) 2024 Alves Quentin
+ * Copyright (c) 2024- Alves Quentin
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -57,7 +57,7 @@ struct MicroTestable {
 	 * @param other : Query instance to compare.
 	 * @return : Return true when the two instance match.
 	 **/
-	virtual bool GetAreEqual( const Type& other ) const = 0;
+	micro_abstract( bool GetAreEqual( const Type& other ) const );
 
 	/**
 	 * GetAreNotEqual const function
@@ -74,7 +74,7 @@ struct MicroTestable {
 	 * @note : Get string representation.
 	 * @return : Return string representation value.
 	 **/
-	virtual std::string GetAsString( ) const = 0;
+	micro_abstract( std::string GetAsString( ) const );
 
 	/**
 	 * == operator
