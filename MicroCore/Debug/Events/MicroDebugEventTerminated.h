@@ -31,13 +31,13 @@
 
 #include "MicroDebugEventStopped.h"
 
-struct MicroDebugEventTerminated : public MicroDebugEvent {
+micro_struct MicroDebugEventTerminated : public MicroDebugEvent {
 
 	bool Restart;
 
 	MicroDebugEventTerminated( );
 
-	MicroDebugEventTerminated( const bool restart );
+	MicroDebugEventTerminated( const uint32_t sequence, const bool restart );
 
 	micro_implement( std::string ToString( ) const );
 

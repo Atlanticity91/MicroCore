@@ -29,73 +29,73 @@
  *
  **/
 
+#pragma once 
+
 #include "__micro_core_pch.h"
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 //		===	PUBLIC ===
 ////////////////////////////////////////////////////////////////////////////////////////////
-MicroDebugEventBreakpoint::MicroDebugEventBreakpoint( ) 
-	: MicroDebugEventBreakpoint{ 0 }
+MicroDebugResponse::MicroDebugResponse( ) 
+	: MicroDebugResponse{ 0, 0, "", "" }
 { }
 
-MicroDebugEventBreakpoint::MicroDebugEventBreakpoint( const uint32_t sequence )
-	: MicroDebugEvent{ sequence, MicrDebugEventTypes::Breakpoint },
-	BreakpointID{ 0 },
-	Line{ 0 },
-	Column{ 0 },
-	EndLine{ 0 },
-	EndColumn{ 0 },
-	Offset{ 0 },
-	Reason{ MicroDebugEventReasons::None },
-	Verified{ false },
-	Message{ },
-	Source{ },
-	InstructionReference{ }
+MicroDebugResponse::MicroDebugResponse( 
+	const uint32_t sequence,
+	const uint32_t request_sequence, 
+	const std::string& error 
+)
+	: MicroDebugResponse{ sequence, request_sequence, true, "", "", error }
 { }
 
-////////////////////////////////////////////////////////////////////////////////////////////
-//		===	PUBLIC GET ===
-////////////////////////////////////////////////////////////////////////////////////////////
-bool MicroDebugEventBreakpoint::GetIsValid( ) const {
-	return Reason > MicroDebugEventReasons::None;
-}
+MicroDebugResponse::MicroDebugResponse(
+	const uint32_t sequence,
+	const uint32_t request_sequence,
+	const std::string& command,
+	const std::string& message
+)
+	: MicroDebugResponse{ sequence, request_sequence, false, command, message, "" }
+{ }
 
-std::string MicroDebugEventBreakpoint::ToString( ) const {
-	const auto header   = MicroDebugMessage::GetHeader( );
-	const auto reason   = MicroDebugAdapter::ToString( Reason );
-	const auto verified = MicroDebugAdapter::ToString( Verified );
+std::string MicroDebugResponse::ToString( ) const {
+	const auto header = MicroDebugMessage::GetHeader( );
+	const auto success = MicroDebugAdapter::ToString( Success );
 
-	return std::format( 
-		R"({{
+	return std::format(
+		R"({{ 
 			{},
-			"event" : "breakpoint",
+			"request_seq" : {},
+			"success" : {},
+			"command" : {},
+			"message" : {},
 			"body" : {{
-				"reason" : "{}",
-				"breakpoint" : {{
-					"id": "{}",
-					"verified" : "{}",
-					"message" : "{}",
-					"source" : "{}",
-					"line" : "{}",
-					"column" : "{}",
-					"endLine" : "{}",
-					"endColumn" : "{}",
-					"instructionReference" : "{}",
-					"offset" : "{}"
-				}}
+				"error" : {}
 			}}
 		}})",
 		header,
-		reason,
-		BreakpointID,
-		verified,
+		RequestSequence,
+		success,
+		Command,
 		Message,
-		Source,
-		Line,
-		Column,
-		EndLine,
-		EndColumn,
-		InstructionReference,
-		Offset
+		Error
 	);
 }
+
+////////////////////////////////////////////////////////////////////////////////////////////
+//		===	PRIVATE ===
+////////////////////////////////////////////////////////////////////////////////////////////
+MicroDebugResponse::MicroDebugResponse(
+	const uint32_t sequence,
+	const uint32_t request_sequence,
+	const bool success,
+	const std::string& command,
+	const std::string& message,
+	const std::string& error
+)
+	: MicroDebugMessage{ MicroDebugMessageTypes::Response, sequence },
+	RequestSequence{ request_sequence },
+	Success{ success },
+	Command{ command },
+	Message{ message },
+	Error{ error } 
+{ }

@@ -31,16 +31,20 @@
 
 #include "MicroDebugEventBreakpoint.h"
 
-struct MicroDebugEventContinued : public MicroDebugEvent {
+micro_struct MicroDebugEventContinued : public MicroDebugEvent {
 
 	uint32_t ThreadID;
 	bool AllThreadsStopped;
 
 	MicroDebugEventContinued( );
 
-	MicroDebugEventContinued( const uint32_t thread_id );
-
 	MicroDebugEventContinued( 
+		const uint32_t sequence,
+		const uint32_t thread_id 
+	);
+
+	MicroDebugEventContinued(
+		const uint32_t sequence,
 		const uint32_t thread_id, 
 		const bool all_thread_stopped 
 	);

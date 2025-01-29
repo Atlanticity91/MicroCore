@@ -34,12 +34,15 @@
 ////////////////////////////////////////////////////////////////////////////////////////////
 //		===	PUBLIC ===
 ////////////////////////////////////////////////////////////////////////////////////////////
-MicroDebugEventExited::MicroDebugEventExited( ) 
-	: MicroDebugEventExited{ 0 }
+MicroDebugEventExited::MicroDebugEventExited( const uint32_t sequence )
+	: MicroDebugEventExited{ sequence, 0 }
 { }
 
-MicroDebugEventExited::MicroDebugEventExited( const uint32_t code )
-	: MicroDebugEvent{ MicrDebugEventTypes::Exited },
+MicroDebugEventExited::MicroDebugEventExited(
+	const uint32_t sequence,
+	const uint32_t code
+)
+	: MicroDebugEvent{ sequence, MicrDebugEventTypes::Exited },
 	Code{ code }
 { }
 
@@ -47,13 +50,17 @@ MicroDebugEventExited::MicroDebugEventExited( const uint32_t code )
 //		===	PUBLIC GET ===
 ////////////////////////////////////////////////////////////////////////////////////////////
 std::string MicroDebugEventExited::ToString( ) const {
+	const auto header = MicroDebugMessage::GetHeader( );
+
 	return std::format(
 		R"({{
+			{},
 			"event" : "exited",
 			"body" : {{
 				"exitCode" : "{}"
 			}}
 		}})",
+		header,
 		Code 
 	);
 }

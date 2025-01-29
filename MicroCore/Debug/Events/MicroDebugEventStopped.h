@@ -31,7 +31,7 @@
 
 #include "MicroDebugEventInitialized.h"
 
-struct MicroDebugEventStopped : public MicroDebugEvent {
+micro_struct MicroDebugEventStopped : public MicroDebugEvent {
 
 	uint32_t ThreadID;
 	uint32_t HitBreakpointIds;
@@ -43,9 +43,13 @@ struct MicroDebugEventStopped : public MicroDebugEvent {
 
 	MicroDebugEventStopped( );
 
-	MicroDebugEventStopped( const MicroDebugEventReasons& reason );
+	MicroDebugEventStopped( 
+		const uint32_t sequence,
+		const MicroDebugEventReasons& reason 
+	);
 
 	MicroDebugEventStopped(
+		const uint32_t sequence,
 		const uint32_t hit_breakpoint_id,
 		const bool preserve_focus_hint,
 		const MicroDebugEventReasons& reason,
@@ -53,7 +57,8 @@ struct MicroDebugEventStopped : public MicroDebugEvent {
 		const std::string& text
 	);
 
-	MicroDebugEventStopped( 
+	MicroDebugEventStopped(
+		const uint32_t sequence,
 		const uint32_t thread_id,
 		const uint32_t hit_breakpoint_id,
 		const bool preserve_focus_hint,

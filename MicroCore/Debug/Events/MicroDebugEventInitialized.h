@@ -31,7 +31,7 @@
 
 #include "MicroDebugEventExited.h"
 
-struct MicroDebugEventInitialized : public MicroDebugEvent {
+micro_struct MicroDebugEventInitialized : public MicroDebugEvent {
 
 	MicroDebugEventInitialized( );
 

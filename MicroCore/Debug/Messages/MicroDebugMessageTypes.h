@@ -29,28 +29,15 @@
  *
  **/
 
-#include "MicroDebugEvent.h"
+#pragma once 
 
-micro_struct MicroDebugEventBreakpoint : public MicroDebugEvent {
+#include "../MicroDebugAdapterError.h"
 
-	uint32_t BreakpointID;
-	uint32_t Line;
-	uint32_t Column;
-	uint32_t EndLine;
-	uint32_t EndColumn;
-	uint32_t Offset;
-	MicroDebugEventReasons Reason;
-	bool Verified;
-	std::string Message;
-	std::string Source;
-	std::string InstructionReference;
+enum class MicroDebugMessageTypes : uint32_t {
 
-	MicroDebugEventBreakpoint( );
-
-	MicroDebugEventBreakpoint( const uint32_t sequence );
-
-	micro_implement( bool GetIsValid( ) const );
-
-	micro_implement( std::string ToString( ) const );
+	Request = 0,
+	Response,
+	Event,
+	Custom
 
 };

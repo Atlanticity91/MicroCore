@@ -35,12 +35,20 @@
 //		===	PUBLIC ===
 ////////////////////////////////////////////////////////////////////////////////////////////
 MicroDebugEventInitialized::MicroDebugEventInitialized( )
-	: MicroDebugEvent{ MicrDebugEventTypes::Initialized }
+	: MicroDebugEvent{ 0, MicrDebugEventTypes::Initialized }
 { }
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 //		===	PUBLIC GET ===
 ////////////////////////////////////////////////////////////////////////////////////////////
 std::string MicroDebugEventInitialized::ToString( ) const {
-	return R"({ "event" : "initialized" })";
+	const auto header = MicroDebugMessage::GetHeader( );
+
+	return std::format( 
+		R"({{
+			{},
+			"event" : "initialized" 
+		}})",
+		header 
+	);
 }

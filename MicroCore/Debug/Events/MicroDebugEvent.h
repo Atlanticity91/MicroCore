@@ -33,15 +33,16 @@
 
 #include "MicroDebugEventReasons.h"
 
-struct MicroDebugEvent {
+micro_struct MicroDebugEvent : public MicroDebugMessage {
 
 	MicrDebugEventTypes Type;
 
-	MicroDebugEvent( const MicrDebugEventTypes type );
+	MicroDebugEvent(
+		const uint32_t sequence,
+		const MicrDebugEventTypes type 
+	);
 
 	virtual bool GetIsValid( ) const;
-
-	micro_abstract( std::string ToString( ) const );
 
 	operator bool ( ) const;
 

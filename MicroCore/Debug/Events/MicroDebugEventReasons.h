@@ -58,13 +58,3 @@ enum class MicroDebugEventReasons : uint32_t {
 	Exited
 
 };
-
-namespace micro { 
-
-	MICRO_API std::string debug_bool_to_string( const bool value );
-
-	constexpr MICRO_API std::string debug_reason_to_string( 
-		const MicroDebugEventReasons reason 
-	);
-
-};

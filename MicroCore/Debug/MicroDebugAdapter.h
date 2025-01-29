@@ -48,7 +48,9 @@ public:
 		const MicroDebugAdapterSpecification& specification
 	);
 
-	static MicroDebugAdapterError Broadcast( const MicroDebugEvent* event_specification );
+	static MicroDebugAdapterError Broadcast( 
+		const MicroDebugEvent* event_specification 
+	);
 
 	static MicroDebugAdapterError Receive( MicrDebugEventTypes& event_type );
 
@@ -56,7 +58,10 @@ public:
 
 public:
 	template<typename Type>
-		requires ( !std::is_pointer<Type>::value&& std::is_base_of<MicroDebugEvent, Type>::value )
+		requires ( 
+			!std::is_pointer<Type>::value && 
+			std::is_base_of<MicroDebugEvent, Type>::value 
+		)
 	static MicroDebugAdapterError Broadcast( const Type& event_specification ) { 
 		return Broadcast( micro_ptr( event_specification ) );
 	};
@@ -67,5 +72,11 @@ public:
 	static const char* GetBufferData( );
 
 	static const MicroDebugAdapterBuffer GetBuffer( );
+
+	static constexpr std::string ToString( const MicroDebugMessageTypes type );
+
+	static constexpr std::string ToString( const bool value );
+
+	static constexpr std::string ToString( const MicroDebugEventReasons reason );
 
 };

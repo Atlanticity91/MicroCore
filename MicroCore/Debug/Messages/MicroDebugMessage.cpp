@@ -29,28 +29,33 @@
  *
  **/
 
-#include "MicroDebugEvent.h"
+#pragma once 
 
-micro_struct MicroDebugEventBreakpoint : public MicroDebugEvent {
+#include "__micro_core_pch.h"
 
-	uint32_t BreakpointID;
-	uint32_t Line;
-	uint32_t Column;
-	uint32_t EndLine;
-	uint32_t EndColumn;
-	uint32_t Offset;
-	MicroDebugEventReasons Reason;
-	bool Verified;
-	std::string Message;
-	std::string Source;
-	std::string InstructionReference;
+////////////////////////////////////////////////////////////////////////////////////////////
+//		===	PUBLIC ===
+////////////////////////////////////////////////////////////////////////////////////////////
+MicroDebugMessage::MicroDebugMessage(
+	const MicroDebugMessageTypes type,
+	const uint32_t sequence
+) 
+	: Type{ type }, 
+	Sequence{ sequence }
+{ }
 
-	MicroDebugEventBreakpoint( );
+////////////////////////////////////////////////////////////////////////////////////////////
+//		===	PUBLIC GET ===
+////////////////////////////////////////////////////////////////////////////////////////////
+std::string MicroDebugMessage::GetHeader( ) const {
+	const auto type = MicroDebugAdapter::ToString( Type );
 
-	MicroDebugEventBreakpoint( const uint32_t sequence );
+	return std::format( R"("seq" : {}, "type" : {})", Sequence, type );
+}
 
-	micro_implement( bool GetIsValid( ) const );
-
-	micro_implement( std::string ToString( ) const );
-
-};
+////////////////////////////////////////////////////////////////////////////////////////////
+//		===	OPERATOR ===
+////////////////////////////////////////////////////////////////////////////////////////////
+MicroDebugMessage::operator std::string( ) const {
+	return ToString( );
+}

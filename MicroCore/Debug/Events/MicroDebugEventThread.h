@@ -31,16 +31,20 @@
 
 #include "MicroDebugEventTerminated.h"
 
-struct MicroDebugEventThread : public MicroDebugEvent {
+micro_struct MicroDebugEventThread : public MicroDebugEvent {
 
 	MicroDebugEventReasons Reason;
 	uint32_t ThreadID;
 
 	MicroDebugEventThread( );
 
-	MicroDebugEventThread( const MicroDebugEventReasons reason );
-
 	MicroDebugEventThread( 
+		const uint32_t sequence,
+		const MicroDebugEventReasons reason 
+	);
+
+	MicroDebugEventThread(
+		const uint32_t sequence,
 		const MicroDebugEventReasons reason,
 		const uint32_t thread_id
 	);

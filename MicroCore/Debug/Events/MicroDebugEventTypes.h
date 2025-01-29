@@ -31,7 +31,7 @@
 
 #pragma once 
 
-#include "../MicroDebugAdapterError.h"
+#include "../Requests/MicroDebugRequestCancel.h"
 
 enum class MicrDebugEventTypes : uint32_t {
 

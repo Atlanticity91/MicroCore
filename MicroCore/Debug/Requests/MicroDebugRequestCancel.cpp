@@ -29,28 +29,41 @@
  *
  **/
 
-#include "MicroDebugEvent.h"
+#pragma once 
 
-micro_struct MicroDebugEventBreakpoint : public MicroDebugEvent {
+#include "__micro_core_pch.h"
 
-	uint32_t BreakpointID;
-	uint32_t Line;
-	uint32_t Column;
-	uint32_t EndLine;
-	uint32_t EndColumn;
-	uint32_t Offset;
-	MicroDebugEventReasons Reason;
-	bool Verified;
-	std::string Message;
-	std::string Source;
-	std::string InstructionReference;
+////////////////////////////////////////////////////////////////////////////////////////////
+//		===	PUBLIC ===
+////////////////////////////////////////////////////////////////////////////////////////////
+MicroDebugRequestCancel::MicroDebugRequestCancel( ) 
+	: MicroDebugRequestCancel{ 0, 0 }
+{ }
 
-	MicroDebugEventBreakpoint( );
+MicroDebugRequestCancel::MicroDebugRequestCancel( 
+	const uint32_t request_id,
+	const uint32_t progress_id
+)
+	: MicroDebugRequest{ 0, "cancel", "" },
+	RequestID{ request_id },
+	ProgressID{ progress_id }
+{ }
 
-	MicroDebugEventBreakpoint( const uint32_t sequence );
+std::string MicroDebugRequestCancel::ToString( ) const {
+	const auto header = MicroDebugMessage::GetHeader( );
 
-	micro_implement( bool GetIsValid( ) const );
-
-	micro_implement( std::string ToString( ) const );
-
-};
+	return std::format( 
+		R"({{ 
+			{},
+			"command" : {},
+			"arguments" : {{
+				"requestId" : {},
+				"progressId" : {}
+			}} 
+		}})", 
+		header,
+		Command,
+		RequestID,
+		ProgressID
+	);
+}

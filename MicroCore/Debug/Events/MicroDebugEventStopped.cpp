@@ -35,14 +35,18 @@
 //		===	PUBLIC ===
 ////////////////////////////////////////////////////////////////////////////////////////////
 MicroDebugEventStopped::MicroDebugEventStopped( )
-	: MicroDebugEventStopped{ MicroDebugEventReasons::None }
-{ }
-
-MicroDebugEventStopped::MicroDebugEventStopped( const MicroDebugEventReasons& reason )
-	: MicroDebugEventStopped{ 0, 0, true, false, reason, "", "" }
+	: MicroDebugEventStopped{ 0, MicroDebugEventReasons::None }
 { }
 
 MicroDebugEventStopped::MicroDebugEventStopped(
+	const uint32_t sequence, 
+	const MicroDebugEventReasons& reason 
+)
+	: MicroDebugEventStopped{ sequence, 0, 0, true, false, reason, "", "" }
+{ }
+
+MicroDebugEventStopped::MicroDebugEventStopped(
+	const uint32_t sequence,
 	const uint32_t hit_breakpoint_id,
 	const bool preserve_focus_hint,
 	const MicroDebugEventReasons& reason,
@@ -50,6 +54,7 @@ MicroDebugEventStopped::MicroDebugEventStopped(
 	const std::string& text
 )
 	: MicroDebugEventStopped{
+		sequence,
 		0,
 		hit_breakpoint_id,
 		preserve_focus_hint,
@@ -61,6 +66,7 @@ MicroDebugEventStopped::MicroDebugEventStopped(
 { }
 
 MicroDebugEventStopped::MicroDebugEventStopped(
+	const uint32_t sequence,
 	const uint32_t thread_id,
 	const uint32_t hit_breakpoint_id,
 	const bool preserve_focus_hint,
@@ -69,7 +75,7 @@ MicroDebugEventStopped::MicroDebugEventStopped(
 	const std::string& description,
 	const std::string& text
 )
-	: MicroDebugEvent{ MicrDebugEventTypes::Stopped },
+	: MicroDebugEvent{ sequence, MicrDebugEventTypes::Stopped },
 	ThreadID{ thread_id },
 	HitBreakpointIds{ hit_breakpoint_id },
 	PreserveFocusHint{ preserve_focus_hint },
@@ -87,12 +93,14 @@ bool MicroDebugEventStopped::GetIsValid( ) const {
 }
 
 std::string MicroDebugEventStopped::ToString( ) const {
-	const auto reason = micro::debug_reason_to_string( Reason );
-	const auto preserve_focus_hint = micro::debug_bool_to_string( PreserveFocusHint );
-	const auto all_threads_stopped = micro::debug_bool_to_string( AllThreadsStopped );
+	const auto header			   = MicroDebugMessage::GetHeader( );
+	const auto reason			   = MicroDebugAdapter::ToString( Reason );
+	const auto preserve_focus_hint = MicroDebugAdapter::ToString( PreserveFocusHint );
+	const auto all_threads_stopped = MicroDebugAdapter::ToString( AllThreadsStopped );
 
 	return std::format( 
 		R"({{
+			{},
 			"event" : "stopped",
 			"body" : {{
 				"reason" : "{}",
@@ -104,6 +112,7 @@ std::string MicroDebugEventStopped::ToString( ) const {
 				"hitBreakpointIds" : "{}"
 			}}
 		}})",
+		header,
 		reason,
 		Description,
 		ThreadID,

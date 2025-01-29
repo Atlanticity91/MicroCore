@@ -29,28 +29,49 @@
  *
  **/
 
-#include "MicroDebugEvent.h"
+#pragma once 
 
-micro_struct MicroDebugEventBreakpoint : public MicroDebugEvent {
+#include "__micro_core_pch.h"
 
-	uint32_t BreakpointID;
-	uint32_t Line;
-	uint32_t Column;
-	uint32_t EndLine;
-	uint32_t EndColumn;
-	uint32_t Offset;
-	MicroDebugEventReasons Reason;
-	bool Verified;
-	std::string Message;
-	std::string Source;
-	std::string InstructionReference;
+////////////////////////////////////////////////////////////////////////////////////////////
+//		===	PUBLIC ===
+////////////////////////////////////////////////////////////////////////////////////////////
+MicroDebugRequest::MicroDebugRequest( ) 
+	: MicroDebugRequest{ 0, "", "" }
+{ }
 
-	MicroDebugEventBreakpoint( );
+MicroDebugRequest::MicroDebugRequest( const uint32_t sequence )
+	: MicroDebugRequest{ sequence, "", "" }
+{ }
 
-	MicroDebugEventBreakpoint( const uint32_t sequence );
+MicroDebugRequest::MicroDebugRequest(
+	const std::string& command,
+	const std::string& arguments
+)
+	: MicroDebugRequest{ 0, command, arguments }
+{ }
 
-	micro_implement( bool GetIsValid( ) const );
+MicroDebugRequest::MicroDebugRequest(
+	const uint32_t sequence,
+	const std::string& command,
+	const std::string& arguments
+)
+	: MicroDebugMessage{ MicroDebugMessageTypes::Request, sequence },
+	Command{ command },
+	Arguments{ arguments }
+{ }
 
-	micro_implement( std::string ToString( ) const );
+std::string MicroDebugRequest::ToString( ) const {
+	const auto header = MicroDebugMessage::GetHeader( );
 
-};
+	return std::format( 
+		R"({{ 
+			{},
+			"command" : {},
+			"arguments" : {} 
+		}})", 
+		header,
+		Command,
+		Arguments
+	);
+}

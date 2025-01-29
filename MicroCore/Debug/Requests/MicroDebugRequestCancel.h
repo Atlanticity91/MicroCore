@@ -29,27 +29,21 @@
  *
  **/
 
-#include "MicroDebugEvent.h"
+#pragma once 
 
-micro_struct MicroDebugEventBreakpoint : public MicroDebugEvent {
+#include "MicroDebugRequest.h"
 
-	uint32_t BreakpointID;
-	uint32_t Line;
-	uint32_t Column;
-	uint32_t EndLine;
-	uint32_t EndColumn;
-	uint32_t Offset;
-	MicroDebugEventReasons Reason;
-	bool Verified;
-	std::string Message;
-	std::string Source;
-	std::string InstructionReference;
+micro_struct MicroDebugRequestCancel : public MicroDebugRequest{
 
-	MicroDebugEventBreakpoint( );
+	uint32_t RequestID;
+	uint32_t ProgressID;
 
-	MicroDebugEventBreakpoint( const uint32_t sequence );
+	MicroDebugRequestCancel( );
 
-	micro_implement( bool GetIsValid( ) const );
+	MicroDebugRequestCancel(
+		const uint32_t request_id,
+		const uint32_t progress_id
+	);
 
 	micro_implement( std::string ToString( ) const );
 

@@ -35,11 +35,14 @@
 //		===	PUBLIC ===
 ////////////////////////////////////////////////////////////////////////////////////////////
 MicroDebugEventTerminated::MicroDebugEventTerminated( ) 
-	: MicroDebugEventTerminated{ false }
+	: MicroDebugEventTerminated{ 0, false }
 { }
 
-MicroDebugEventTerminated::MicroDebugEventTerminated( const bool restart )
-	: MicroDebugEvent{ MicrDebugEventTypes::Terminated },
+MicroDebugEventTerminated::MicroDebugEventTerminated(
+	const uint32_t sequence, 
+	const bool restart 
+)
+	: MicroDebugEvent{ sequence, MicrDebugEventTypes::Terminated },
 	Restart{ restart }
 { }
 
@@ -47,15 +50,18 @@ MicroDebugEventTerminated::MicroDebugEventTerminated( const bool restart )
 //		===	PUBLIC GET ===
 ////////////////////////////////////////////////////////////////////////////////////////////
 std::string MicroDebugEventTerminated::ToString( ) const {
-	const auto restart = micro::debug_bool_to_string( Restart );
+	const auto header  = MicroDebugMessage::GetHeader( );
+	const auto restart = MicroDebugAdapter::ToString( Restart );
 
 	return std::format(
 		R"({{
+			{},
 			"event" : "terminated",
 			"body" : {{
 				"restart" : "{:s}"
 			}}
 		}})", 
+		header,
 		restart
 	);
 }

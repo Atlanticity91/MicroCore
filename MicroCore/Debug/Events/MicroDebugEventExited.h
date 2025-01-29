@@ -31,13 +31,13 @@
 
 #include "MicroDebugEventContinued.h"
 
-struct MicroDebugEventExited : public MicroDebugEvent {
+micro_struct MicroDebugEventExited : public MicroDebugEvent {
 
 	uint32_t Code;
 
-	MicroDebugEventExited( );
+	MicroDebugEventExited( const uint32_t sequence );
 
-	MicroDebugEventExited( const uint32_t code );
+	MicroDebugEventExited( const uint32_t sequence, const uint32_t code );
 
 	micro_implement( std::string ToString( ) const );
 

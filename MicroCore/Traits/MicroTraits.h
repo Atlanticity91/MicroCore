@@ -98,6 +98,12 @@ extern "C" {
 #define micro_ref( VAR ) ( *(VAR) )
 
 /**
+ * micro_ref_as macro
+ * @note : Get reference from a C pointer.
+ **/
+#define micro_ref_as( VAR, TYPE ) micro_ref( micro_cast( VAR, TYPE* ) )
+
+/**
  * micro_unused macro
  * @note : Mark function parameter unused for the compiler.
  **/

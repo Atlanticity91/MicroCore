@@ -167,3 +167,49 @@ const char* MicroDebugAdapter::GetBufferData( ) {
 const MicroDebugAdapterBuffer MicroDebugAdapter::GetBuffer( ) {
     return { MDA_BUFFER_SIZE, mda_offset, mda_buffer };
 }
+
+constexpr std::string MicroDebugAdapter::ToString( const MicroDebugMessageTypes type ) {
+    switch ( type ) {
+        case MicroDebugMessageTypes::Request  : return "request";
+        case MicroDebugMessageTypes::Response : return "response";
+        case MicroDebugMessageTypes::Event    : return "event";
+
+        default : break;
+    }
+
+    return "";
+}
+
+constexpr std::string MicroDebugAdapter::ToString( const bool value ) {
+    return value ? "true" : "false";
+}
+
+constexpr std::string MicroDebugAdapter::ToString(
+    const MicroDebugEventReasons reason
+) {
+    switch ( reason ) {
+        // STOPPED
+        case MicroDebugEventReasons::Step                  : return "step";
+        case MicroDebugEventReasons::Breakpoint            : return "breakpoint";
+        case MicroDebugEventReasons::Exception             : return "exception";
+        case MicroDebugEventReasons::Pause                 : return "pause";
+        case MicroDebugEventReasons::Entry                 : return "entry";
+        case MicroDebugEventReasons::Goto                  : return "goto";
+        case MicroDebugEventReasons::FunctionBreakpoint    : return "function breakpoint";
+        case MicroDebugEventReasons::DataBreakpoint        : return "data breakpoint";
+        case MicroDebugEventReasons::InstructionBreakpoint : return "instruction breakpoint";
+
+        // BREAKPOINT
+        case MicroDebugEventReasons::Changed               : return "changed";
+        case MicroDebugEventReasons::New                   : return "new";
+        case MicroDebugEventReasons::Removed               : return "removed";
+
+        // THREAD
+        case MicroDebugEventReasons::Started               : return "started";
+        case MicroDebugEventReasons::Exited                : return "exited";
+
+        default: break;
+    }
+
+    return "none";
+}

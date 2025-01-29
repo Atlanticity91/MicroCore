@@ -38,15 +38,19 @@ MicroDebugEventContinued::MicroDebugEventContinued( )
 	: MicroDebugEventContinued{ 0, false }
 { }
 
-MicroDebugEventContinued::MicroDebugEventContinued( const uint32_t thread_id )
-	: MicroDebugEventContinued{ thread_id, false }
+MicroDebugEventContinued::MicroDebugEventContinued(
+	const uint32_t sequence, 
+	const uint32_t thread_id 
+)
+	: MicroDebugEventContinued{ sequence, thread_id, false }
 { }
 
 MicroDebugEventContinued::MicroDebugEventContinued(
+	const uint32_t sequence,
 	const uint32_t thread_id,
 	const bool all_thread_stopped
 )
-	: MicroDebugEvent{ MicrDebugEventTypes::Continued },
+	: MicroDebugEvent{ sequence, MicrDebugEventTypes::Continued },
 	ThreadID{ thread_id },
 	AllThreadsStopped{ all_thread_stopped }
 { }
@@ -55,16 +59,19 @@ MicroDebugEventContinued::MicroDebugEventContinued(
 //		===	PUBLIC GET ===
 ////////////////////////////////////////////////////////////////////////////////////////////
 std::string MicroDebugEventContinued::ToString( ) const {
-	const auto all_threads_stopped = micro::debug_bool_to_string( AllThreadsStopped );
+	const auto header = MicroDebugMessage::GetHeader( );
+	const auto all_threads_stopped = MicroDebugAdapter::ToString( AllThreadsStopped );
 
 	return std::format(
 		R"({{
+			{},
 			"event" : "continued",
 			"body" : {{
 				"threadId" : "{}",
 				"allThreadsStopped" : "{}"
 			}}
 		}})", 
+		header,
 		ThreadID, 
 		all_threads_stopped 
 	);

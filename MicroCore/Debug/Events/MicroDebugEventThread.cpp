@@ -35,18 +35,22 @@
 //		===	PUBLIC ===
 ////////////////////////////////////////////////////////////////////////////////////////////
 MicroDebugEventThread::MicroDebugEventThread( )
-	: MicroDebugEventThread{ MicroDebugEventReasons::None, 0 }
+	: MicroDebugEventThread{ 0, MicroDebugEventReasons::None, 0 }
 { }
 
-MicroDebugEventThread::MicroDebugEventThread( const MicroDebugEventReasons reason )
-	: MicroDebugEventThread{ reason, 0 }
+MicroDebugEventThread::MicroDebugEventThread( 
+	const uint32_t sequence, 
+	const MicroDebugEventReasons reason 
+)
+	: MicroDebugEventThread{ sequence, reason, 0 }
 { }
 
 MicroDebugEventThread::MicroDebugEventThread(
+	const uint32_t sequence,
 	const MicroDebugEventReasons reason,
 	const uint32_t thread_id
 )
-	: MicroDebugEvent{ MicrDebugEventTypes::Thread },
+	: MicroDebugEvent{ sequence, MicrDebugEventTypes::Thread },
 	Reason{ reason },
 	ThreadID{ thread_id }
 { }
@@ -59,16 +63,19 @@ bool MicroDebugEventThread::GetIsValid( ) const {
 }
 
 std::string MicroDebugEventThread::ToString( ) const {
-	const auto reason = micro::debug_reason_to_string( Reason );
+	const auto header = MicroDebugMessage::GetHeader( );
+	const auto reason = MicroDebugAdapter::ToString( Reason );
 
 	return std::format(
 		R"({{
+			{},
 			"event" : "thread",
 			"body" : {{
 				"reason" : "{}",
 				"threadId" : "{}"
 			}}
 		}})", 
+		header,
 		reason, 
 		ThreadID 
 	);
