@@ -33,7 +33,7 @@
 
 #include "../MicroDebugAdapterError.h"
 
-enum class MicroDebugMessageTypes : uint32_t {
+micro_enum_class MicroDebugMessageTypes : uint32_t {
 
 	Request = 0,
 	Response,

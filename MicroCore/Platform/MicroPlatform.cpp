@@ -42,6 +42,14 @@ namespace micro {
 		return micro_ref( micro_ptr_as( test, int8_t* ) ) == 1;
 	}
 
+	std::string cast_thread_id( const std::thread::id& thread_id ) {
+		auto stream = std::ostringstream{ };
+
+		stream << thread_id;
+
+		return stream.str( );
+	}
+
 	bool copy( const uint32_t length, const void* src, void* dst ) {
 		micro_assert( length > 0, "You can't copy data form buffer to buffer with a 0 size buffer." );
 		micro_assert( src != nullptr, "You can't copy data from a null buffer." );

@@ -168,7 +168,7 @@ const MicroDebugAdapterBuffer MicroDebugAdapter::GetBuffer( ) {
     return { MDA_BUFFER_SIZE, mda_offset, mda_buffer };
 }
 
-constexpr std::string MicroDebugAdapter::ToString( const MicroDebugMessageTypes type ) {
+const std::string MicroDebugAdapter::ToString( const MicroDebugMessageTypes type ) {
     switch ( type ) {
         case MicroDebugMessageTypes::Request  : return "request";
         case MicroDebugMessageTypes::Response : return "response";
@@ -180,11 +180,11 @@ constexpr std::string MicroDebugAdapter::ToString( const MicroDebugMessageTypes 
     return "";
 }
 
-constexpr std::string MicroDebugAdapter::ToString( const bool value ) {
+const std::string MicroDebugAdapter::ToString( const bool value ) {
     return value ? "true" : "false";
 }
 
-constexpr std::string MicroDebugAdapter::ToString(
+const std::string MicroDebugAdapter::ToString(
     const MicroDebugEventReasons reason
 ) {
     switch ( reason ) {

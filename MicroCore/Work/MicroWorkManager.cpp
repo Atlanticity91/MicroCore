@@ -29,96 +29,101 @@
  *
  **/
 
-#include <__micro_core_pch.h>
+#include "__micro_core_pch.h"
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 //		===	PUBLIC ===
 ////////////////////////////////////////////////////////////////////////////////////////////
 MicroWorkManager::MicroWorkManager( )
-	: m_works{ },
-	m_workers{ },
-	m_can_work{ true }
+	: m_signal{ false },
+	m_queue{ },
+	m_workers{ } 
 { }
 
-bool MicroWorkManager::Create( ) {
-	auto thread_id = std::thread::hardware_concurrency( ) / 2;
-
-	m_workers.resize( thread_id );
-
-	while ( thread_id-- > 0 ) {
-		auto thread = std::thread( WorkExecution, this );
-
-		m_workers[ thread_id ] = std::move( thread );
-	}
-
-	return m_workers.size( ) > 0;
+MicroWorkManager::~MicroWorkManager( ) {
+	Terminate( );
 }
 
-void MicroWorkManager::PushWork( MicroWorkPriorities priority, const MicroWork& work ) {
-	if ( work.GetIsValid( ) )
-		m_works[ (uint32_t)priority ].push( work );
-}
+bool MicroWorkManager::Create( 
+	const MicroWorkSpecification& specification, 
+	void* init_data 
+) {
+	auto lambda = [ this, specification ]( void* init_data ) {
+		specification.CreateCallback.Invoke( init_data );
 
-void MicroWorkManager::Destroy( ) {
-	m_mutex.lock( );
-	m_can_work = false;
-	m_mutex.unlock( );
+		auto id = std::this_thread::get_id( );
 
-	for ( auto& worker : m_workers )
-		worker.join( );
-}
+		while ( true ) {
+			auto thread_work = MicroWork{ };
+			auto guard_lock = std::unique_lock{ m_signal.m_mutex };
 
-void MicroWorkManager::WorkExecution( MicroWorkManager* work_manager ) {
-	auto work = MicroWork{ };
+			m_signal.m_condition.wait( guard_lock, [ this ]( ) {
+				return m_signal.m_value.load( std::memory_order_relaxed ) || !m_queue.GetIsEmpty( );
+			} );
 
-	while ( work_manager->GetCanWork( ) ) {
-		if ( work_manager->PopWork( work ) ) {
-			if ( std::invoke( work.Execute, work_manager, work.Storage ) ) {
-				if ( work.OnSucced )
-					std::invoke( work.OnSucced, work_manager, work.Storage );
-			} else {
-				if ( work.OnFailed )
-					std::invoke( work.OnFailed, work_manager, work.Storage );
+			if ( m_signal.m_value.load( std::memory_order_relaxed ) ) {
+				specification.TerminateCallback.Invoke( );
+
+				return;
 			}
-		} else
-			std::this_thread::sleep_for( std::chrono::milliseconds( 100 ) );
-	}
+
+			if ( m_queue.Dequeue( m_signal.m_condition, thread_work ) ) {
+				guard_lock.unlock( );
+				thread_work.Execute( );
+			}
+		}
+	};
+
+	return m_workers.Create( lambda, init_data );
+}
+
+void MicroWorkManager::Enqueue(
+	const uint32_t work_uuid,
+	const MicroWork::Task_t& task
+) {
+	Enqueue( work_uuid, task, { }, { }, nullptr );
+}
+
+void MicroWorkManager::Enqueue(
+	const uint32_t work_uuid,
+	const MicroWork::Task_t& task,
+	void* user_data
+) {
+	Enqueue( work_uuid, task, { }, { }, user_data );
+}
+
+void MicroWorkManager::Enqueue(
+	const uint32_t work_uuid,
+	const MicroWork::Task_t& task,
+	const MicroWork::Callback_t& error,
+	const MicroWork::Callback_t& success
+) {
+	Enqueue( work_uuid, task, error, success, nullptr );
+}
+
+void MicroWorkManager::Enqueue(
+	const uint32_t work_uuid,
+	const MicroWork::Task_t& task,
+	const MicroWork::Callback_t& error,
+	const MicroWork::Callback_t& success,
+	void* user_data
+) {
+	if ( task )
+		m_queue.Enqueue( m_signal.m_condition, { work_uuid, task, error, success, user_data } );
+}
+
+void MicroWorkManager::Terminate( ) {
+	m_signal.Send( );
+	m_workers.Terminate( );
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 //		===	PUBLIC GET ===
 ////////////////////////////////////////////////////////////////////////////////////////////
-bool MicroWorkManager::GetCanWork( ) {
-	auto can_work = false;
-
-	m_mutex.lock( );
-	can_work = m_can_work;
-	m_mutex.unlock( );
-
-	return can_work;
+uint32_t MicroWorkManager::GetWorkCount( ) const {
+	return m_queue.GetCount( );
 }
 
-uint32_t MicroWorkManager::GetCount( ) const {
-	return (uint32_t)m_workers.size( );
-}
-
-bool MicroWorkManager::PopWork( MicroWork& work ) {
-	auto has_work = false;
-	auto work_id  = (uint32_t)MicroWorkPriorities::COUNT;
-	
-	m_mutex.lock( );
-
-	while ( !has_work && work_id-- > 0 ) {
-		if ( m_works[ work_id ].size( ) > 0 ) {
-			work = m_works[ work_id ].front( );
-
-			m_works[ work_id ].pop( );
-
-			has_work = true;
-		}
-	}
-
-	m_mutex.unlock( );
-
-	return has_work;
+uint32_t MicroWorkManager::GetWorkerCount( ) const {
+	return m_workers.GetCount( );
 }

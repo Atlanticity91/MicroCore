@@ -31,20 +31,7 @@
 
 #pragma once
 
-#include "MicroWork.h"
-
-/**
- * MicroWorkPriorities enum class
- * @note : Defined work priorities.
- **/
-micro_enum_class MicroWorkPriorities : uint32_t { 
-
-	High = 0,
-	LOW,
-
-	COUNT
-
-};
+#include "Workers/MicroWorkerManager.h"
 
 /**
  * MicroWorkManager class
@@ -53,69 +40,92 @@ micro_enum_class MicroWorkPriorities : uint32_t {
 micro_class MicroWorkManager {
 
 private:
-	std::mutex m_mutex;
-	std::queue<MicroWork> m_works[ 2 ];
-	std::vector<std::thread> m_workers;
-	bool m_can_work;
+	MicroWorkSignal<bool> m_signal;
+	MicroWorkQueue<256> m_queue;
+	MicroWorkerManager m_workers;
 
 public:
-	/**
-	 * Constructor
-	 **/
 	MicroWorkManager( );
 
-	/**
-	 * Destructor
-	 **/
-	~MicroWorkManager( ) = default;
+	~MicroWorkManager( );
 
-	/**
-	 * Create function
-	 * @note : Create the manager and threads for dispatch.
-	 **/
-	bool Create( );
+	bool Create( const MicroWorkSpecification& specification, void* init_data );
 
-	/**
-	 * PushWork procedure
-	 * @note : Push work for execution.
-	 * @param priority : Priority ot the work.
-	 * @param work : Work handle instance.
-	 **/
-	void PushWork( MicroWorkPriorities priority, const MicroWork& work );
+	inline void Enqueue(
+		const uint32_t work_uuid,
+		const MicroWork::Task_t& task
+	);
 
-	/**
-	 * Destroy procedure
-	 * @note : Terminate and clear threads.
-	 **/
-	void Destroy( );
+	inline void Enqueue(
+		const uint32_t work_uuid,
+		const MicroWork::Task_t& task,
+		void* user_data
+	);
 
-private:
-	/**
-	 * WorkExecution static procedure
-	 * @note : Thread "main" function for executing work.
-	 * @param work_manager : Current MicroWorkManager instance.
-	 **/
-	static void WorkExecution( MicroWorkManager* work_manager );
+	inline void Enqueue(
+		const uint32_t work_uuid,
+		const MicroWork::Task_t& task,
+		const MicroWork::Callback_t& error,
+		const MicroWork::Callback_t& success
+	);
+
+	void Enqueue(
+		const uint32_t work_uuid,
+		const MicroWork::Task_t& task,
+		const MicroWork::Callback_t& error,
+		const MicroWork::Callback_t& success,
+		void* user_data
+	);
+
+	void Terminate( );
 
 public:
-	/**
-	 * GetCanWork const function
-	 * @note : Get if a worker can execute work task.
-	 **/
-	bool GetCanWork( );
+	template<typename Task>
+	void Enqueue( const uint32_t work_uuid, Task&& task ) {
+		Enqueue( work_uuid, MicroWork::Task_t{ std::forward<Task>( task ) }, { }, { }, nullptr );
+	};
 
-	/**
-	 * GetCount const function
-	 * @note : Get current thread count.
-	 **/
-	uint32_t GetCount( ) const;
+	template<typename Task>
+	void Enqueue( const uint32_t work_uuid, Task&& task, void* user_data ) {
+		Enqueue( work_uuid, MicroWork::Task_t{ std::forward<Task>( task ) }, { }, { }, user_data );
+	};
 
-	/**
-	 * PopWork function
-	 * @note : Pop first work task to available for execution.
-	 * @param work : Reference for the work.
-	 * @return : True if the function populate the work reference.
-	 **/
-	bool PopWork( MicroWork& work );
+	template<typename Task, typename OnError, typename OnSuccess>
+	void Enqueue(
+		const uint32_t work_uuid,
+		Task&& task,
+		OnError&& on_error,
+		OnSuccess&& on_success
+	) {
+		Enqueue(
+			work_uuid,
+			MicroWork::Task_t{ std::forward<Task>( task ) },
+			MicroWork::Callback_t{ std::forward<OnError>( on_error ) },
+			MicroWork::Callback_t{ std::forward<OnSuccess>( on_success ) },
+			nullptr
+		);
+	};
+
+	template<typename Task, typename OnError, typename OnSuccess>
+	void Enqueue(
+		const uint32_t work_uuid,
+		Task&& task,
+		OnError&& on_error,
+		OnSuccess&& on_success,
+		void* user_data
+	) {
+		Enqueue(
+			work_uuid,
+			MicroWork::Task_t{ std::forward<Task>( task ) },
+			MicroWork::Callback_t{ std::forward<OnError>( on_error ) },
+			MicroWork::Callback_t{ std::forward<OnSuccess>( on_success ) },
+			user_data
+		);
+	};
+
+public:
+	uint32_t GetWorkCount( ) const;
+
+	uint32_t GetWorkerCount( ) const;
 
 };

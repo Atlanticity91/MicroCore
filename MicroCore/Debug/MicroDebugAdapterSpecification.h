@@ -51,7 +51,7 @@
  **/
 #define MICRO_DEBUG_VSC_PORT 12345
 
-struct MicroDebugAdapterSpecification {
+micro_struct MicroDebugAdapterSpecification {
 
 	micro_string Address;
 	uint16_t Port;

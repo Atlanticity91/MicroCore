@@ -29,32 +29,27 @@
  *
  **/
 
-#pragma once 
+#pragma once
 
-#include "MicroDebugEventTypes.h"
+#include "MicroWorkSignal.h"
 
-micro_enum_class MicroDebugEventReasons : uint32_t {
+micro_class MicroWorkerManager final {
 
-	None = 0,
+	friend class MicroWorkManager;
 
-	// STOPPED
-	Step,
-	Breakpoint,
-	Exception,
-	Pause,
-	Entry,
-	Goto,
-	FunctionBreakpoint,
-	DataBreakpoint,
-	InstructionBreakpoint,
+private:
+	std::vector<std::thread> m_workers;
 
-	// BREAKPOINT
-	Changed,
-	New,
-	Removed,
+public:
+	MicroWorkerManager( );
 
-	// THREAD
-	Started,
-	Exited
+	~MicroWorkerManager( ) = default;
+
+	bool Create( std::function<void( void* )> thread_runner, void* init_data );
+
+	void Terminate( );
+
+public:
+	uint32_t GetCount( ) const;
 
 };

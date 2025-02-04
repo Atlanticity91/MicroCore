@@ -29,54 +29,70 @@
  *
  **/
 
-#pragma once 
+#pragma once
 
-#include "Events/MicroDebugEventThread.h"
+#include "MicroTraits.h"
 
-micro_struct MicroDebugAdapterBuffer {
+template<typename Return, typename... Args>
+class MicroCallable final {
 
-	uint32_t Length;
-	uint32_t Size;
-	const char* Data;
+	using Signature_t = std::function<Return( Args... )>;
 
-};
-
-micro_class MicroDebugAdapter final {
+private:
+	Signature_t m_invocable;
 
 public:
-	static MicroDebugAdapterError Connect( 
-		const MicroDebugAdapterSpecification& specification
-	);
+	MicroCallable( )
+		: m_invocable{ } 
+	{ };
 
-	static MicroDebugAdapterError Broadcast( 
-		const MicroDebugEvent* event_specification 
-	);
+	explicit MicroCallable( Signature_t invocable )
+		: m_invocable{ std::move( invocable ) } 
+	{ };
 
-	static MicroDebugAdapterError Receive( MicrDebugEventTypes& event_type );
+	MicroCallable( const MicroCallable& other )
+		: m_invocable{ other.m_invocable } 
+	{ };
 
-	static MicroDebugAdapterError Disconnect( );
+	MicroCallable( MicroCallable&& other ) noexcept
+		: m_invocable{ std::move( other.m_invocable ) } 
+	{ };
 
-public:
-	template<typename Type>
-		requires ( 
-			!std::is_pointer<Type>::value && 
-			std::is_base_of<MicroDebugEvent, Type>::value 
-		)
-	static MicroDebugAdapterError Broadcast( const Type& event_specification ) { 
-		return Broadcast( micro_ptr( event_specification ) );
+	~MicroCallable( ) = default;
+
+	Return Invoke( Args... args ) const {
+		if ( m_invocable )
+			return std::invoke( m_invocable, std::forward<Args>( args )... );
+
+		if constexpr ( !std::is_void<Return>::value )
+			return Return{ };
 	};
 
 public:
-	static uint32_t GetBufferSize( );
+	explicit operator bool( ) const {
+		return (bool)m_invocable;
+	};
 
-	static const char* GetBufferData( );
+	Return operator( )( Args... args ) const {
+		return Invoke( std::forward<Args>( args )... );
+	};
 
-	static const MicroDebugAdapterBuffer GetBuffer( );
+	MicroCallable& operator=( Signature_t invocable ) noexcept {
+		m_invocable = std::move( invocable );
 
-	static const std::string ToString( const MicroDebugMessageTypes type );
+		return *this;
+	};
 
-	static const std::string ToString( const bool value );
+	MicroCallable& operator=( const MicroCallable& other ) noexcept {
+		m_invocable = other.m_invocable;
 
-	static const std::string ToString( const MicroDebugEventReasons reason );
+		return *this;
+	};
+
+	MicroCallable& operator=( MicroCallable&& other ) noexcept {
+		m_invocable = std::move( other.m_invocable );
+
+		return *this;
+	};
 
 };

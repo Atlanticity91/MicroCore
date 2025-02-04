@@ -33,7 +33,7 @@
 
 #include "MicroDebugAdapterSpecification.h"
 
-enum class MicroDebugAdapterError : uint32_t {
+micro_enum_class MicroDebugAdapterError : uint32_t {
 
 	None = 0,
 

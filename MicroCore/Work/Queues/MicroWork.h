@@ -29,32 +29,42 @@
  *
  **/
 
-#pragma once 
+#pragma once
 
-#include "MicroDebugEventTypes.h"
+#include "../../Yaml/MicroYamlWriter.h"
 
-micro_enum_class MicroDebugEventReasons : uint32_t {
+micro_class MicroWork {
 
-	None = 0,
+public:
+	using Task_t = MicroCallable<bool, const uint32_t, void*>;
+	using Callback_t = MicroCallable<void, const uint32_t, void*>;
 
-	// STOPPED
-	Step,
-	Breakpoint,
-	Exception,
-	Pause,
-	Entry,
-	Goto,
-	FunctionBreakpoint,
-	DataBreakpoint,
-	InstructionBreakpoint,
+private:
+	uint32_t m_uuid;
+	void* m_user_data;
+	Task_t m_task;
+	Callback_t m_on_error;
+	Callback_t m_on_success;
 
-	// BREAKPOINT
-	Changed,
-	New,
-	Removed,
+public:
+	MicroWork( );
 
-	// THREAD
-	Started,
-	Exited
+	MicroWork(
+		const uint32_t uuid,
+		const Task_t& task,
+		const Callback_t& on_error,
+		const Callback_t& on_success,
+		void* user_data
+	);
+
+	void Execute( );
+
+public:
+	bool GetIsValid( ) const;
+
+public:
+	operator bool( ) const;
+
+	MicroWork& operator=( const MicroWork& other );
 
 };

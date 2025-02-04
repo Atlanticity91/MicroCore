@@ -31,7 +31,7 @@
 
 #pragma once
 
-#include "MicroTraits.h"
+#include "MicroCallable.h"
 
 /**
  * MicroTestable template class

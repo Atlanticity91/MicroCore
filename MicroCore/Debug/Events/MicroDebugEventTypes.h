@@ -33,7 +33,7 @@
 
 #include "../Requests/MicroDebugRequestCancel.h"
 
-enum class MicrDebugEventTypes : uint32_t {
+micro_enum_class MicrDebugEventTypes : uint32_t {
 
 	Initialized = 0,
 	Terminated,

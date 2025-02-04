@@ -29,32 +29,12 @@
  *
  **/
 
-#pragma once 
+#include "__micro_core_pch.h"
 
-#include "MicroDebugEventTypes.h"
-
-micro_enum_class MicroDebugEventReasons : uint32_t {
-
-	None = 0,
-
-	// STOPPED
-	Step,
-	Breakpoint,
-	Exception,
-	Pause,
-	Entry,
-	Goto,
-	FunctionBreakpoint,
-	DataBreakpoint,
-	InstructionBreakpoint,
-
-	// BREAKPOINT
-	Changed,
-	New,
-	Removed,
-
-	// THREAD
-	Started,
-	Exited
-
-};
+////////////////////////////////////////////////////////////////////////////////////////////
+//		===	PUBLIC ===
+////////////////////////////////////////////////////////////////////////////////////////////
+MicroWorkSpecification::MicroWorkSpecification( )
+	: CreateCallback{ },
+	TerminateCallback{ } 
+{ }

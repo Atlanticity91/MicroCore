@@ -42,6 +42,8 @@ namespace micro {
 	 **/
 	MICRO_API bool is_little_endian( );
 
+	MICRO_API std::string cast_thread_id( const std::thread::id& thread_id );
+
 	/**
 	 * copy function
 	 * @note : Wrapper for platform memcpy.

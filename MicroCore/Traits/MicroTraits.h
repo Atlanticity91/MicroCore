@@ -40,6 +40,7 @@ extern "C" {
 
 #include <algorithm>
 #include <array>
+#include <atomic>
 #include <bitset>
 #include <cassert>
 #include <chrono>
@@ -263,3 +264,9 @@ typedef const char* micro_string;
  **/
 template<uint32_t Count>
 constexpr uint32_t micro_array_size = ( Count > 0 ) ? Count : 1;
+
+/**
+ * @brief Define a wrapper for std::move support for types.
+ **/
+template<typename Type>
+concept micro_is_movable = std::is_move_constructible<Type>::value && std::is_move_assignable<Type>::value;

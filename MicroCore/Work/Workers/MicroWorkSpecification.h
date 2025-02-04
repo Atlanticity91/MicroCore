@@ -29,32 +29,15 @@
  *
  **/
 
-#pragma once 
+#pragma once
 
-#include "MicroDebugEventTypes.h"
+#include "../Queues/MicroWorkQueue.h"
 
-micro_enum_class MicroDebugEventReasons : uint32_t {
+struct MicroWorkSpecification {
 
-	None = 0,
+	MicroCallable<void, void*> CreateCallback;
+	MicroCallable<void> TerminateCallback;
 
-	// STOPPED
-	Step,
-	Breakpoint,
-	Exception,
-	Pause,
-	Entry,
-	Goto,
-	FunctionBreakpoint,
-	DataBreakpoint,
-	InstructionBreakpoint,
-
-	// BREAKPOINT
-	Changed,
-	New,
-	Removed,
-
-	// THREAD
-	Started,
-	Exited
+	MicroWorkSpecification( );
 
 };

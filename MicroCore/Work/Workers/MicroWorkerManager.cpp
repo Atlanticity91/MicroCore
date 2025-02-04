@@ -29,32 +29,46 @@
  *
  **/
 
-#pragma once 
+#include "__micro_core_pch.h"
 
-#include "MicroDebugEventTypes.h"
+////////////////////////////////////////////////////////////////////////////////////////////
+//		===	PUBLIC ===
+////////////////////////////////////////////////////////////////////////////////////////////
+MicroWorkerManager::MicroWorkerManager( )
+	: m_workers{ } 
+{ }
 
-micro_enum_class MicroDebugEventReasons : uint32_t {
+bool MicroWorkerManager::Create( 
+	std::function<void( void* )> thread_runner, 
+	void* init_data 
+) {
+	auto thread_count = std::thread::hardware_concurrency( );
+	auto result		  = ( thread_count > 2 );
 
-	None = 0,
+	if ( result ) {
+		thread_count -= 2;
 
-	// STOPPED
-	Step,
-	Breakpoint,
-	Exception,
-	Pause,
-	Entry,
-	Goto,
-	FunctionBreakpoint,
-	DataBreakpoint,
-	InstructionBreakpoint,
+		m_workers.resize( thread_count );
 
-	// BREAKPOINT
-	Changed,
-	New,
-	Removed,
+		while ( thread_count-- > 0 )
+			m_workers[ thread_count ] = std::move( std::thread{ thread_runner, init_data } );
+	}
 
-	// THREAD
-	Started,
-	Exited
+	return result;
+}
 
-};
+void MicroWorkerManager::Terminate( ) {
+	for ( auto& worker : m_workers ) {
+		if ( worker.joinable( ) )
+			worker.join( );
+	}
+
+	m_workers.clear( );
+}
+
+////////////////////////////////////////////////////////////////////////////////////////////
+//		===	PUBLIC GET ===
+////////////////////////////////////////////////////////////////////////////////////////////
+uint32_t MicroWorkerManager::GetCount( ) const {
+	return (uint32_t)m_workers.size( );
+}

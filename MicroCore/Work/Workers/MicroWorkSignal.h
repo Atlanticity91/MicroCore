@@ -29,36 +29,31 @@
  *
  **/
 
-#include <__micro_core_pch.h>
+#pragma once
 
-////////////////////////////////////////////////////////////////////////////////////////////
-//		===	PUBLIC ===
-////////////////////////////////////////////////////////////////////////////////////////////
-MicroWork::MicroWork( ) 
-	: MicroWork{ nullptr, nullptr, nullptr }
-{ }
+#include "MicroWorkSpecification.h"
 
-MicroWork::MicroWork( Execute_t execute )
-	: MicroWork{ execute, nullptr, nullptr }
-{ }
+template<typename Type>
+	requires ( std::is_fundamental<Type>::value )
+struct MicroWorkSignal {
 
-MicroWork::MicroWork( Execute_t execute, Callback_t on_succed, Callback_t on_failed )
-	: Execute{ execute },
-	OnSucced{ on_succed },
-	OnFailed{ on_failed },
-	Storage{ }
-{ }
+	std::mutex m_mutex;
+	std::atomic<Type> m_value;
+	std::condition_variable m_condition;
 
-////////////////////////////////////////////////////////////////////////////////////////////
-//		===	PUBLIC GET ===
-////////////////////////////////////////////////////////////////////////////////////////////
-bool MicroWork::GetIsValid( ) const {
-	return Execute != nullptr;
-}
+	MicroWorkSignal( )
+		: MicroWorkSignal{ { } } 
+	{ };
 
-////////////////////////////////////////////////////////////////////////////////////////////
-//		===	OPERATOR ===
-////////////////////////////////////////////////////////////////////////////////////////////
-MicroWork::operator bool( ) const {
-	return GetIsValid( );
-}
+	MicroWorkSignal( const Type& default_value )
+		: m_mutex{ },
+		m_value{ default_value },
+		m_condition{ } 
+	{ };
+
+	void Send( ) {
+		m_value.store( true, std::memory_order_relaxed );
+		m_condition.notify_all( );
+	};
+
+};
