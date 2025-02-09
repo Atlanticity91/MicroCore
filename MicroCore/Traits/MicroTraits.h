@@ -110,6 +110,8 @@ extern "C" {
  **/
 #define micro_unused( VAR ) ( (void)VAR )
 
+#define micro_mask( VAR, MASK ) ( VAR & MASK )
+
 /**
  * micro_compile_if macro
  * @note : Wrapper for Compile time if dispatch.
@@ -223,6 +225,10 @@ extern "C" {
  *		   addition of micro_abstract for clarity.
  **/
 #define micro_implement( SIGNATURE ) virtual SIGNATURE override
+
+#define micro_optional( SIGNATURE, RETURN ) virtual SIGNATURE { return RETURN; };
+
+#define micro_optional2( SIGNATURE ) micro_optional( SIGNATURE, )
 
 /**
  * micro_stringifyx macro
