@@ -31,7 +31,7 @@
 
 #pragma once
 
-#include "MicroTraits.h"
+#include "MicroArchitecture.h"
 
 template<typename Return, typename... Args>
 class MicroCallable final {

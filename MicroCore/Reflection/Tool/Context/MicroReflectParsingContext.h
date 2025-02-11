@@ -34,7 +34,7 @@
 #include "MicroReflectParsingTypes.h"
 
 extern "C" {
-	#include <clang-c/Index.h>
+	#include "clang-c/Index.h"
 };
 
 typedef void* MicroReflectParsingNode;
