@@ -60,7 +60,7 @@ public:
 
 	~MicroCallable( ) = default;
 
-	Return Invoke( Args... args ) const {
+	Return Invoke( Args&&... args ) const {
 		if ( m_invocable )
 			return std::invoke( m_invocable, std::forward<Args>( args )... );
 
@@ -73,7 +73,7 @@ public:
 		return (bool)m_invocable;
 	};
 
-	Return operator( )( Args... args ) const {
+	Return operator( )( Args&&... args ) const {
 		return Invoke( std::forward<Args>( args )... );
 	};
 

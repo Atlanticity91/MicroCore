@@ -141,7 +141,7 @@ public:
 	 * @return : Return procedure address value casted as function pointer.
 	 **/
 	template<typename Type>
-		requires ( std::is_pointer<Type>::value )
+		requires ( std::is_pointer_v<Type> )
 	Type AcquireAs( const std::string& procedure ) { 
 		return micro_cast( Acquire( procedure ), Type );
 	};

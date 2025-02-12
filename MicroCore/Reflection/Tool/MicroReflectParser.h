@@ -177,7 +177,7 @@ public:
 	 * @template Type : Query emitter type.
 	 **/
 	template<typename Type>
-		requires ( std::is_base_of<MicroReflectEmitter, Type>::value )
+		requires ( std::is_base_of_v<MicroReflectEmitter, Type> )
 	void Register( ) {
 		if ( auto emitter = std::make_unique<Type>( ) )
 			m_emitters.emplace_back( std::move( emitter ) );

@@ -37,7 +37,7 @@
  * MicroReflectParserReportModes enum class
  * @note : Defined all parser report output modes.
  **/
-enum class MicroReflectParserReportModes : uint32_t {
+micro_enum_class MicroReflectParserReportModes : uint32_t {
 
 	None = 0,
 	Warn,

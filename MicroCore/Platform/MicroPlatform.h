@@ -159,7 +159,7 @@ namespace micro {
 	 * @param data : Reference to query data to swap.
 	 **/
 	template<typename Type>
-		requires ( !std::is_pointer<Type>::value )
+		requires ( !std::is_pointer_v<Type> )
 	inline void swap_endianness( Type& data ) {
 		auto data_size = sizeof( Type );
 		auto byte_max  = data_size / 2;
@@ -180,7 +180,7 @@ namespace micro {
 	 * @param data : Reference to query data array to swap.
 	 **/
 	template<typename Type>
-		requires ( std::is_pointer<Type>::value )
+		requires ( std::is_pointer_v<Type> )
 	inline void swap_endianness( const uint32_t length, Type& data ) {
 		auto element_id = length;
 		

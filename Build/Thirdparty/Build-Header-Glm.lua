@@ -1,5 +1,5 @@
 project "GLM"
-	kind "StaticLib"
+	kind "Utility"
 	language "C++"
 	location "%{OutputDirs.Solution}"
 

@@ -1,5 +1,5 @@
 project "libclang"
-	kind "StaticLib"
+	kind "Utility"
 	language "C"
 	location "%{OutputDirs.Solution}"
 

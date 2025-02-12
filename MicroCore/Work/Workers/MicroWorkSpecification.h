@@ -33,7 +33,7 @@
 
 #include "../Queues/MicroWorkQueue.h"
 
-struct MicroWorkSpecification {
+micro_struct MicroWorkSpecification {
 
 	MicroCallable<void, void*> CreateCallback;
 	MicroCallable<void> TerminateCallback;

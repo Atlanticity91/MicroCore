@@ -106,7 +106,7 @@ public:
 	 * @return : Count of bytes loaded from file.
 	 **/
 	template<typename Type>
-		requires ( !std::is_pointer<Type>::value )
+		requires ( !std::is_pointer_v<Type> )
 	uint32_t Read( Type& data ) {
 		auto* buffer = micro_ptr_as( data, uint8_t* );
 
@@ -140,7 +140,7 @@ public:
 	 * @return : Count of bytes loaded from file.
 	 **/
 	template<typename Type>
-		requires ( !std::is_pointer<Type>::value )
+		requires ( !std::is_pointer_v<Type> )
 	uint32_t Read( std::vector<Type>& data ) {
 		auto length = (uint32_t)0;
 
@@ -161,7 +161,7 @@ public:
 	 * @return : Count of bytes writed to the file.
 	 **/
 	template<typename Type>
-		requires ( !std::is_pointer<Type>::value )
+		requires ( !std::is_pointer_v<Type> )
 	uint32_t Write( const Type& data ) {
 		auto* buffer = micro_ptr_as( data, const uint8_t* );
 		
@@ -192,7 +192,7 @@ public:
 	 * @return : Count of bytes writed to the file.
 	 **/
 	template<typename Type>
-		requires ( !std::is_pointer<Type>::value )
+		requires ( !std::is_pointer_v<Type> )
 	uint32_t Write( const std::vector<Type>& data ) {
 		auto* buffer = micro_cast( data.data( ), const uint8_t* );
 		auto length  = (uint32_t)data.size( );

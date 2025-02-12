@@ -34,7 +34,7 @@
 #include "MicroWorkSpecification.h"
 
 template<typename Type>
-	requires ( std::is_fundamental<Type>::value )
+	requires ( std::is_fundamental_v<Type> )
 struct MicroWorkSignal {
 
 	std::mutex m_mutex;

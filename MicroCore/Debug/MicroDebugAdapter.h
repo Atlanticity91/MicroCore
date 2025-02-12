@@ -59,8 +59,8 @@ public:
 public:
 	template<typename Type>
 		requires ( 
-			!std::is_pointer<Type>::value && 
-			std::is_base_of<MicroDebugEvent, Type>::value 
+			!std::is_pointer_v<Type> && 
+			std::is_base_of_v<MicroDebugEvent, Type>
 		)
 	static MicroDebugAdapterError Broadcast( const Type& event_specification ) { 
 		return Broadcast( micro_ptr( event_specification ) );
