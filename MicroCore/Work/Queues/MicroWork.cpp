@@ -54,11 +54,11 @@ MicroWork::MicroWork(
 
 void MicroWork::Execute( ) {
 	try {
-		if ( std::invoke( m_task, m_uuid, m_user_data ) ) {
+		if ( m_task.Invoke( std::move( m_uuid ), std::move( m_user_data ) ) ) {
 			if ( m_on_success )
-				std::invoke( m_on_success, m_uuid, m_user_data );
+				m_on_success.Invoke( std::move( m_uuid ), std::move( m_user_data ) );
 		} else if ( m_on_error )
-			std::invoke( m_on_error, m_uuid, m_user_data );
+			m_on_error.Invoke( std::move( m_uuid ), std::move( m_user_data ) );
 	} catch ( const std::exception& exception ) {
 		auto* message = exception.what( );
 

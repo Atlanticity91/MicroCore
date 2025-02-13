@@ -49,7 +49,7 @@ bool MicroWorkManager::Create(
 	void* init_data 
 ) {
 	auto lambda = [ this, specification ]( void* init_data ) {
-		specification.CreateCallback.Invoke( init_data );
+		specification.CreateCallback.Invoke( std::move( init_data ) );
 
 		auto id = std::this_thread::get_id( );
 
