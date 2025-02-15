@@ -33,7 +33,7 @@
 
 #include "Storage/MicroReflectStorageClass.h"
 
-namespace micro {
+namespace micro_utils {
 
 	/**
 	 * ReflectTypeTag template struct
@@ -49,7 +49,7 @@ namespace micro {
 	 * @return : Return pointer to the type structure detail.
 	 **/
 	template<class T>
-	const ReflectType* GetTypeImpl( ReflectTypeTag<T> ) noexcept {
+	const micro::ReflectType* get_type_impl( ReflectTypeTag<T> ) noexcept {
 		return nullptr;
 	};
 
@@ -67,7 +67,7 @@ namespace micro {
 	 * @return : Return pointer to the type structure detail.
 	 **/
 	template<class T>
-	const ReflectClass* GetClassImpl( ReflectClassTag<T> ) {
+	const micro::ReflectClass* get_class_impl( ReflectClassTag<T> ) {
 		return nullptr;
 	};
 

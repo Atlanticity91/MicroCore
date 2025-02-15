@@ -34,17 +34,17 @@
 ////////////////////////////////////////////////////////////////////////////////////////////
 //		===	PUBLIC ===
 ////////////////////////////////////////////////////////////////////////////////////////////
-namespace micro {
+namespace micro_utils {
 
 	#define REFLECT_TYPE_IMP( TYPE )\
-		template<> const ReflectType* GetTypeImpl( ReflectTypeTag<TYPE> ) noexcept {\
-			static auto type_info = ReflectType{ micro_stringify( TYPE ), micro_sizeof( TYPE ) };\
+		template<> const micro::ReflectType* get_type_impl( ReflectTypeTag<TYPE> ) noexcept {\
+			static auto type_info = micro::ReflectType{ micro_stringify( TYPE ), micro_sizeof( TYPE ) };\
 			return micro_ptr( type_info );\
 		}
 
 	template<>
-	const ReflectType* GetTypeImpl( ReflectTypeTag<void> ) noexcept {
-		static auto void_type = ReflectType{ "void", 0 };
+	const micro::ReflectType* get_type_impl( ReflectTypeTag<void> ) noexcept {
+		static auto void_type = micro::ReflectType{ "void", 0 };
 
 		return micro_ptr( void_type );
 	}
@@ -63,22 +63,22 @@ namespace micro {
 	REFLECT_TYPE_IMP( bool );
 
 	template<>
-	const ReflectType* GetTypeImpl( ReflectTypeTag<std::string> ) noexcept {
-		static auto type_info = ReflectType{ "std::string", micro_sizeof( std::string ) };
+	const micro::ReflectType* get_type_impl( ReflectTypeTag<std::string> ) noexcept {
+		static auto type_info = micro::ReflectType{ "std::string", micro_sizeof( std::string ) };
 
 		return micro_ptr( type_info );
 	}
 
 	template<>
-	const ReflectType* GetTypeImpl( ReflectTypeTag<micro_string> ) noexcept {
-		static auto type_info = ReflectType{ "const char*", micro_sizeof( micro_string ) };
+	const micro::ReflectType* get_type_impl( ReflectTypeTag<micro_string> ) noexcept {
+		static auto type_info = micro::ReflectType{ "const char*", micro_sizeof( micro_string ) };
 
 		return micro_ptr( type_info );
 	}
 
 	template<>
-	const ReflectClass* GetClassImpl( ReflectClassTag<std::string> ) noexcept {
-		static auto storage_string = ReflectStorageClass<std::string, 0, 0, 0>{
+	const micro::ReflectClass* get_class_impl( ReflectClassTag<std::string> ) noexcept {
+		static auto storage_string = micro::ReflectStorageClass<std::string, 0, 0, 0>{
 			"std::string" 
 		};
 

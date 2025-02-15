@@ -31,43 +31,40 @@
 
 #pragma once
 
-#include "MicroReflectImplementation.h"
+#include "MicroArchitecture.h"
 
-namespace micro_utils {
+#if defined( _WIN32 ) || defined( _WIN64 ) || defined( __MINGW32__ ) || defined( __MINGW64__ ) || defined( __CYGWIN__ )
+#	define MICRO_OS_WINDOWS
+#elif defined( __linux__ ) || defined( __unix__ ) || defined( __FreeBSD__ )
+#	define MICRO_OS_LINUX
+#elif defined( __ANDROID__ )
+#	define MICRO_OS_ANDROID
+#elif defined( __APPLE__ ) 
+#	if defined( __MACH__ )
+#		define MICRO_OS_MACOS
+#	else
+#		define MICRO_OS_IOS
+#	endif
+#else
+#	throw "OS undefined"
+#endif
 
-	#define REFLECT_TYPE( TYPE )\
-		template<> extern const micro::ReflectType* get_type_impl( ReflectTypeTag<TYPE> ) noexcept
+micro_struct MicroOSSpecification final {
 
-	REFLECT_TYPE( void );
-	REFLECT_TYPE( int8_t );
-	REFLECT_TYPE( int16_t );
-	REFLECT_TYPE( int32_t );
-	REFLECT_TYPE( int64_t );
-	REFLECT_TYPE( uint8_t );
-	REFLECT_TYPE( uint16_t );
-	REFLECT_TYPE( uint32_t );
-	REFLECT_TYPE( uint64_t );
-	REFLECT_TYPE( float );
-	REFLECT_TYPE( double );
-	REFLECT_TYPE( char );
-	REFLECT_TYPE( bool );
-	REFLECT_TYPE( std::string );
-	REFLECT_TYPE( micro_string );
+	std::string Name;
+	std::string Version;
+	std::string Architecture;
+	uint32_t Ram;
+	uint32_t Cores;
 
-	template<>
-	extern const micro::ReflectClass* get_class_impl( 
-		ReflectClassTag<std::string> 
-	) noexcept;
+	MicroOSSpecification( );
 
-	template<class T>
-	extern const micro::ReflectClass* get_class_impl( 
-		ReflectClassTag<std::vector<T>> 
-	) noexcept {
-		static auto storage_vector = micro::ReflectStorageClass<std::vector<T>, 0, 0, 0>{
-			"std::vector"
-		};
+	MicroOSSpecification( MicroOSSpecification&& other ) noexcept;
 
-		return storage_vector;
-	};
+};
+
+namespace micro {
+
+	MICRO_API MicroOSSpecification get_os_specification( );
 
 };

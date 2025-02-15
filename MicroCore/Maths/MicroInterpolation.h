@@ -33,19 +33,10 @@
 
 #include "MicroMathConstant.h"
 
-namespace micro {
+namespace micro_math {
 
-	/**
-	 * Lerp template function
-	 * @note : Perform linear interpolation between source and destination.
-	 * @template Type : Type of the element to lerp.
-	 * @param source : Query source value.
-	 * @param destination : Query destination value.
-	 * @param alpha : Scalar controlling interpolation in range [ 0.f : 1.f ]
-	 * @return : Return interpolation between source and destination by alpha.
-	 **/
 	template<typename Type>
-	micro_nodiscard inline Type Lerp(
+	micro_nodiscard inline Type lerp(
 		const Type& source, 
 		const Type& destination,
 		const float alpha
@@ -53,17 +44,8 @@ namespace micro {
 		return source + alpha * ( destination - source );
 	};
 
-	/**
-	 * LerpStable function
-	 * @note : Perform linear interpolation between source and destination.
-	 * @template Type : Type of the element to lerp.
-	 * @param source : Query source value.
-	 * @param destination : Query destination value.
-	 * @param alpha : Scalar controlling interpolation in range [ 0.f : 1.f ]
-	 * @return : Return interpolation between source and destination by alpha.
-	 **/
 	template<typename Type>
-	micro_nodiscard inline Type LerpStable(
+	micro_nodiscard inline Type lerp_stable(
 		const Type& source,
 		const Type& destination,
 		const float alpha
@@ -72,7 +54,7 @@ namespace micro {
 	};
 
 	template<typename Type>
-	micro_nodiscard Type InterpEaseIn(
+	micro_nodiscard Type interp_ease_in(
 		const Type& source,
 		const Type& destination,
 		const float alpha,
@@ -80,11 +62,11 @@ namespace micro {
 	) {
 		const auto scalar = std::pow( alpha, exponent );
 
-		return Lerp( source, destination, scalar );
+		return micro_math::lerp( source, destination, scalar );
 	};
 
 	template<typename Type>
-	micro_nodiscard Type InterpEaseOut(
+	micro_nodiscard Type interp_ease_out(
 		const Type& source,
 		const Type& destination,
 		const float alpha,
@@ -92,91 +74,91 @@ namespace micro {
 	) {
 		const auto scalar = 1.f - std::pow( 1.f - alpha, exponent );
 
-		return Lerp( source, destination, scalar );
+		return micro_math::lerp( source, destination, scalar );
 	};
 
 	template<typename Type>
-	micro_nodiscard Type InterpEaseInOut(
+	micro_nodiscard Type interp_ease_in_out(
 		const Type& source,
 		const Type& destination,
 		const float alpha,
 		const float exponent
 	) { 
 		const auto scalar = ( alpha < 0.5f ) ? 
-							InterpEaseIn(  0.f, 1.f, alpha * 2.f	  , exponent ) * 0.5f :
-							InterpEaseOut( 0.f, 1.f, alpha * 2.f - 1.f, exponent );
+							micro_math::interp_ease_in(  0.f, 1.f, alpha * 2.f	  , exponent ) * 0.5f :
+							micro_math::interp_ease_out( 0.f, 1.f, alpha * 2.f - 1.f, exponent );
 
-		return Lerp( source, destination, scalar * 0.5f + 0.5f );
+		return micro_math::lerp( source, destination, scalar * 0.5f + 0.5f );
 	};
 
 	template<typename Type>
-	micro_nodiscard Type InterpSinIn(
+	micro_nodiscard Type interp_sin_in(
 		const Type& source,
 		const Type& destination,
 		const float alpha
 	) {
-		const auto scalar = -1.f * std::cos( alpha * MICRO_HALF_PI_F ) + 1.f;
+		const auto scalar = -1.f * std::cos( alpha * micro_half_pi_f ) + 1.f;
 
-		return Lerp( source, destination, scalar );
+		return micro_math::lerp( source, destination, scalar );
 	};
 
 	template<typename Type>
-	micro_nodiscard Type InterpSinOut(
+	micro_nodiscard Type interp_sin_out(
 		const Type& source,
 		const Type& destination,
 		const float alpha
 	) {
-		const auto scalar = std::sin( alpha * MICRO_HALF_PI_F );
+		const auto scalar = std::sin( alpha * micro_half_pi_f );
 		
-		return Lerp( source, destination, scalar );
+		return micro_math::lerp( source, destination, scalar );
 	};
 
 	template<typename Type>
-	micro_nodiscard Type InterpSinInOut(
+	micro_nodiscard Type interp_sin_in_out(
 		const Type& source,
 		const Type& destination,
 		const float alpha
 	) {
 		const auto scalar = ( alpha < 0.5f ) ?
-							InterpSinIn(  0.f, 1.f, alpha * 2.f		  ) * 0.5f :
-							InterpSinOut( 0.f, 1.f, alpha * 2.f - 1.f );
+							micro_math::interp_sin_in(  0.f, 1.f, alpha * 2.f		  ) * 0.5f :
+							micro_math::interp_sin_out( 0.f, 1.f, alpha * 2.f - 1.f );
 
-		return Lerp( source, destination, scalar * 0.5f + 0.5f );
+		return micro_math::lerp( source, destination, scalar * 0.5f + 0.5f );
 	};
 
 	template<typename Type>
-	micro_nodiscard Type InterpExpoIn(
+	micro_nodiscard Type interp_expo_in(
 		const Type& source,
 		const Type& destination,
 		const float alpha
 	) {
 		const auto scalar = ( alpha == 0.f ) ? 0.f : std::pow( 2.f, 10.f * ( alpha - 1.f ) );
 
-		return Lerp( source, destination, scalar );
+		return micro_math::lerp( source, destination, scalar );
 	};
 
 	template<typename Type>
-	micro_nodiscard Type InterpExpoOut(
+	micro_nodiscard Type interp_expo_out(
 		const Type& source,
 		const Type& destination,
 		const float alpha
 	) {
 		const auto scalar = ( alpha == 1.f ) ? 1.f : -std::pow( 2.f, -10.f * alpha ) + 1.f;
 		
-		return Lerp( source, destination, scalar );
+		return micro_math::lerp( source, destination, scalar );
 	};
 
 	template<typename Type>
-	micro_nodiscard Type InterpExpoInOut(
+	micro_nodiscard Type interp_expo_in_out(
 		const Type& source,
 		const Type& destination,
 		const float alpha
 	) {
 		const auto scalar = ( alpha < 0.5f ) ?
-							InterpExpoIn(  0.f, 1.f, alpha * 2.f	   ) * 0.5f :
-							InterpExpoOut( 0.f, 1.f, alpha * 2.f - 1.f );
+							micro_math::interp_expo_in(  0.f, 1.f, alpha * 2.f	   ) * 0.5f :
+							micro_math::interp_expo_out( 0.f, 1.f, alpha * 2.f - 1.f );
 
-		return Lerp( source, destination, scalar * 0.5f + 0.5f );
+		return micro_math::lerp( source, destination, scalar * 0.5f + 0.5f );
 	};
 
 };

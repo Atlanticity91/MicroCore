@@ -34,16 +34,16 @@
 ////////////////////////////////////////////////////////////////////////////////////////////
 //		===	PUBLIC ===
 ////////////////////////////////////////////////////////////////////////////////////////////
-namespace micro {
-
-	BenchReport Bench(
+namespace micro_utils {
+	
+	BenchReport bench(
 		micro_string name,
 		std::initializer_list<uint32_t> step_counts,
 		std::function<double( BenchTimer& timer, uint32_t )> lambda
 	) {
 		auto step_id = step_counts.size( );
-		auto report = BenchReport{ name, (uint32_t)step_id };
-		auto timer = BenchTimer{ };
+		auto report  = BenchReport{ name, (uint32_t)step_id };
+		auto timer   = BenchTimer{ };
 
 		while ( step_id-- > 0 ) {
 			auto& result = report.Results[ step_id ];
@@ -52,23 +52,23 @@ namespace micro {
 			result.Duration = std::invoke( lambda, timer, result.Steps );
 		}
 
-		return std::move( report );
+		return report;
 	}
 
-	BenchReport Bench(
+	BenchReport bench(
 		std::string& report_string,
 		micro_string name,
 		std::initializer_list<uint32_t> step_counts,
 		std::function<double( BenchTimer& timer, uint32_t )> lambda
 	) {
-		auto report = Bench( name, step_counts, lambda );
+		auto report = micro_utils::bench( name, step_counts, lambda );
 
 		report_string = std::format( "{} : {}\n", name, step_counts.size( ) );
 
 		for ( const auto& result : report.Results )
 			report_string += std::format( "\t{:6}/{}\n", result.Steps, result.Duration );
 
-		return std::move( report );
+		return report;
 	}
 
 };

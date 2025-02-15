@@ -29,45 +29,16 @@
  *
  **/
 
-#pragma once
+#include "__micro_core_pch.h"
 
-#include "MicroReflectImplementation.h"
-
+////////////////////////////////////////////////////////////////////////////////////////////
+//		===	PUBLIC ===
+////////////////////////////////////////////////////////////////////////////////////////////
 namespace micro_utils {
 
-	#define REFLECT_TYPE( TYPE )\
-		template<> extern const micro::ReflectType* get_type_impl( ReflectTypeTag<TYPE> ) noexcept
-
-	REFLECT_TYPE( void );
-	REFLECT_TYPE( int8_t );
-	REFLECT_TYPE( int16_t );
-	REFLECT_TYPE( int32_t );
-	REFLECT_TYPE( int64_t );
-	REFLECT_TYPE( uint8_t );
-	REFLECT_TYPE( uint16_t );
-	REFLECT_TYPE( uint32_t );
-	REFLECT_TYPE( uint64_t );
-	REFLECT_TYPE( float );
-	REFLECT_TYPE( double );
-	REFLECT_TYPE( char );
-	REFLECT_TYPE( bool );
-	REFLECT_TYPE( std::string );
-	REFLECT_TYPE( micro_string );
-
-	template<>
-	extern const micro::ReflectClass* get_class_impl( 
-		ReflectClassTag<std::string> 
-	) noexcept;
-
-	template<class T>
-	extern const micro::ReflectClass* get_class_impl( 
-		ReflectClassTag<std::vector<T>> 
-	) noexcept {
-		static auto storage_vector = micro::ReflectStorageClass<std::vector<T>, 0, 0, 0>{
-			"std::vector"
-		};
-
-		return storage_vector;
-	};
+	BenchResult::BenchResult( )
+		: Steps{ 0 },
+		Duration{ 0.0 } 
+	{ }
 
 };

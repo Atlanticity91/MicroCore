@@ -97,7 +97,7 @@ public:
 	micro_inline ReturnType Invoke( Args&&... args ) {
 		typedef ReturnType( *Signature )( Args... );
 
-		micro_compile_if( !std::is_void<ReturnType>::value ) {
+		micro_compile_if( !std::is_void_v<ReturnType> ) {
 			auto result = ReturnType{ };
 
 			if ( GetIsCallable( ) )

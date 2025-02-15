@@ -33,7 +33,7 @@
 
 #include "../Benchmarks/MicroBenchmark.h"
 
-namespace micro {
+namespace micro_utils {
 
 	/**
 	 * Profiler class final

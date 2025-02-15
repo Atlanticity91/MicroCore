@@ -44,7 +44,7 @@ namespace micro {
 	 **/
 	template<typename AType, typename BType>
 	bool are_equal( const AType& one, const BType& two ) {
-		micro_compile_if( std::equality_comparable<AType, BType>::value )
+		micro_compile_if( std::equality_comparable<AType, BType> )
 			return one == two;
 		micro_compile_else
 			return false;
@@ -59,7 +59,7 @@ namespace micro {
 	 **/
 	template<typename AType, typename BType>
 	bool are_not_equal( const AType& one, const BType& two ) {
-		micro_compile_if( std::equality_comparable<AType, BType>::value )
+		micro_compile_if( std::equality_comparable<AType, BType> )
 			return one != two;
 		micro_compile_else
 			return false;
@@ -85,7 +85,7 @@ namespace micro {
 	 **/
 	template<typename Type>
 	std::string to_string( const Type& element ) {
-		micro_compile_if( std::is_base_of<MicroTestable<Type>, Type>::value )
+		micro_compile_if( std::is_base_of_v<MicroTestable<Type>, Type> )
 			return std::move( element.GetAsString( ) );
 		micro_compile_else
 			return to_string<Type>( );

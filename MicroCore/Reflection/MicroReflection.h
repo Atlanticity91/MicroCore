@@ -49,7 +49,7 @@ buildcommands {
 #	define MICRO_CLASS( ... ) class API
 #	define MICRO_REFLECT_BODY( )\
 		template<class T> \
-		friend const micro::ReflectClass* micro::GetClassImpl( micro::ReflectClassTag<T> ) noexcept;
+		friend const micro::ReflectClass* micro_utils::get_class_impl( micro_utils::ReflectClassTag<T> ) noexcept;
 #else
 #	define MICRO_FIELD( ... ) __attribute__(( annotate( "micro_reflect," #__VA_ARGS__ )))
 #	define MICRO_FUNCTION( ... ) __attribute__(( annotate( "micro_reflect," #__VA_ARGS__ )))
@@ -68,8 +68,8 @@ namespace micro {
 	 * @return : Return pointer to the type structure detail.
 	 **/
 	template<class T>
-	const ReflectType* GetReflectType( ) noexcept {
-		return GetTypeImpl( ReflectTypeTag<T>{ } );
+	const ReflectType* get_reflect_type( ) noexcept {
+		return micro_utils::get_type_impl( micro_utils::ReflectTypeTag<T>{ } );
 	};
 
 	/**
@@ -79,8 +79,8 @@ namespace micro {
 	 * @return : Return pointer to the type structure detail.
 	 **/
 	template<class T>
-	const ReflectClass* GetReflectClass( ) noexcept {
-		return GetClassImpl( ReflectClassTag<T>{ } );
+	const ReflectClass* get_reflect_class( ) noexcept {
+		return micro_utils::get_class_impl( micro_utils::ReflectClassTag<T>{ } );
 	};
 
 };

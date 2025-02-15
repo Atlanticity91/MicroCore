@@ -129,13 +129,13 @@ const uint32_t crc32_tab[] = {
 ////////////////////////////////////////////////////////////////////////////////////////////
 //		===	PUBLIC ===
 ////////////////////////////////////////////////////////////////////////////////////////////
-namespace micro {
+namespace micro_math {
 
 	uint32_t crc32( const std::vector<uint8_t>& data ) {
-		auto* pointer = data.data( );
-		auto length   = (uint32_t)data.size( );
+		const auto* pointer = data.data( );
+		const auto length   = (uint32_t)data.size( );
 
-		return crc32( length, pointer );
+		return micro_math::crc32( length, pointer );
 	}
 
 	uint32_t crc32( const uint32_t length, const uint8_t* data ) {
@@ -153,16 +153,16 @@ namespace micro {
 	}
 
 	uint32_t hash32( const std::string& string ) {
-		auto* pointer = string.c_str( );
-		auto length   = (uint32_t)string.size( );
+		const auto* pointer = string.c_str( );
+		const auto length   = (uint32_t)string.size( );
 
-		return hash32( length, pointer );
+		return micro_math::hash32( length, pointer );
 	}
 
 	uint32_t hash32( micro_string string ) {
-		auto length = (uint32_t)strlen( string );
+		const auto length = (uint32_t)strlen( string );
 
-		return hash32( length, string );
+		return micro_math::hash32( length, string );
 	}
 
 	uint32_t hash32( const uint32_t length, micro_string string ) {
@@ -180,16 +180,16 @@ namespace micro {
 	}
 
 	uint64_t hash64( const std::string& string ) {
-		auto* pointer = string.c_str( );
-		auto length   = (uint32_t)string.size( );
+		const auto* pointer = string.c_str( );
+		const auto length   = (uint32_t)string.size( );
 
-		return hash64( length, pointer );
+		return micro_math::hash64( length, pointer );
 	}
 
 	uint64_t hash64( micro_string string ) {
-		auto length = (uint32_t)strlen( string );
+		const auto length = (uint32_t)strlen( string );
 
-		return hash64( length, string );
+		return micro_math::hash64( length, string );
 	}
 
 	uint64_t hash64( const uint32_t length, micro_string string ) {

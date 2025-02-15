@@ -34,15 +34,15 @@
 ////////////////////////////////////////////////////////////////////////////////////////////
 //		===	PUBLIC ===
 ////////////////////////////////////////////////////////////////////////////////////////////
-namespace micro {
+namespace micro_utils {
 
 	template<>
-	const ReflectClass* GetClassImpl( ReflectClassTag<micro_upoint> ) noexcept {
-		static auto storage_upoint = ReflectStorageClass<micro_upoint, 0, 2, 0>{ 
+	const micro::ReflectClass* get_class_impl( ReflectClassTag<micro_upoint> ) noexcept {
+		static auto storage_upoint = micro::ReflectStorageClass<micro_upoint, 0, 2, 0>{ 
 			"micro_upoint",
 			[]( auto* self ){
-				self->Fields[ 0 ] = { "x", GetReflectType<micro_upoint::value_type>( ) };
-				self->Fields[ 1 ] = { "y", offsetof( micro_upoint, y ), GetReflectType<micro_upoint::value_type>( ) };
+				self->Fields[ 0 ] = { "x", micro::get_reflect_type<micro_upoint::value_type>( ) };
+				self->Fields[ 1 ] = { "y", offsetof( micro_upoint, y ), micro::get_reflect_type<micro_upoint::value_type>( ) };
 			}
 		};
 

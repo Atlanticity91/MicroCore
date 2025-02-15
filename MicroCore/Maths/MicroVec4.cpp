@@ -34,17 +34,17 @@
 ////////////////////////////////////////////////////////////////////////////////////////////
 //		===	PUBLIC ===
 ////////////////////////////////////////////////////////////////////////////////////////////
-namespace micro {
+namespace micro_utils {
 
 	template<>
-	const ReflectClass* GetClassImpl( ReflectClassTag<micro_vec4> ) noexcept {
-		static auto storage_vec4 = ReflectStorageClass<micro_vec4, 0, 4, 0>{
+	const micro::ReflectClass* get_class_impl( ReflectClassTag<micro_vec4> ) noexcept {
+		static auto storage_vec4 = micro::ReflectStorageClass<micro_vec4, 0, 4, 0>{
 			"micro_vec4",
 			[]( auto* self ) {
-				self->Fields[ 0 ] = { "x", GetReflectType<micro_vec4::value_type>( ) };
-				self->Fields[ 1 ] = { "y", offsetof( micro_vec4, y ), GetReflectType<micro_vec4::value_type>( ) };
-				self->Fields[ 2 ] = { "z", offsetof( micro_vec4, z ), GetReflectType<micro_vec4::value_type>( ) };
-				self->Fields[ 3 ] = { "w", offsetof( micro_vec4, w ), GetReflectType<micro_vec4::value_type>( ) };
+				self->Fields[ 0 ] = { "x", micro::get_reflect_type<micro_vec4::value_type>( ) };
+				self->Fields[ 1 ] = { "y", offsetof( micro_vec4, y ), micro::get_reflect_type<micro_vec4::value_type>( ) };
+				self->Fields[ 2 ] = { "z", offsetof( micro_vec4, z ), micro::get_reflect_type<micro_vec4::value_type>( ) };
+				self->Fields[ 3 ] = { "w", offsetof( micro_vec4, w ), micro::get_reflect_type<micro_vec4::value_type>( ) };
 			}
 		};
 

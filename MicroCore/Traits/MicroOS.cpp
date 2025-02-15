@@ -1,9 +1,9 @@
 /**
  *
- *  __  __ _             ___
- * |  \/  (_)__ _ _ ___ / __|___ _ _ ___
- * | |\/| | / _| '_/ _ \ (__/ _ \ '_/ -_)
- * |_|  |_|_\__|_| \___/\___\___/_| \___|
+ *  __  __ _            ___                                  _
+ * |  \/  (_)__ _ _ ___| __| _ __ _ _ __  _____ __ _____ _ _| |__
+ * | |\/| | / _| '_/ _ \ _| '_/ _` | '  \/ -_) V  V / _ \ '_| / /
+ * |_|  |_|_\__|_| \___/_||_| \__,_|_|_|_\___|\_/\_/\___/_| |_\_\
  *
  * MIT License
  *
@@ -29,25 +29,54 @@
  *
  **/
 
+#pragma once
+
 #include "__micro_core_pch.h"
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 //		===	PUBLIC ===
 ////////////////////////////////////////////////////////////////////////////////////////////
+MicroOSSpecification::MicroOSSpecification( )
+	: Name{ },
+	Version{ },
+	Architecture{ },
+	Ram{ },
+	Cores{ }
+{ }
+
+MicroOSSpecification::MicroOSSpecification( MicroOSSpecification&& other ) noexcept
+	: Name{ std::move( other.Name ) },
+	Version{ std::move( other.Version ) },
+	Architecture{ std::move( other.Architecture ) },
+	Ram{ std::move( other.Ram ) },
+	Cores{ std::move( other.Cores ) }
+{ }
+
+#ifdef MICRO_OS_WINDOWS
+void Internal_get_os_specification( MicroOSSpecification& os_spec ) { 
+}
+#elif MICRO_OS_LINUX
+void Internal_get_os_specification( MicroOSSpecification& os_spec ) {
+}
+#elif MICRO_OS_MACOS
+void Internal_get_os_specification( MicroOSSpecification& os_spec ) { 
+}
+#elif MICRO_OS_ANDROID
+void Internal_get_os_specification( MicroOSSpecification& os_spec ) {
+}
+#elif MICRO_OS_IOS
+void Internal_get_os_specification( MicroOSSpecification& os_spec ) { 
+}
+#endif
+
 namespace micro {
 
-	BenchReport::BenchReport( )
-		: BenchReport{ "", 0 } 
-	{ }
+	MicroOSSpecification get_os_specification( ) { 
+		auto os_spec = MicroOSSpecification{ };
 
-	BenchReport::BenchReport( micro_string name, const uint32_t step_count )
-		: Name{ name },
-		Results{ step_count } 
-	{ }
+		Internal_get_os_specification( os_spec );
 
-	BenchReport::BenchReport( BenchReport&& other )
-		: Name{ other.Name },
-		Results{ std::move( other.Results ) } 
-	{ }
+		return os_spec;
+	}
 
 };

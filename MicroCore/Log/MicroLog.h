@@ -31,7 +31,7 @@
 
 #pragma once
 
-#include "../Maths/MicroMath.h"
+#include "../Maths/MicroHash.h"
 
 #ifdef _MSC_VER
 #	pragma warning( push, 0 )

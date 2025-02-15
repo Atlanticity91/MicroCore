@@ -31,25 +31,36 @@
 
 #pragma once
 
-#include "MicroBenchTimer.h"
+#include "MicroBenchResult.h"
 
-namespace micro {
+namespace micro_utils {
 
 	/**
-	 * BenchResult struct
-	 * @note : Defined benchmark result for one call.
+	 * BenchReport struct
+	 * @note : Defined benchmark call result value.
 	 **/
-	micro_struct BenchResult {
+	micro_struct BenchReport {
 
-		uint32_t Steps;
-		double Duration;
+		micro_string Name;
+		std::vector<BenchResult> Results;
 
 		/**
 		 * Constructor
 		 **/
-		BenchResult( );
+		BenchReport( );
+
+		/**
+		 * Constructor
+		 * @param name : Query function name.
+		 * @param step_count : Number of execution.
+		 **/
+		BenchReport( micro_string name, const uint32_t step_count );
+
+		/**
+		 * Move-Constructor
+		 **/
+		BenchReport( BenchReport&& other );
 
 	};
-
 
 };

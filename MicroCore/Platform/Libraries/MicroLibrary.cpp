@@ -92,10 +92,10 @@ bool MicroLibrary::Open( const std::string& path, bool load_local ) {
 }
 
 void* MicroLibrary::Acquire( const std::string& procedure) {
-	auto* procedure_address = (void*)NULL;
+	auto* procedure_address = micro_cast( NULL, void* );
 
 	if ( GetIsValid( ) ) {
-		auto* procedure_name = procedure.c_str( );
+		const auto* procedure_name = procedure.c_str( );
 
 	#	ifdef _WIN64
 		procedure_address = micro_cast( GetProcAddress( m_handle, procedure_name ), void* );
@@ -172,7 +172,7 @@ MicroLibrary::operator bool( ) const {
 }
 
 void* MicroLibrary::operator[]( const std::string& procedure ) {
-	return Acquire( std::move( procedure ) );
+	return Acquire( procedure );
 }
 
 bool MicroLibrary::operator[]( MicroLibraryProcedure& procedure ) {

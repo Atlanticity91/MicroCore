@@ -76,10 +76,10 @@ namespace micro {
 	}
 
 	FILE* file_open( micro_string path, micro_string mode ) {
-		auto file = (FILE*)NULL;
+		auto file = micro_cast( NULL, FILE* );
 
 	#	ifdef _WIN64
-		fopen_s( &file, path, mode );
+		fopen_s( micro_ptr( file ), path, mode );
 	#	else
 		file = fopen( path, mode );
 	#	endif

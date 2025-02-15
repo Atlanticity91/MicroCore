@@ -34,11 +34,20 @@
 ////////////////////////////////////////////////////////////////////////////////////////////
 //		===	PUBLIC ===
 ////////////////////////////////////////////////////////////////////////////////////////////
-namespace micro {
+namespace micro_utils {
 
-	BenchResult::BenchResult( )
-		: Steps{ 0 },
-		Duration{ 0.0 } 
+	BenchReport::BenchReport( )
+		: BenchReport{ "", 0 } 
+	{ }
+
+	BenchReport::BenchReport( micro_string name, const uint32_t step_count )
+		: Name{ name },
+		Results{ step_count } 
+	{ }
+
+	BenchReport::BenchReport( BenchReport&& other )
+		: Name{ other.Name },
+		Results{ std::move( other.Results ) } 
 	{ }
 
 };

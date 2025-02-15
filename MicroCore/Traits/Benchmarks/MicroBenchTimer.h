@@ -33,7 +33,7 @@
 
 #include "../MicroHelper.h"
 
-namespace micro {
+namespace micro_utils {
 
 	/**
 	 * BenchTimer class final

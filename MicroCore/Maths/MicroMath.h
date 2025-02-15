@@ -33,7 +33,7 @@
 
 #include "MicroInterpolation.h"
 
-namespace micro {
+namespace micro_math {
 
 	/**
 	 * crc32 function

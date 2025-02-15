@@ -37,14 +37,18 @@
 namespace micro { 
 
 	ReflectFunction::ReflectFunction( )
-		: ReflectFunction{ "", MicroReflectAccessor::Public, GetReflectType<void>( ) }
+		: ReflectFunction{ 
+			"", 
+			MicroReflectAccessor::Public, 
+			micro::get_reflect_type<void>( ) 
+		}
 	{ }
 
 	ReflectFunction::ReflectFunction( micro_string name )
 		: ReflectFunction{ 
 			name, 
 			MicroReflectAccessor::Public, 
-			GetReflectType<void>( ), 
+			micro::get_reflect_type<void>( ),
 			Parameters_t{ } 
 		}
 	{ }
@@ -53,7 +57,12 @@ namespace micro {
 		micro_string name,
 		const MicroReflectAccessor accessor
 	)
-		: ReflectFunction{ name, accessor, GetReflectType<void>( ), Parameters_t{ } }
+		: ReflectFunction{ 
+			name, 
+			accessor, 
+			micro::get_reflect_type<void>( ),
+			Parameters_t{ } 
+		}
 	{ }
 
 	ReflectFunction::ReflectFunction(
@@ -75,7 +84,7 @@ namespace micro {
 		: ReflectFunction{
 			name, 
 			MicroReflectAccessor::Public,
-			GetReflectType<void>( ), 
+			micro::get_reflect_type<void>( ),
 			parameters 
 		}
 	{ }
@@ -85,7 +94,12 @@ namespace micro {
 		const MicroReflectAccessor accessor,
 		const ReflectType* return_type
 	)
-		: ReflectFunction{ name, accessor, return_type, Parameters_t{ } }
+		: ReflectFunction{ 
+			name, 
+			accessor, 
+			return_type, 
+			Parameters_t{ } 
+		}
 	{ }
 
 	ReflectFunction::ReflectFunction(
@@ -93,7 +107,12 @@ namespace micro {
 		const MicroReflectAccessor accessor,
 		const Parameters_t parameters
 	)
-		: ReflectFunction{ name, accessor, GetReflectType<void>( ), parameters }
+		: ReflectFunction{ 
+			name, 
+			accessor, 
+			micro::get_reflect_type<void>( ), 
+			parameters 
+		}
 	{ }
 
 	ReflectFunction::ReflectFunction(
@@ -101,7 +120,12 @@ namespace micro {
 		const ReflectType* return_type,
 		const Parameters_t parameters
 	)
-		: ReflectFunction{ name, MicroReflectAccessor::Public, return_type, parameters }
+		: ReflectFunction{ 
+			name,
+			MicroReflectAccessor::Public,
+			return_type, 
+			parameters 
+		}
 	{ }
 
 	ReflectFunction::ReflectFunction(

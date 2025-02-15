@@ -31,9 +31,9 @@
 
 #pragma once
 
-#include "BenchReport.h"
+#include "MicroBenchReport.h"
 
-namespace micro {
+namespace micro_utils {
 
 	/**
 	 * Bench function
@@ -43,7 +43,7 @@ namespace micro {
 	 * @param lambda : Query lambda to bench.
 	 * @return : Return benchmark result.
 	 **/
-	MICRO_API BenchReport Bench(
+	MICRO_API BenchReport bench(
 		micro_string name,
 		std::initializer_list<uint32_t> step_counts,
 		std::function<double( BenchTimer& timer, uint32_t )> lambda
@@ -58,7 +58,7 @@ namespace micro {
 	 * @param lambda : Query lambda to bench.
 	 * @return : Return benchmark result.
 	 **/
-	MICRO_API BenchReport Bench(
+	MICRO_API BenchReport bench(
 		std::string& report_string,
 		micro_string name,
 		std::initializer_list<uint32_t> step_counts,
