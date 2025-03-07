@@ -34,6 +34,14 @@
 ////////////////////////////////////////////////////////////////////////////////////////////
 //		===	PUBLIC ===
 ////////////////////////////////////////////////////////////////////////////////////////////
+bool operator==( const micro_vec2& vector, const float scalar ) {
+	return vector.x == scalar && vector.y == scalar;
+}
+
+bool operator!=( const micro_vec2& vector, const float scalar ) {
+	return !( vector == scalar );
+}
+
 namespace micro_utils {
 
 	template<>

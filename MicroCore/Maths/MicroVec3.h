@@ -35,6 +35,10 @@
 
 typedef glm::vec3 micro_vec3;
 
+MICRO_API bool operator==( const micro_vec3& vector, const float scalar );
+
+MICRO_API bool operator!=( const micro_vec3& vector, const float scalar );
+
 namespace micro_utils {
 
 	/**

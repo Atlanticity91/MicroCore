@@ -45,8 +45,8 @@ buildcommands {
 #	define MICRO_FIELD( ... )
 #	define MICRO_FUNCTION( ... )
 #	define MICRO_ENUM( ... ) enum
-#	define MICRO_STRUCT( ... ) struct API
-#	define MICRO_CLASS( ... ) class API
+#	define MICRO_STRUCT( ... ) micro_struct
+#	define MICRO_CLASS( ... ) micro_class
 #	define MICRO_REFLECT_BODY( )\
 		template<class T> \
 		friend const micro::ReflectClass* micro_utils::get_class_impl( micro_utils::ReflectClassTag<T> ) noexcept;
@@ -54,8 +54,8 @@ buildcommands {
 #	define MICRO_FIELD( ... ) __attribute__(( annotate( "micro_reflect," #__VA_ARGS__ )))
 #	define MICRO_FUNCTION( ... ) __attribute__(( annotate( "micro_reflect," #__VA_ARGS__ )))
 #	define MICRO_ENUM( ... ) enum __attribute__(( annotate( "micro_reflect," #__VA_ARGS__ )))
-#	define MICRO_STRUCT( ... ) struct __attribute__(( annotate( "micro_reflect," #__VA_ARGS__ )))
-#	define MICRO_CLASS( ... ) class __attribute__(( annotate( "micro_reflect," #__VA_ARGS__ )))
+#	define MICRO_STRUCT( ... ) micro_struct __attribute__(( annotate( "micro_reflect," #__VA_ARGS__ )))
+#	define MICRO_CLASS( ... ) micro_class __attribute__(( annotate( "micro_reflect," #__VA_ARGS__ )))
 #	define MICRO_REFLECT_BODY( )
 #endif
 
